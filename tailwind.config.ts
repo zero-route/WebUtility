@@ -1,22 +1,23 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        page: '#0f1417',
-        surface: '#161c20',
-        surface2: '#1c2328',
-        border: '#262e33',
-        borderStrong: '#333d43',
-        textPrimary: '#e6edf0',
-        textSecondary: '#9aa7ad',
-        textMuted: '#6b7780',
+        page: 'rgb(var(--kb-page) / <alpha-value>)',
+        surface: 'rgb(var(--kb-surface) / <alpha-value>)',
+        surface2: 'rgb(var(--kb-surface-2) / <alpha-value>)',
+        border: 'rgb(var(--kb-border) / <alpha-value>)',
+        borderStrong: 'rgb(var(--kb-border-strong) / <alpha-value>)',
+        textPrimary: 'rgb(var(--kb-text-primary) / <alpha-value>)',
+        textSecondary: 'rgb(var(--kb-text-secondary) / <alpha-value>)',
+        textMuted: 'rgb(var(--kb-text-muted) / <alpha-value>)',
         teal: {
-          light: '#5DCAA5',
-          DEFAULT: '#1D9E75',
-          dark: '#0f6e56'
+          light: 'rgb(var(--kb-teal-light) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--kb-teal) / <alpha-value>)',
+          dark: 'rgb(var(--kb-teal-dark) / <alpha-value>)'
         }
       },
       fontFamily: {
