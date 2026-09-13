@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
-import Sidebar from '@/components/layout/Sidebar'
+import ThemeProvider from '@/components/theme/ThemeProvider'
+import AppShell from '@/components/layout/AppShell'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -32,12 +33,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <body className={`${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable} bg-page`}>
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <main className="flex-1 px-6 py-8 md:px-10 md:py-10">{children}</main>
-        </div>
+        <ThemeProvider>
+          <AppShell>{children}</AppShell>
+        </ThemeProvider>
       </body>
     </html>
   )
