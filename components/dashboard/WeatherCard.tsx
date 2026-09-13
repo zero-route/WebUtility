@@ -9,6 +9,7 @@ type WeatherData = {
   humidity: number
   windSpeed: number
   code: number
+  approx: boolean
 }
 
 function describeWeather(code: number) {
@@ -34,35 +35,62 @@ function weatherIcon(code: number): LucideIcon {
 
 export default function WeatherCard() {
   const [data, setData] = useState<WeatherData | null>(null)
-  const [status, setStatus] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading')
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
 
   useEffect(() => {
+    let cancelled = false
+
+    function loadFromCoords(latitude: number, longitude: number, approx: boolean) {
+      fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          if (cancelled) return
+          setData({
+            temperature: Math.round(json.current.temperature_2m),
+            apparentTemperature: Math.round(json.current.apparent_temperature),
+            humidity: Math.round(json.current.relative_humidity_2m),
+            windSpeed: Math.round(json.current.wind_speed_10m),
+            code: json.current.weather_code,
+            approx
+          })
+          setStatus('ready')
+        })
+        .catch(() => {
+          if (!cancelled) setStatus('error')
+        })
+    }
+
+    function loadFromIp() {
+      fetch('https://ipapi.co/json/')
+        .then((res) => res.json())
+        .then((json) => {
+          if (cancelled) return
+          if (typeof json.latitude === 'number' && typeof json.longitude === 'number') {
+            loadFromCoords(json.latitude, json.longitude, true)
+          } else {
+            setStatus('error')
+          }
+        })
+        .catch(() => {
+          if (!cancelled) setStatus('error')
+        })
+    }
+
     if (!navigator.geolocation) {
-      setStatus('error')
+      loadFromIp()
       return
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords
-        fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
-        )
-          .then((res) => res.json())
-          .then((json) => {
-            setData({
-              temperature: Math.round(json.current.temperature_2m),
-              apparentTemperature: Math.round(json.current.apparent_temperature),
-              humidity: Math.round(json.current.relative_humidity_2m),
-              windSpeed: Math.round(json.current.wind_speed_10m),
-              code: json.current.weather_code
-            })
-            setStatus('ready')
-          })
-          .catch(() => setStatus('error'))
-      },
-      () => setStatus('denied')
+      (position) => loadFromCoords(position.coords.latitude, position.coords.longitude, false),
+      () => loadFromIp()
     )
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   if (status === 'loading') {
@@ -70,16 +98,6 @@ export default function WeatherCard() {
       <div className="rounded-xl border border-border bg-surface p-5">
         <h3 className="font-display text-sm font-medium text-textPrimary">Cuaca</h3>
         <p className="mt-4 text-sm text-textMuted">Memuat...</p>
-      </div>
-    )
-  }
-
-  if (status === 'denied') {
-    return (
-      <div className="rounded-xl border border-border bg-surface p-5">
-        <h3 className="font-display text-sm font-medium text-textPrimary">Cuaca</h3>
-        <p className="mt-4 text-sm text-textMuted">Izin lokasi ditolak</p>
-        <p className="mt-1 text-xs text-textMuted">Aktifkan izin lokasi untuk melihat cuaca</p>
       </div>
     )
   }
@@ -120,6 +138,7 @@ export default function WeatherCard() {
           <p className="mt-1 text-sm font-medium text-textPrimary">{data.windSpeed} km/j</p>
         </div>
       </div>
+      {data.approx && <p className="mt-3 text-xs text-textMuted">Lokasi perkiraan dari IP</p>}
     </div>
   )
 }
