@@ -15,7 +15,8 @@
     "framer-motion": "11.3.19",
     "next-themes": "0.3.0",
     "lucide-react": "0.408.0",
-    "@supabase/supabase-js": "2.45.4"
+    "@supabase/supabase-js": "2.45.4",
+    "imagetracerjs": "1.2.6"
   },
   "devDependencies": {
     "typescript": "5.5.4",
