@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Cloud, CloudRain, CloudFog, Sun, CloudSnow, CloudLightning, LucideIcon } from 'lucide-react'
+import { getManualLocation } from '@/lib/settings'
+
+type WeatherSource = 'manual' | 'precise' | 'approx'
 
 type WeatherData = {
   temperature: number
@@ -9,7 +12,7 @@ type WeatherData = {
   humidity: number
   windSpeed: number
   code: number
-  approx: boolean
+  source: WeatherSource
 }
 
 function describeWeather(code: number) {
@@ -40,7 +43,7 @@ export default function WeatherCard() {
   useEffect(() => {
     let cancelled = false
 
-    function loadFromCoords(latitude: number, longitude: number, approx: boolean) {
+    function loadFromCoords(latitude: number, longitude: number, source: WeatherSource) {
       fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
       )
@@ -53,7 +56,7 @@ export default function WeatherCard() {
             humidity: Math.round(json.current.relative_humidity_2m),
             windSpeed: Math.round(json.current.wind_speed_10m),
             code: json.current.weather_code,
-            approx
+            source
           })
           setStatus('ready')
         })
@@ -68,7 +71,7 @@ export default function WeatherCard() {
         .then((json) => {
           if (cancelled) return
           if (typeof json.latitude === 'number' && typeof json.longitude === 'number') {
-            loadFromCoords(json.latitude, json.longitude, true)
+            loadFromCoords(json.latitude, json.longitude, 'approx')
           } else {
             setStatus('error')
           }
@@ -78,15 +81,26 @@ export default function WeatherCard() {
         })
     }
 
-    if (!navigator.geolocation) {
-      loadFromIp()
-      return
+    function loadFromGeolocation() {
+      if (!navigator.geolocation) {
+        loadFromIp()
+        return
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => loadFromCoords(position.coords.latitude, position.coords.longitude, 'precise'),
+        () => loadFromIp()
+      )
     }
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => loadFromCoords(position.coords.latitude, position.coords.longitude, false),
-      () => loadFromIp()
-    )
+    getManualLocation().then((manual) => {
+      if (cancelled) return
+      if (manual) {
+        loadFromCoords(manual.latitude, manual.longitude, 'manual')
+      } else {
+        loadFromGeolocation()
+      }
+    })
 
     return () => {
       cancelled = true
@@ -138,7 +152,8 @@ export default function WeatherCard() {
           <p className="mt-1 text-sm font-medium text-textPrimary">{data.windSpeed} km/j</p>
         </div>
       </div>
-      {data.approx && <p className="mt-3 text-xs text-textMuted">Lokasi perkiraan dari IP</p>}
+      {data.source === 'manual' && <p className="mt-3 text-xs text-textMuted">Lokasi diset manual</p>}
+      {data.source === 'approx' && <p className="mt-3 text-xs text-textMuted">Lokasi perkiraan dari IP</p>}
     </div>
   )
 }
