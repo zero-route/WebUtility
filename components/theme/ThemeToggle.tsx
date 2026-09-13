@@ -1,11 +1,30 @@
 'use client'
 
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
+import { useEffect, useState } from 'react'
+import { useTheme } from 'next-themes'
+import { Sun, Moon } from 'lucide-react'
 
-export default function ThemeProvider({ children }: { children: React.ReactNode }) {
+export default function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return <div className="h-9 w-9" />
+  }
+
+  const isDark = theme === 'dark'
+
   return (
-    <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false} themes={['dark', 'light']}>
-      {children}
-    </NextThemesProvider>
+    <button
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-label="Ganti tema"
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface/80 text-textSecondary backdrop-blur-md transition-colors hover:text-textPrimary"
+    >
+      {isDark ? <Moon size={16} /> : <Sun size={16} />}
+    </button>
   )
 }
