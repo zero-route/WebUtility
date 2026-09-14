@@ -1,26 +1,18 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import ImageTracer from 'imagetracerjs'
 import { Upload, Copy, Check } from 'lucide-react'
-import { isToolEnabled } from '@/lib/featureFlags'
+import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 
 export default function VectorizerUI() {
-  const [enabled, setEnabled] = useState<boolean | null>(null)
-  const [disabledReason, setDisabledReason] = useState<string | null>(null)
+  const { enabled, reason } = useToolEnabled('svg-vectorizer')
   const [fileName, setFileName] = useState<string | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [svgCode, setSvgCode] = useState<string | null>(null)
   const [isConverting, setIsConverting] = useState(false)
   const [copied, setCopied] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    isToolEnabled('svg-vectorizer').then((result) => {
-      setEnabled(result.enabled)
-      setDisabledReason(result.reason)
-    })
-  }, [])
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -57,7 +49,7 @@ export default function VectorizerUI() {
       <div className="rounded-xl border border-border bg-surface p-5">
         <h3 className="font-display text-base font-medium text-textPrimary">SVG vectorizer</h3>
         <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
-        {disabledReason && <p className="mt-1 text-xs text-textMuted">{disabledReason}</p>}
+        {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
       </div>
     )
   }
