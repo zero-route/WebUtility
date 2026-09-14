@@ -18,3 +18,17 @@ export async function getManualLocation(): Promise<{ latitude: number; longitude
 
   return { latitude, longitude }
 }
+
+export async function getWeatherMode(): Promise<'auto' | 'manual'> {
+  const { data, error } = await supabase
+    .from('app_settings')
+    .select('value')
+    .eq('key', 'weather_mode')
+    .maybeSingle()
+
+  if (error || !data || data.value !== 'manual') {
+    return 'auto'
+  }
+
+  return 'manual'
+}

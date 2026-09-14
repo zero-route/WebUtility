@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Cloud, CloudRain, CloudFog, Sun, CloudSnow, CloudLightning, LucideIcon } from 'lucide-react'
-import { getManualLocation } from '@/lib/settings'
+import { getManualLocation, getWeatherMode } from '@/lib/settings'
 
-type WeatherSource = 'manual' | 'precise' | 'approx'
+type WeatherSource = 'manual' | 'ip'
 
 type WeatherData = {
   temperature: number
@@ -71,7 +71,7 @@ export default function WeatherCard() {
         .then((json) => {
           if (cancelled) return
           if (typeof json.latitude === 'number' && typeof json.longitude === 'number') {
-            loadFromCoords(json.latitude, json.longitude, 'approx')
+            loadFromCoords(json.latitude, json.longitude, 'ip')
           } else {
             setStatus('error')
           }
@@ -81,24 +81,19 @@ export default function WeatherCard() {
         })
     }
 
-    function loadFromGeolocation() {
-      if (!navigator.geolocation) {
-        loadFromIp()
-        return
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => loadFromCoords(position.coords.latitude, position.coords.longitude, 'precise'),
-        () => loadFromIp()
-      )
-    }
-
-    getManualLocation().then((manual) => {
+    getWeatherMode().then((mode) => {
       if (cancelled) return
-      if (manual) {
-        loadFromCoords(manual.latitude, manual.longitude, 'manual')
+      if (mode === 'manual') {
+        getManualLocation().then((manual) => {
+          if (cancelled) return
+          if (manual) {
+            loadFromCoords(manual.latitude, manual.longitude, 'manual')
+          } else {
+            loadFromIp()
+          }
+        })
       } else {
-        loadFromGeolocation()
+        loadFromIp()
       }
     })
 
@@ -153,7 +148,7 @@ export default function WeatherCard() {
         </div>
       </div>
       {data.source === 'manual' && <p className="mt-3 text-xs text-textMuted">Lokasi diset manual</p>}
-      {data.source === 'approx' && <p className="mt-3 text-xs text-textMuted">Lokasi perkiraan dari IP</p>}
+      {data.source === 'ip' && <p className="mt-3 text-xs text-textMuted">Lokasi berdasarkan IP pengunjung</p>}
     </div>
   )
 }
