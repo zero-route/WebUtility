@@ -1,7 +1,7 @@
 import Base64EncodeDecodeUI from '@/components/security/base64-encode-decode/Base64EncodeDecodeUI'
 import EncryptorUI from '@/components/security/text-encryptor/EncryptorUI'
 import PasswordGenUI from '@/components/security/password-gen/PasswordGenUI'
-import ToolPlaceholderCard from '@/components/dashboard/ToolPlaceholderCard'
+import HashGenUI from '@/components/security/hash-gen/HashGenUI'
 
 export default function SecurityPage() {
   return (
@@ -11,7 +11,7 @@ export default function SecurityPage() {
         <Base64EncodeDecodeUI />
         <EncryptorUI />
         <PasswordGenUI />
-        <ToolPlaceholderCard name="Hash generator" index={0} />
+        <HashGenUI />
       </div>
     </div>
   )
