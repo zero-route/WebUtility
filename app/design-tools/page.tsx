@@ -1,6 +1,6 @@
 import VectorizerUI from '@/components/design-tools/svg-vectorizer/VectorizerUI'
 import Base64UI from '@/components/design-tools/base64-converter/Base64UI'
-import ToolPlaceholderCard from '@/components/dashboard/ToolPlaceholderCard'
+import QrUI from '@/components/design-tools/qr-barcode/QrUI'
 
 export default function DesignToolsPage() {
   return (
@@ -9,7 +9,7 @@ export default function DesignToolsPage() {
       <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <VectorizerUI />
         <Base64UI />
-        <ToolPlaceholderCard name="QR and barcode generator" index={0} />
+        <QrUI />
       </div>
     </div>
   )
