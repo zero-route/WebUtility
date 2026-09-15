@@ -72,7 +72,7 @@ export default function PasswordGenUI() {
 
   if (!enabled) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <KeyRound size={16} />
@@ -88,7 +88,7 @@ export default function PasswordGenUI() {
   const strength = getStrengthLabel(length, categoryCount)
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-5">
+    <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
       <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <KeyRound size={16} />
@@ -123,25 +123,25 @@ export default function PasswordGenUI() {
           max={64}
           value={length}
           onChange={(event) => setLength(Number(event.target.value))}
-          className="mt-2 w-full accent-teal"
+          className="mt-2 w-full accent-[#9aa7ad]"
         />
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
         <label className="flex items-center gap-2 text-sm text-textSecondary">
-          <input type="checkbox" checked={useLower} onChange={(event) => setUseLower(event.target.checked)} className="accent-teal" />
+          <input type="checkbox" checked={useLower} onChange={(event) => setUseLower(event.target.checked)} className="accent-[#9aa7ad]" />
           Huruf kecil
         </label>
         <label className="flex items-center gap-2 text-sm text-textSecondary">
-          <input type="checkbox" checked={useUpper} onChange={(event) => setUseUpper(event.target.checked)} className="accent-teal" />
+          <input type="checkbox" checked={useUpper} onChange={(event) => setUseUpper(event.target.checked)} className="accent-[#9aa7ad]" />
           Huruf besar
         </label>
         <label className="flex items-center gap-2 text-sm text-textSecondary">
-          <input type="checkbox" checked={useNumbers} onChange={(event) => setUseNumbers(event.target.checked)} className="accent-teal" />
+          <input type="checkbox" checked={useNumbers} onChange={(event) => setUseNumbers(event.target.checked)} className="accent-[#9aa7ad]" />
           Angka
         </label>
         <label className="flex items-center gap-2 text-sm text-textSecondary">
-          <input type="checkbox" checked={useSymbols} onChange={(event) => setUseSymbols(event.target.checked)} className="accent-teal" />
+          <input type="checkbox" checked={useSymbols} onChange={(event) => setUseSymbols(event.target.checked)} className="accent-[#9aa7ad]" />
           Simbol
         </label>
       </div>
