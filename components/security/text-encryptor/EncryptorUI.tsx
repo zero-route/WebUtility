@@ -140,7 +140,7 @@ export default function EncryptorUI() {
 
   if (!enabled) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Lock size={16} />
@@ -155,7 +155,7 @@ export default function EncryptorUI() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Lock size={16} />
@@ -167,16 +167,20 @@ export default function EncryptorUI() {
         <div className="mt-4 flex gap-2">
           <button
             onClick={() => handleActionChange('encrypt')}
-            className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium ${
-              action === 'encrypt' ? 'bg-teal text-white' : 'border border-border text-textSecondary'
+            className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+              action === 'encrypt'
+                ? 'border border-teal bg-teal/10 text-teal-light'
+                : 'border border-border text-textSecondary hover:border-teal/40 hover:text-textPrimary'
             }`}
           >
             Encoder
           </button>
           <button
             onClick={() => handleActionChange('decrypt')}
-            className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium ${
-              action === 'decrypt' ? 'bg-teal text-white' : 'border border-border text-textSecondary'
+            className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+              action === 'decrypt'
+                ? 'border border-teal bg-teal/10 text-teal-light'
+                : 'border border-border text-textSecondary hover:border-teal/40 hover:text-textPrimary'
             }`}
           >
             Decoder
@@ -255,8 +259,10 @@ export default function EncryptorUI() {
                     setPinLength(length as 4 | 6 | 10)
                     setPassword('')
                   }}
-                  className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium ${
-                    pinLength === length ? 'bg-teal text-white' : 'border border-border text-textSecondary'
+                  className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+                    pinLength === length
+                      ? 'border border-teal bg-teal/10 text-teal-light'
+                      : 'border border-border text-textSecondary hover:border-teal/40 hover:text-textPrimary'
                   }`}
                 >
                   {length} digit
@@ -311,7 +317,7 @@ export default function EncryptorUI() {
       </div>
 
       {contentMode === 'text' && textOutput && (
-        <div className="rounded-xl border border-border bg-surface p-5">
+        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
           <div className="flex items-center justify-between">
             <h4 className="font-display text-sm font-medium text-textPrimary">Hasil</h4>
             <button
@@ -332,7 +338,7 @@ export default function EncryptorUI() {
       )}
 
       {contentMode === 'file' && outputBlobUrl && outputFileName && (
-        <div className="rounded-xl border border-border bg-surface p-5">
+        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
           <div className="flex flex-col items-center gap-3">
             <p className="text-sm text-textSecondary">{outputFileName}</p>
             <a
