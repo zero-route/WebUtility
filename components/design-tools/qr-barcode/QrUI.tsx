@@ -68,7 +68,7 @@ export default function QrUI() {
 
   if (!enabled) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <QrCode size={16} />
@@ -83,7 +83,7 @@ export default function QrUI() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <QrCode size={16} />
@@ -127,7 +127,7 @@ export default function QrUI() {
       <canvas ref={canvasRef} className="hidden" />
 
       {qrDataUrl && (
-        <div className="rounded-xl border border-border bg-surface p-5">
+        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
           <div className="flex flex-col items-center gap-4">
             <img src={qrDataUrl} alt="QR code" className="h-48 w-48 rounded-lg bg-white p-2" />
             <a
