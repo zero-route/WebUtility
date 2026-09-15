@@ -7,7 +7,7 @@ export default function SecurityPage() {
   return (
     <div>
       <h1 className="text-center font-display text-2xl font-medium text-textPrimary">Security tools</h1>
-      <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-10 flex flex-col gap-4">
         <Base64EncodeDecodeUI />
         <EncryptorUI />
         <PasswordGenUI />

@@ -21,7 +21,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <ThemeToggle />
       </div>
       <Sidebar open={open} onClose={() => setOpen(false)} />
-      <main className="px-6 pb-16 pt-24 md:px-10">{children}</main>
+      <main className="px-6 pb-16 pt-24 md:px-10">
+        <div className="mx-auto max-w-5xl">{children}</div>
+      </main>
     </div>
   )
 }
