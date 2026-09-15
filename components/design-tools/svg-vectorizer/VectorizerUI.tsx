@@ -46,7 +46,7 @@ export default function VectorizerUI() {
 
   if (!enabled) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Shapes size={16} />
@@ -61,7 +61,7 @@ export default function VectorizerUI() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Shapes size={16} />
@@ -107,7 +107,7 @@ export default function VectorizerUI() {
       </div>
 
       {svgCode && (
-        <div className="rounded-xl border border-border bg-surface p-5">
+        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
           <div className="flex items-center justify-between">
             <h4 className="font-display text-sm font-medium text-textPrimary">Kode SVG</h4>
             <button
