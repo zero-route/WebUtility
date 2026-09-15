@@ -267,7 +267,7 @@ export default function AdminPage() {
       <div className="mx-auto max-w-5xl">
         <header className="text-center">
           <h1 className="text-3xl font-semibold">
-            ToolsKit Control
+            ToolKit Control
           </h1>
           <p className="mt-2 text-sm text-white/50">
             Kelola status tools WebUtility.
