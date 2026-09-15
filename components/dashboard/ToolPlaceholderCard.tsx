@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import {
   ArrowUpRight,
   Braces,
-  Cloud,
   Code2,
   Database,
   Download,
@@ -14,8 +13,7 @@ import {
   Network,
   QrCode,
   ShieldCheck,
-  Terminal,
-  Wifi
+  Terminal
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
@@ -50,61 +48,52 @@ export default function ToolPlaceholderCard({
 }: {
   tool: ToolItem
   index: number
-  onOpen: (tool: ToolItem) => void
+  onOpen: () => void
 }) {
   const { enabled } = useToolEnabled(tool.id)
   const disabledNote = useDisabledToolsNote()
-  const Icon = icons[tool.id as keyof typeof icons] ?? Cloud
 
-  const isLoading = enabled === null
-  const isDisabled = enabled === false
+  const Icon = icons[tool.id as keyof typeof icons] ?? Code2
+
+  const loading = enabled === null
+  const disabled = enabled === false
+  const active = enabled === true
 
   return (
     <motion.button
       type="button"
-      onClick={() => {
-        if (!isDisabled && !isLoading) {
-          onOpen(tool)
-        }
-      }}
-      initial={{ opacity: 0, y: 12 }}
+      disabled={!active}
+      onClick={onOpen}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
         delay: Math.min(index * 0.045, 0.18),
         duration: 0.32,
         ease: [0.22, 1, 0.36, 1]
       }}
-      whileHover={!isDisabled && !isLoading ? { y: -3 } : undefined}
-      whileTap={!isDisabled && !isLoading ? { scale: 0.99 } : undefined}
-      className={`group relative min-h-[156px] w-full overflow-hidden rounded-2xl border border-border bg-surface p-5 text-left transition-[border-color,background-color] duration-300 ${
-        isDisabled
-          ? 'cursor-not-allowed'
-          : 'cursor-pointer hover:border-teal/50 hover:bg-surface2'
+      whileHover={active ? { y: -3 } : undefined}
+      whileTap={active ? { scale: 0.99 } : undefined}
+      className={`group relative min-h-[156px] w-full overflow-hidden rounded-2xl border bg-surface p-5 text-left transition-[border-color,background-color] duration-300 ${
+        disabled
+          ? 'cursor-not-allowed border-border'
+          : 'border-border hover:border-teal/50 hover:bg-surface2'
       }`}
     >
       <div
         className={`pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-teal/10 to-transparent transition-transform duration-700 ease-out ${
-          !isDisabled && !isLoading ? 'group-hover:translate-x-[300%]' : ''
+          active ? 'group-hover:translate-x-[300%]' : ''
         }`}
       />
 
       <div
-        className={`pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-300 ${
-          !isDisabled && !isLoading
-            ? 'bg-[radial-gradient(circle_at_85%_15%,rgba(45,212,191,0.10),transparent_32%)] opacity-0 group-hover:opacity-100'
-            : ''
-        }`}
-      />
-
-      <div
-        className={`relative flex h-full flex-col ${
-          isDisabled ? 'blur-[3px] opacity-35' : ''
+        className={`relative flex h-full flex-col transition-all duration-300 ${
+          disabled ? 'blur-[3px] opacity-25' : ''
         }`}
       >
         <div className="flex items-start justify-between gap-4">
           <div
-            className={`flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-surface2 text-teal-light transition-all duration-500 ease-out ${
-              !isDisabled && !isLoading
+            className={`flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-surface2 text-teal-light transition-all duration-500 ${
+              active
                 ? 'group-hover:rotate-3 group-hover:rounded-2xl group-hover:border-teal/50 group-hover:bg-teal/10'
                 : ''
             }`}
@@ -113,7 +102,7 @@ export default function ToolPlaceholderCard({
               size={20}
               strokeWidth={1.8}
               className={`transition-transform duration-500 ${
-                !isDisabled && !isLoading
+                active
                   ? 'group-hover:rotate-[-6deg] group-hover:scale-110'
                   : ''
               }`}
@@ -121,19 +110,19 @@ export default function ToolPlaceholderCard({
           </div>
 
           <span
-            className={`flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-surface2 text-textMuted transition-all duration-400 ${
-              !isDisabled && !isLoading
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-surface2 text-textMuted transition-all duration-300 ${
+              active
                 ? 'group-hover:border-teal/40 group-hover:bg-teal/10 group-hover:text-teal-light'
                 : ''
             }`}
           >
             <ArrowUpRight
               size={17}
-              className={`transition-transform duration-400 ${
-                !isDisabled && !isLoading
-                  ? 'group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+              className={
+                active
+                  ? 'transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5'
                   : ''
-              }`}
+              }
             />
           </span>
         </div>
@@ -149,16 +138,19 @@ export default function ToolPlaceholderCard({
         </div>
       </div>
 
-      {isLoading && (
+      {loading && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-teal" />
         </div>
       )}
 
-      {isDisabled && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-borderStrong bg-surface2 text-textSecondary">
-            <LockKeyhole size={19} strokeWidth={1.8} />
+      {disabled && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-borderStrong bg-surface2 text-textSecondary shadow-lg">
+            <LockKeyhole
+              size={21}
+              strokeWidth={1.8}
+            />
           </div>
 
           <p className="mt-3 font-display text-sm font-medium text-textPrimary">
@@ -166,7 +158,7 @@ export default function ToolPlaceholderCard({
           </p>
 
           {disabledNote && (
-            <p className="mt-1.5 max-w-[280px] text-xs leading-5 text-textMuted">
+            <p className="mt-1.5 max-w-[260px] text-xs leading-5 text-textMuted">
               {disabledNote}
             </p>
           )}
