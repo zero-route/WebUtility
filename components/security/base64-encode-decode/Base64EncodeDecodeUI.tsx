@@ -68,7 +68,7 @@ export default function Base64EncodeDecodeUI() {
 
   if (!enabled) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Binary size={16} />
@@ -82,7 +82,7 @@ export default function Base64EncodeDecodeUI() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-5">
+    <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
       <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Binary size={16} />
@@ -94,16 +94,20 @@ export default function Base64EncodeDecodeUI() {
       <div className="mt-4 flex gap-2">
         <button
           onClick={() => handleModeChange('encode')}
-          className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium ${
-            mode === 'encode' ? 'bg-teal text-white' : 'border border-border text-textSecondary'
+          className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+            mode === 'encode'
+              ? 'border border-teal bg-teal/10 text-teal-light'
+              : 'border border-border text-textSecondary hover:border-teal/40 hover:text-textPrimary'
           }`}
         >
           Encode
         </button>
         <button
           onClick={() => handleModeChange('decode')}
-          className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium ${
-            mode === 'decode' ? 'bg-teal text-white' : 'border border-border text-textSecondary'
+          className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+            mode === 'decode'
+              ? 'border border-teal bg-teal/10 text-teal-light'
+              : 'border border-border text-textSecondary hover:border-teal/40 hover:text-textPrimary'
           }`}
         >
           Decode
