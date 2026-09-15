@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
+type FeatureFlagPayload = {
+  tool_id?: string
+  is_enabled?: boolean
+  disabled_reason?: string | null
+}
+
 export function useToolEnabled(toolId: string) {
   const [enabled, setEnabled] = useState<boolean | null>(null)
   const [reason, setReason] = useState<string | null>(null)
@@ -10,31 +16,51 @@ export function useToolEnabled(toolId: string) {
   useEffect(() => {
     let active = true
 
-    async function load() {
-      const { data } = await supabase
+    const loadInitialState = async () => {
+      const { data, error } = await supabase
         .from('feature_flags')
         .select('is_enabled, disabled_reason')
         .eq('tool_id', toolId)
         .maybeSingle()
 
       if (!active) return
-      setEnabled(data ? data.is_enabled : true)
-      setReason(data?.disabled_reason ?? null)
+
+      if (error || !data) {
+        setEnabled(true)
+        setReason(null)
+        return
+      }
+
+      setEnabled(data.is_enabled)
+      setReason(data.disabled_reason ?? null)
     }
 
-    load()
+    loadInitialState()
 
     const channel = supabase
-      .channel(`feature_flags-${toolId}`)
+      .channel(`feature-flag-${toolId}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'feature_flags', filter: `tool_id=eq.${toolId}` },
+        {
+          event: '*',
+          schema: 'public',
+          table: 'feature_flags',
+          filter: `tool_id=eq.${toolId}`,
+        },
         (payload) => {
           if (!active) return
-          const row = payload.new as { is_enabled?: boolean; disabled_reason?: string | null } | null
-          if (row && typeof row.is_enabled === 'boolean') {
-            setEnabled(row.is_enabled)
-            setReason(row.disabled_reason ?? null)
+
+          const next = payload.new as FeatureFlagPayload
+
+          if (payload.eventType === 'DELETE') {
+            setEnabled(true)
+            setReason(null)
+            return
+          }
+
+          if (typeof next.is_enabled === 'boolean') {
+            setEnabled(next.is_enabled)
+            setReason(next.disabled_reason ?? null)
           }
         }
       )
@@ -46,5 +72,8 @@ export function useToolEnabled(toolId: string) {
     }
   }, [toolId])
 
-  return { enabled, reason }
+  return {
+    enabled,
+    reason,
+  }
 }
