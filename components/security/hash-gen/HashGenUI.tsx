@@ -43,7 +43,7 @@ export default function HashGenUI() {
 
   if (!enabled) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Fingerprint size={16} />
@@ -57,7 +57,7 @@ export default function HashGenUI() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-5">
+    <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
       <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Fingerprint size={16} />
@@ -71,8 +71,10 @@ export default function HashGenUI() {
           <button
             key={algo}
             onClick={() => handleAlgorithmChange(algo)}
-            className={`rounded-lg px-3 py-2 text-xs font-medium ${
-              algorithm === algo ? 'bg-teal text-white' : 'border border-border text-textSecondary'
+            className={`rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+              algorithm === algo
+                ? 'border border-teal bg-teal/10 text-teal-light'
+                : 'border border-border text-textSecondary hover:border-teal/40 hover:text-textPrimary'
             }`}
           >
             {algo}
