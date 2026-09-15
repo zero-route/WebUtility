@@ -41,7 +41,7 @@ export default function Base64UI() {
 
   if (!enabled) {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Image size={16} />
@@ -56,7 +56,7 @@ export default function Base64UI() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
             <Image size={16} />
@@ -94,7 +94,7 @@ export default function Base64UI() {
       </div>
 
       {base64Code && (
-        <div className="rounded-xl border border-border bg-surface p-5">
+        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
           <div className="flex items-center justify-between">
             <h4 className="font-display text-sm font-medium text-textPrimary">Data URI Base64</h4>
             <button
