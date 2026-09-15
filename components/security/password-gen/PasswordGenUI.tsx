@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Copy, Check, RefreshCw } from 'lucide-react'
+import { Copy, Check, RefreshCw, KeyRound } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 
 const LOWERCASE = 'abcdefghijklmnopqrstuvwxyz'
@@ -73,7 +73,12 @@ export default function PasswordGenUI() {
   if (!enabled) {
     return (
       <div className="rounded-xl border border-border bg-surface p-5">
-        <h3 className="font-display text-base font-medium text-textPrimary">Password generator</h3>
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
+            <KeyRound size={16} />
+          </span>
+          <h3 className="font-display text-base font-medium text-textPrimary">Password generator</h3>
+        </div>
         <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
         {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
       </div>
@@ -84,7 +89,12 @@ export default function PasswordGenUI() {
 
   return (
     <div className="rounded-xl border border-border bg-surface p-5">
-      <h3 className="font-display text-base font-medium text-textPrimary">Password generator</h3>
+      <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
+            <KeyRound size={16} />
+          </span>
+          <h3 className="font-display text-base font-medium text-textPrimary">Password generator</h3>
+        </div>
       <p className="mt-1 text-sm text-textSecondary">Bikin password acak yang kuat, generate baru kapan pun</p>
 
       <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-border bg-surface2 px-3 py-3">

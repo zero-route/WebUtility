@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import ImageTracer from 'imagetracerjs'
-import { Upload, Copy, Check } from 'lucide-react'
+import { Upload, Copy, Check, Shapes } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 
 export default function VectorizerUI() {
@@ -47,7 +47,12 @@ export default function VectorizerUI() {
   if (!enabled) {
     return (
       <div className="rounded-xl border border-border bg-surface p-5">
-        <h3 className="font-display text-base font-medium text-textPrimary">SVG vectorizer</h3>
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
+            <Shapes size={16} />
+          </span>
+          <h3 className="font-display text-base font-medium text-textPrimary">SVG vectorizer</h3>
+        </div>
         <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
         {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
       </div>
@@ -57,7 +62,12 @@ export default function VectorizerUI() {
   return (
     <div className="flex flex-col gap-4">
       <div className="rounded-xl border border-border bg-surface p-5">
-        <h3 className="font-display text-base font-medium text-textPrimary">SVG vectorizer</h3>
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
+            <Shapes size={16} />
+          </span>
+          <h3 className="font-display text-base font-medium text-textPrimary">SVG vectorizer</h3>
+        </div>
         <p className="mt-1 text-sm text-textSecondary">
           Upload logo PNG/JPG berlatar transparan, lalu generate kode SVG-nya
         </p>

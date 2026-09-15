@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Copy, Check } from 'lucide-react'
+import { Copy, Check, Binary } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 
 function encodeBase64(text: string): string {
@@ -69,7 +69,12 @@ export default function Base64EncodeDecodeUI() {
   if (!enabled) {
     return (
       <div className="rounded-xl border border-border bg-surface p-5">
-        <h3 className="font-display text-base font-medium text-textPrimary">Base64 encode/decode</h3>
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
+            <Binary size={16} />
+          </span>
+          <h3 className="font-display text-base font-medium text-textPrimary">Base64 encode/decode</h3>
+        </div>
         <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
         {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
       </div>
@@ -78,7 +83,12 @@ export default function Base64EncodeDecodeUI() {
 
   return (
     <div className="rounded-xl border border-border bg-surface p-5">
-      <h3 className="font-display text-base font-medium text-textPrimary">Base64 encode/decode</h3>
+      <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
+            <Binary size={16} />
+          </span>
+          <h3 className="font-display text-base font-medium text-textPrimary">Base64 encode/decode</h3>
+        </div>
       <p className="mt-1 text-sm text-textSecondary">Ubah teks biasa jadi Base64, atau sebaliknya</p>
 
       <div className="mt-4 flex gap-2">
