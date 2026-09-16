@@ -8,7 +8,7 @@ import WeatherCard from '@/components/dashboard/WeatherCard'
 import { categories } from '@/lib/toolsData'
 
 export const metadata: Metadata = {
-  title: 'Ringkasan tools'
+  title: 'Ringkasan tool'
 }
 
 export default function HomePage() {
