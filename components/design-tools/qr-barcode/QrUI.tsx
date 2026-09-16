@@ -2,11 +2,9 @@
 
 import { useRef, useState } from 'react'
 import QRCode from 'qrcode'
-import { Upload, Download, QrCode } from 'lucide-react'
-import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
+import { Upload, Download } from 'lucide-react'
 
 export default function QrUI() {
-  const { enabled, reason } = useToolEnabled('qr-barcode-generator')
   const [text, setText] = useState('')
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
@@ -62,41 +60,14 @@ export default function QrUI() {
     )
   }
 
-  if (enabled === null) {
-    return <div className="rounded-xl border border-border bg-surface p-5 text-sm text-textMuted">Memuat...</div>
-  }
-
-  if (!enabled) {
-    return (
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <QrCode size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">QR and barcode generator</h3>
-        </div>
-        <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
-        {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <QrCode size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">QR and barcode generator</h3>
-        </div>
-        <p className="mt-1 text-sm text-textSecondary">Masukkan link atau teks, opsional tambahkan logo di tengah QR</p>
-
+      <div>
         <input
           value={text}
           onChange={(event) => setText(event.target.value)}
           placeholder="https://contoh.com"
-          className="mt-4 w-full rounded-lg border border-border bg-surface2 px-3 py-2 text-sm text-textPrimary outline-none focus:border-teal"
+          className="w-full rounded-lg border border-border bg-surface2 px-3 py-2 text-sm text-textPrimary outline-none focus:border-teal"
         />
 
         <input
@@ -127,7 +98,7 @@ export default function QrUI() {
       <canvas ref={canvasRef} className="hidden" />
 
       {qrDataUrl && (
-        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
+        <div className="rounded-lg border border-border bg-surface2 p-4">
           <div className="flex flex-col items-center gap-4">
             <img src={qrDataUrl} alt="QR code" className="h-48 w-48 rounded-lg bg-white p-2" />
             <a
