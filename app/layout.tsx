@@ -23,7 +23,10 @@ const plexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'KitBox',
+  title: {
+    default: 'KitBox',
+    template: '%s · KitBox'
+  },
   description: 'Dashboard developer dan IT pribadi'
 }
 

@@ -3,6 +3,12 @@ import Base64UI from '@/components/design-tools/base64-converter/Base64UI'
 import QrUI from '@/components/design-tools/qr-barcode/QrUI'
 import ToolPage from '@/components/dashboard/ToolPage'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Design tools'
+}
+
 export default function DesignToolsPage() {
   return (
     <ToolPage

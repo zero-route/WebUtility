@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { LockKeyhole, X } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -39,6 +40,17 @@ function ToolModalContent({
 
   const disabled = enabled === false
   const loading = enabled === null
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
 
   return (
     <motion.div

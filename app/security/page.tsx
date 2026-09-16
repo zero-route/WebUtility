@@ -4,6 +4,12 @@ import PasswordGenUI from '@/components/security/password-gen/PasswordGenUI'
 import HashGenUI from '@/components/security/hash-gen/HashGenUI'
 import ToolPage from '@/components/dashboard/ToolPage'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Security tools'
+}
+
 export default function SecurityPage() {
   return (
     <ToolPage
