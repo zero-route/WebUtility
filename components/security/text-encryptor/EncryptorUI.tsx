@@ -1,8 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Copy, Check, Upload, Download, Lock } from 'lucide-react'
-import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
+import { Copy, Check, Upload, Download } from 'lucide-react'
 import { encryptPacket, decryptPacket, bytesToBase64, base64ToBytes, AES_ALGORITHMS, AesAlgorithm } from '@/lib/aes'
 
 type Action = 'encrypt' | 'decrypt'
@@ -10,8 +9,6 @@ type ContentMode = 'text' | 'file'
 type KeyType = 'passphrase' | 'pin'
 
 export default function EncryptorUI() {
-  const { enabled, reason } = useToolEnabled('aes-encryptor')
-
   const [action, setAction] = useState<Action>('encrypt')
   const [contentMode, setContentMode] = useState<ContentMode>('text')
   const [algorithm, setAlgorithm] = useState<AesAlgorithm>('AES-GCM')
@@ -134,37 +131,10 @@ export default function EncryptorUI() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  if (enabled === null) {
-    return <div className="rounded-xl border border-border bg-surface p-5 text-sm text-textMuted">Memuat...</div>
-  }
-
-  if (!enabled) {
-    return (
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <Lock size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">AES encryptor</h3>
-        </div>
-        <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
-        {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <Lock size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">AES encryptor</h3>
-        </div>
-        <p className="mt-1 text-sm text-textSecondary">Enkripsi teks atau file pakai password, AES asli lewat Web Crypto API</p>
-
-        <div className="mt-4 flex gap-2">
+      <div>
+        <div className="flex gap-2">
           <button
             onClick={() => handleActionChange('encrypt')}
             className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
@@ -317,9 +287,9 @@ export default function EncryptorUI() {
       </div>
 
       {contentMode === 'text' && textOutput && (
-        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
+        <div className="rounded-lg border border-border bg-surface2 p-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-display text-sm font-medium text-textPrimary">Hasil</h4>
+            <h4 className="text-sm font-medium text-textPrimary">Hasil</h4>
             <button
               onClick={handleCopy}
               className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-textSecondary hover:text-textPrimary"
@@ -332,13 +302,13 @@ export default function EncryptorUI() {
             readOnly
             value={textOutput}
             rows={5}
-            className="mt-3 w-full resize-none rounded-lg border border-border bg-surface2 p-3 font-mono text-xs text-textSecondary"
+            className="mt-3 w-full resize-none rounded-lg border border-border bg-surface p-3 font-mono text-xs text-textSecondary"
           />
         </div>
       )}
 
       {contentMode === 'file' && outputBlobUrl && outputFileName && (
-        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
+        <div className="rounded-lg border border-border bg-surface2 p-4">
           <div className="flex flex-col items-center gap-3">
             <p className="text-sm text-textSecondary">{outputFileName}</p>
             <a
