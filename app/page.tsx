@@ -1,9 +1,15 @@
+import type { Metadata } from 'next'
+
 import CategoryCard from '@/components/dashboard/CategoryCard'
 import TimeCard from '@/components/dashboard/TimeCard'
 import IpCard from '@/components/dashboard/IpCard'
 import WorldClockCard from '@/components/dashboard/WorldClockCard'
 import WeatherCard from '@/components/dashboard/WeatherCard'
 import { categories } from '@/lib/toolsData'
+
+export const metadata: Metadata = {
+  title: 'Ringkasan tools'
+}
 
 export default function HomePage() {
   return (
