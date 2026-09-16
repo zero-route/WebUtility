@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Copy, Check, RefreshCw, KeyRound } from 'lucide-react'
-import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
+import { Copy, Check, RefreshCw } from 'lucide-react'
 
 const LOWERCASE = 'abcdefghijklmnopqrstuvwxyz'
 const UPPERCASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -35,8 +34,6 @@ function getStrengthLabel(length: number, categoryCount: number) {
 }
 
 export default function PasswordGenUI() {
-  const { enabled, reason } = useToolEnabled('password-generator')
-
   const [length, setLength] = useState(16)
   const [useLower, setUseLower] = useState(true)
   const [useUpper, setUseUpper] = useState(true)
@@ -54,10 +51,8 @@ export default function PasswordGenUI() {
   }
 
   useEffect(() => {
-    if (enabled) {
-      setPassword(generatePassword(length, buildCharset(true, true, true, true)))
-    }
-  }, [enabled])
+    setPassword(generatePassword(length, buildCharset(true, true, true, true)))
+  }, [])
 
   function handleCopy() {
     if (!password) return
@@ -66,38 +61,11 @@ export default function PasswordGenUI() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  if (enabled === null) {
-    return <div className="rounded-xl border border-border bg-surface p-5 text-sm text-textMuted">Memuat...</div>
-  }
-
-  if (!enabled) {
-    return (
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <KeyRound size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">Password generator</h3>
-        </div>
-        <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
-        {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
-      </div>
-    )
-  }
-
   const strength = getStrengthLabel(length, categoryCount)
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-      <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <KeyRound size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">Password generator</h3>
-        </div>
-      <p className="mt-1 text-sm text-textSecondary">Bikin password acak yang kuat, generate baru kapan pun</p>
-
-      <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-border bg-surface2 px-3 py-3">
+    <div>
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-surface2 px-3 py-3">
         <span className="flex-1 break-all font-mono text-sm text-textPrimary">{password || '—'}</span>
         <button
           onClick={handleCopy}
