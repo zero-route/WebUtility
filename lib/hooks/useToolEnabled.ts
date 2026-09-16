@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
 type FeatureFlagPayload = {
@@ -12,6 +12,7 @@ type FeatureFlagPayload = {
 export function useToolEnabled(toolId: string) {
   const [enabled, setEnabled] = useState<boolean | null>(null)
   const [reason, setReason] = useState<string | null>(null)
+  const instanceId = useRef(Math.random().toString(36).slice(2))
 
   useEffect(() => {
     let active = true
@@ -38,7 +39,7 @@ export function useToolEnabled(toolId: string) {
     loadInitialState()
 
     const channel = supabase
-      .channel(`feature-flag-${toolId}`)
+      .channel(`feature-flag-${toolId}-${instanceId.current}`)
       .on(
         'postgres_changes',
         {
