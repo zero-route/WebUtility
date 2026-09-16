@@ -1,11 +1,9 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Upload, Copy, Check, Image } from 'lucide-react'
-import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
+import { Upload, Copy, Check } from 'lucide-react'
 
 export default function Base64UI() {
-  const { enabled, reason } = useToolEnabled('base64-converter')
   const [fileName, setFileName] = useState<string | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [base64Code, setBase64Code] = useState<string | null>(null)
@@ -35,36 +33,9 @@ export default function Base64UI() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  if (enabled === null) {
-    return <div className="rounded-xl border border-border bg-surface p-5 text-sm text-textMuted">Memuat...</div>
-  }
-
-  if (!enabled) {
-    return (
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <Image size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">Base64 converter</h3>
-        </div>
-        <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
-        {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <Image size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">Base64 converter</h3>
-        </div>
-        <p className="mt-1 text-sm text-textSecondary">Upload gambar, hasilnya langsung jadi kode data URI Base64</p>
-
+      <div>
         <input
           ref={inputRef}
           type="file"
@@ -75,7 +46,7 @@ export default function Base64UI() {
 
         <button
           onClick={() => inputRef.current?.click()}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-borderStrong px-4 py-8 text-sm text-textSecondary transition-colors hover:border-teal hover:text-textPrimary"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-borderStrong px-4 py-8 text-sm text-textSecondary transition-colors hover:border-teal hover:text-textPrimary"
         >
           <Upload size={16} />
           {fileName ? fileName : 'Pilih gambar'}
@@ -94,9 +65,9 @@ export default function Base64UI() {
       </div>
 
       {base64Code && (
-        <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
+        <div className="rounded-lg border border-border bg-surface2 p-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-display text-sm font-medium text-textPrimary">Data URI Base64</h4>
+            <h4 className="text-sm font-medium text-textPrimary">Data URI Base64</h4>
             <button
               onClick={handleCopy}
               className="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-textSecondary hover:text-textPrimary"
@@ -109,7 +80,7 @@ export default function Base64UI() {
             readOnly
             value={base64Code}
             rows={8}
-            className="mt-3 w-full resize-none rounded-lg border border-border bg-surface2 p-3 font-mono text-xs text-textSecondary"
+            className="mt-3 w-full resize-none rounded-lg border border-border bg-surface p-3 font-mono text-xs text-textSecondary"
           />
         </div>
       )}
