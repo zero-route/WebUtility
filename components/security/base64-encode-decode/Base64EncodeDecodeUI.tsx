@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Copy, Check, Binary } from 'lucide-react'
-import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
+import { Copy, Check } from 'lucide-react'
 
 function encodeBase64(text: string): string {
   const bytes = new TextEncoder().encode(text)
@@ -23,7 +22,6 @@ function decodeBase64(base64: string): string {
 }
 
 export default function Base64EncodeDecodeUI() {
-  const { enabled, reason } = useToolEnabled('base64-encode-decode')
   const [mode, setMode] = useState<'encode' | 'decode'>('encode')
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
@@ -62,36 +60,9 @@ export default function Base64EncodeDecodeUI() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  if (enabled === null) {
-    return <div className="rounded-xl border border-border bg-surface p-5 text-sm text-textMuted">Memuat...</div>
-  }
-
-  if (!enabled) {
-    return (
-      <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <Binary size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">Base64 encode/decode</h3>
-        </div>
-        <p className="mt-2 text-sm text-textMuted">Tool ini sedang dinonaktifkan admin</p>
-        {reason && <p className="mt-1 text-xs text-textMuted">{reason}</p>}
-      </div>
-    )
-  }
-
   return (
-    <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-borderStrong">
-      <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal/10 text-teal-light">
-            <Binary size={16} />
-          </span>
-          <h3 className="font-display text-base font-medium text-textPrimary">Base64 encode/decode</h3>
-        </div>
-      <p className="mt-1 text-sm text-textSecondary">Ubah teks biasa jadi Base64, atau sebaliknya</p>
-
-      <div className="mt-4 flex gap-2">
+    <div>
+      <div className="flex gap-2">
         <button
           onClick={() => handleModeChange('encode')}
           className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
