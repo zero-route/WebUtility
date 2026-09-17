@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import JsonTool from '@/components/utilities/json-validator/JsonTool'
 import JwtDecoder from '@/components/utilities/jwt-decoder/JwtDecoder'
+import MarkdownNotes from '@/components/utilities/markdown-notes/MarkdownNotes'
 import ComingSoonBody from '@/components/dashboard/ComingSoonBody'
 import ToolPage from '@/components/dashboard/ToolPage'
 
@@ -30,7 +31,7 @@ export default function UtilitiesPage() {
           id: 'markdown-notes',
           name: 'Markdown notes',
           description: 'Tempat sederhana untuk menulis dan mengolah catatan Markdown.',
-          component: <ComingSoonBody />
+          component: <MarkdownNotes />
         },
         {
           id: 'url-parser',

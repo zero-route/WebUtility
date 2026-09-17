@@ -18,7 +18,8 @@
     "@supabase/supabase-js": "2.45.4",
     "imagetracerjs": "1.2.6",
     "qrcode": "1.5.3",
-    "crypto-js": "4.2.0"
+    "crypto-js": "4.2.0",
+    "marked": "9.1.6"
   },
   "devDependencies": {
     "typescript": "5.5.4",
