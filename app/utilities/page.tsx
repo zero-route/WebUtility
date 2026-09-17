@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import JsonTool from '@/components/utilities/json-validator/JsonTool'
+import JwtDecoder from '@/components/utilities/jwt-decoder/JwtDecoder'
 import ComingSoonBody from '@/components/dashboard/ComingSoonBody'
 import ToolPage from '@/components/dashboard/ToolPage'
 
@@ -23,7 +24,7 @@ export default function UtilitiesPage() {
           id: 'jwt-decoder',
           name: 'JWT decoder',
           description: 'Baca payload JWT tanpa melakukan verifikasi signature.',
-          component: <ComingSoonBody />
+          component: <JwtDecoder />
         },
         {
           id: 'markdown-notes',
