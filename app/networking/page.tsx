@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import IpNetworkInfo from '@/components/networking/ip-network-info/IpNetworkInfo'
 import SubnetCalc from '@/components/networking/subnet-calc/SubnetCalc'
-import ComingSoonBody from '@/components/dashboard/ComingSoonBody'
+import TimestampTool from '@/components/networking/timestamp-conv/TimestampTool'
 import ToolPage from '@/components/dashboard/ToolPage'
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default function NetworkingPage() {
           id: 'timestamp-converter',
           name: 'Epoch timestamp converter',
           description: 'Konversi Unix epoch timestamp ke format waktu yang mudah dibaca.',
-          component: <ComingSoonBody />
+          component: <TimestampTool />
         }
       ]}
     />
