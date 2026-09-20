@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import JsonTool from '@/components/utilities/json-validator/JsonTool'
 import JwtDecoder from '@/components/utilities/jwt-decoder/JwtDecoder'
 import MarkdownNotes from '@/components/utilities/markdown-notes/MarkdownNotes'
+import UrlParser from '@/components/utilities/url-inspector/UrlParser'
 import ComingSoonBody from '@/components/dashboard/ComingSoonBody'
 import ToolPage from '@/components/dashboard/ToolPage'
 
@@ -37,7 +38,7 @@ export default function UtilitiesPage() {
           id: 'url-parser',
           name: 'URL parser',
           description: 'Inspect bagian-bagian sebuah URL secara lebih detail.',
-          component: <ComingSoonBody />
+          component: <UrlParser />
         },
         {
           id: 'regex-tester',
