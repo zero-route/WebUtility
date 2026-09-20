@@ -3,7 +3,7 @@ import JsonTool from '@/components/utilities/json-validator/JsonTool'
 import JwtDecoder from '@/components/utilities/jwt-decoder/JwtDecoder'
 import MarkdownNotes from '@/components/utilities/markdown-notes/MarkdownNotes'
 import UrlParser from '@/components/utilities/url-inspector/UrlParser'
-import ComingSoonBody from '@/components/dashboard/ComingSoonBody'
+import RegexTester from '@/components/utilities/regex-tester/RegexTester'
 import ToolPage from '@/components/dashboard/ToolPage'
 
 export const metadata: Metadata = {
@@ -44,7 +44,7 @@ export default function UtilitiesPage() {
           id: 'regex-tester',
           name: 'Regex tester',
           description: 'Uji regular expression terhadap teks secara langsung.',
-          component: <ComingSoonBody />
+          component: <RegexTester />
         }
       ]}
     />
