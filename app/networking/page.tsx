@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import IpNetworkInfo from '@/components/networking/ip-network-info/IpNetworkInfo'
+import SubnetCalc from '@/components/networking/subnet-calc/SubnetCalc'
 import ComingSoonBody from '@/components/dashboard/ComingSoonBody'
 import ToolPage from '@/components/dashboard/ToolPage'
 
@@ -23,7 +24,7 @@ export default function NetworkingPage() {
           id: 'subnet-calculator',
           name: 'CIDR/subnet calculator',
           description: 'Hitung network, host, broadcast, dan informasi subnet.',
-          component: <ComingSoonBody />
+          component: <SubnetCalc />
         },
         {
           id: 'timestamp-converter',
