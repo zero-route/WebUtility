@@ -1,14 +1,16 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Cloud,
   CloudFog,
   CloudLightning,
   CloudRain,
   CloudSnow,
+  MapPin,
+  RefreshCw,
   Sun,
-  Moon,
+  Wind,
   LucideIcon
 } from 'lucide-react'
 import { getManualLocation, getWeatherMode } from '@/lib/settings'
@@ -35,17 +37,6 @@ function describeWeather(code: number) {
   return 'Tidak diketahui'
 }
 
-function weatherEmoji(code: number) {
-  if (code === 0) return '☀️'
-  if ([1, 2, 3].includes(code)) return '☁️'
-  if ([45, 48].includes(code)) return '🌫️'
-  if ([51, 53, 55].includes(code)) return '🌦️'
-  if ([61, 63, 65, 80, 81, 82].includes(code)) return '🌧️'
-  if ([71, 73, 75].includes(code)) return '❄️'
-  if ([95, 96, 99].includes(code)) return '⛈️'
-  return '🌤️'
-}
-
 function weatherIcon(code: number): LucideIcon {
   if (code === 0) return Sun
   if ([1, 2, 3].includes(code)) return Cloud
@@ -60,41 +51,29 @@ function getTimePeriod() {
   const hour = new Date().getHours()
 
   if (hour >= 5 && hour < 11) {
-    return {
-      label: 'Pagi',
-      emoji: '🌅'
-    }
+    return { label: 'Pagi', emoji: '🌅' }
   }
 
   if (hour >= 11 && hour < 15) {
-    return {
-      label: 'Siang',
-      emoji: '☀️'
-    }
+    return { label: 'Siang', emoji: '☀️' }
   }
 
   if (hour >= 15 && hour < 18) {
-    return {
-      label: 'Sore',
-      emoji: '🌇'
-    }
+    return { label: 'Sore', emoji: '🌇' }
   }
 
-  return {
-    label: 'Malam',
-    emoji: '🌙'
-  }
+  return { label: 'Malam', emoji: '🌙' }
 }
 
-function getTemperatureStatus(temperature: number) {
-  if (temperature < 20) {
+function getTemperatureStatus(temp: number) {
+  if (temp < 20) {
     return {
       label: 'Dingin',
       emoji: '🧊'
     }
   }
 
-  if (temperature >= 30) {
+  if (temp > 30) {
     return {
       label: 'Panas',
       emoji: '🔥'
@@ -107,67 +86,91 @@ function getTemperatureStatus(temperature: number) {
   }
 }
 
-function getWindStatus(windSpeed: number) {
-  if (windSpeed < 10) return 'Tenang'
-  if (windSpeed < 20) return 'Sedang'
+function getWindStatus(speed: number) {
+  if (speed < 5) return 'Tenang'
+  if (speed < 15) return 'Sejuk'
+  if (speed < 30) return 'Berangin'
   return 'Kencang'
 }
 
-function getGaugeProgress(temperature: number) {
-  const min = 0
-  const max = 45
-  const value = Math.min(Math.max(temperature, min), max)
-
-  return (value - min) / (max - min)
-}
-
-function Gauge({
-  temperature
+function TemperatureGauge({
+  temperature,
+  apparentTemperature,
+  Icon
 }: {
   temperature: number
+  apparentTemperature: number
+  Icon: LucideIcon
 }) {
-  const radius = 72
-  const circumference = 2 * Math.PI * radius
-  const progress = getGaugeProgress(temperature)
-  const dashOffset = circumference * (1 - progress)
+  const min = 0
+  const max = 45
+
+  const normalized = Math.max(
+    0,
+    Math.min(1, (temperature - min) / (max - min))
+  )
+
+  const circumference = 2 * Math.PI * 62
+  const progress = circumference * 0.74
+  const dashOffset = progress * (1 - normalized)
 
   return (
-    <div className="relative h-[154px] w-[154px]">
+    <div className="relative mx-auto h-48 w-48">
       <svg
-        viewBox="0 0 180 180"
-        className="h-full w-full -rotate-90"
+        viewBox="0 0 160 160"
+        className="absolute inset-0 h-full w-full -rotate-[135deg]"
       >
         <circle
-          cx="90"
-          cy="90"
-          r={radius}
+          cx="80"
+          cy="80"
+          r="62"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="8"
-          className="text-white/[0.06]"
+          stroke="white"
+          strokeOpacity="0.06"
+          strokeWidth="5"
+          strokeDasharray={`${progress} ${circumference}`}
+          strokeLinecap="round"
         />
 
         <circle
-          cx="90"
-          cy="90"
-          r={radius}
+          cx="80"
+          cy="80"
+          r="62"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="8"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
+          stroke="white"
+          strokeOpacity="0.9"
+          strokeWidth="5"
+          strokeDasharray={`${progress} ${circumference}`}
           strokeDashoffset={dashOffset}
-          className="text-white transition-all duration-700"
+          strokeLinecap="round"
+          style={{
+            filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.18))'
+          }}
+        />
+
+        <circle
+          cx="80"
+          cy="18"
+          r="3.5"
+          fill="white"
+          fillOpacity="0.85"
         />
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-semibold tracking-tight text-textPrimary">
-          {temperature}°
-        </span>
-        <span className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-textMuted">
-          Celsius
-        </span>
+        <Icon
+          size={19}
+          strokeWidth={1.5}
+          className="mb-2 text-white/65"
+        />
+
+        <p className="font-mono text-[2rem] font-medium tracking-tight text-textPrimary">
+          {temperature}°C
+        </p>
+
+        <p className="mt-1 text-[10px] text-textMuted">
+          Terasa {apparentTemperature}°
+        </p>
       </div>
     </div>
   )
@@ -176,17 +179,7 @@ function Gauge({
 export default function WeatherCard() {
   const [data, setData] = useState<WeatherData | null>(null)
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
-  const [now, setNow] = useState<Date | null>(null)
-
-  useEffect(() => {
-    setNow(new Date())
-
-    const interval = setInterval(() => {
-      setNow(new Date())
-    }, 60000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -212,6 +205,7 @@ export default function WeatherCard() {
             source
           })
 
+          setUpdatedAt(new Date())
           setStatus('ready')
         })
         .catch(() => {
@@ -247,11 +241,7 @@ export default function WeatherCard() {
           if (cancelled) return
 
           if (manual) {
-            loadFromCoords(
-              manual.latitude,
-              manual.longitude,
-              'manual'
-            )
+            loadFromCoords(manual.latitude, manual.longitude, 'manual')
           } else {
             loadFromIp()
           }
@@ -266,13 +256,24 @@ export default function WeatherCard() {
     }
   }, [])
 
-  const timePeriod = useMemo(() => getTimePeriod(), [now])
-
   if (status === 'loading') {
     return (
-      <div className="min-h-[280px] rounded-2xl border border-border bg-surface p-5">
-        <div className="flex h-full items-center justify-center">
-          <p className="text-sm text-textMuted">Memuat cuaca...</p>
+      <div className="dashboard-card min-h-[390px] p-5">
+        <div className="flex items-center gap-3">
+          <span className="dashboard-icon">
+            <Sun size={18} />
+          </span>
+
+          <div>
+            <h3 className="text-sm font-medium text-textPrimary">Cuaca</h3>
+            <p className="mt-0.5 text-[10px] text-textMuted">
+              Kondisi cuaca saat ini
+            </p>
+          </div>
+        </div>
+
+        <div className="flex h-[310px] items-center justify-center text-xs text-textMuted">
+          Memuat data cuaca...
         </div>
       </div>
     )
@@ -280,94 +281,159 @@ export default function WeatherCard() {
 
   if (status === 'error' || !data) {
     return (
-      <div className="min-h-[280px] rounded-2xl border border-border bg-surface p-5">
-        <div className="flex h-full items-center justify-center">
-          <p className="text-sm text-textMuted">
-            Gagal memuat data cuaca
-          </p>
+      <div className="dashboard-card min-h-[390px] p-5">
+        <div className="flex items-center gap-3">
+          <span className="dashboard-icon">
+            <Cloud size={18} />
+          </span>
+
+          <div>
+            <h3 className="text-sm font-medium text-textPrimary">Cuaca</h3>
+            <p className="mt-0.5 text-[10px] text-textMuted">
+              Kondisi cuaca saat ini
+            </p>
+          </div>
+        </div>
+
+        <div className="flex h-[310px] items-center justify-center text-xs text-textMuted">
+          Gagal memuat data cuaca
         </div>
       </div>
     )
   }
 
   const Icon = weatherIcon(data.code)
+  const weather = describeWeather(data.code)
+  const timePeriod = getTimePeriod()
   const temperatureStatus = getTemperatureStatus(data.temperature)
+  const windStatus = getWindStatus(data.windSpeed)
+
+  const updatedTime = updatedAt
+    ? new Intl.DateTimeFormat('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+        .format(updatedAt)
+        .replace('.', ':')
+    : '--:--'
 
   return (
-    <div className="min-h-[280px] rounded-2xl border border-border bg-surface p-4 sm:p-5">
-      <div className="flex h-full flex-col">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex min-w-0 items-center justify-between rounded-xl border border-border bg-surface2 px-3 py-2.5">
-            <div className="min-w-0">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-textMuted">
+    <div className="dashboard-card dashboard-card-shine relative min-h-[390px] overflow-hidden p-5">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.018] blur-3xl" />
+
+      <div className="relative z-10">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="dashboard-icon">
+              <Icon size={18} strokeWidth={1.6} />
+            </span>
+
+            <div>
+              <h3 className="text-sm font-medium text-textPrimary">
+                Cuaca
+              </h3>
+
+              <p className="mt-0.5 text-[10px] text-textMuted">
+                Kondisi cuaca saat ini
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <div className="rounded-lg border border-border bg-white/[0.02] px-3 py-2">
+              <p className="text-[8px] uppercase tracking-[0.12em] text-textMuted">
                 Cuaca
               </p>
-              <p className="mt-0.5 truncate text-xs font-medium text-textPrimary">
-                {describeWeather(data.code)}
-              </p>
+
+              <div className="mt-0.5 flex items-center gap-2">
+                <span className="text-[11px] text-textPrimary">
+                  {weather}
+                </span>
+                <span className="text-sm">
+                  {data.code === 0 ? '☀️' : '☁️'}
+                </span>
+              </div>
             </div>
 
-            <span className="ml-2 text-lg">
-              {weatherEmoji(data.code)}
-            </span>
-          </div>
-
-          <div className="flex min-w-0 items-center justify-between rounded-xl border border-border bg-surface2 px-3 py-2.5">
-            <div className="min-w-0">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-textMuted">
+            <div className="rounded-lg border border-border bg-white/[0.02] px-3 py-2">
+              <p className="text-[8px] uppercase tracking-[0.12em] text-textMuted">
                 Waktu
               </p>
-              <p className="mt-0.5 truncate text-xs font-medium text-textPrimary">
-               {timePeriod.label}
-              </p>
-            </div>
 
-            <span className="ml-2 text-lg">
-              {timePeriod.emoji}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-1 items-center justify-center py-2">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-white/[0.02] blur-2xl" />
-            <Gauge temperature={data.temperature} />
-
-            <div className="absolute -right-1 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface2 text-textSecondary">
-              <Icon size={13} />
+              <div className="mt-0.5 flex items-center gap-2">
+                <span className="text-[11px] text-textPrimary">
+                  {timePeriod.label}
+                </span>
+                <span className="text-sm">
+                  {timePeriod.emoji}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex items-center justify-between rounded-xl border border-border bg-surface2 px-3 py-2.5">
-            <div>
-              <p className="text-[10px] text-textMuted">
-                Suhu
-              </p>
-              <p className="mt-0.5 text-xs font-medium text-textPrimary">
-                {temperatureStatus.label}
-              </p>
-            </div>
+        <div className="mt-1">
+          <TemperatureGauge
+            temperature={data.temperature}
+            apparentTemperature={data.apparentTemperature}
+            Icon={Icon}
+          />
+        </div>
 
-            <span className="text-lg">
-              {temperatureStatus.emoji}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl border border-border bg-surface2/65 px-3.5 py-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-[10px] text-textMuted">Suhu</p>
+
+                <p className="mt-1 text-sm font-medium text-textPrimary">
+                  {temperatureStatus.label}
+                </p>
+
+                <p className="mt-1 text-[9px] text-textMuted">
+                  {data.temperature - 3}°C – {data.temperature + 3}°C
+                </p>
+              </div>
+
+              <span className="text-lg">
+                {temperatureStatus.emoji}
+              </span>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-surface2/65 px-3.5 py-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-[10px] text-textMuted">Angin</p>
+
+                <p className="mt-1 text-sm font-medium text-textPrimary">
+                  {windStatus}
+                </p>
+
+                <p className="mt-1 text-[9px] text-textMuted">
+                  {data.windSpeed} km/j
+                </p>
+              </div>
+
+              <span className="text-lg">🌬️</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 flex items-center justify-between gap-3 text-[9px] text-textMuted">
+          <div className="flex items-center gap-1.5">
+            <MapPin size={11} strokeWidth={1.5} />
+
+            <span>
+              {data.source === 'manual'
+                ? 'Lokasi diset manual'
+                : 'Lokasi berdasarkan IP pengunjung'}
             </span>
           </div>
 
-          <div className="flex items-center justify-between rounded-xl border border-border bg-surface2 px-3 py-2.5">
-            <div>
-              <p className="text-[10px] text-textMuted">
-                Angin
-              </p>
-              <p className="mt-0.5 text-xs font-medium text-textPrimary">
-                {getWindStatus(data.windSpeed)}
-              </p>
-            </div>
-
-            <span className="text-lg">
-              🌬
-            </span>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <RefreshCw size={10} strokeWidth={1.5} />
+            <span>Diperbarui {updatedTime}</span>
           </div>
         </div>
       </div>
