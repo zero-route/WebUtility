@@ -1,173 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --kb-page: 8 9 10;
-  --kb-surface: 15 16 18;
-  --kb-surface-2: 21 22 25;
-  --kb-border: 35 36 40;
-  --kb-border-strong: 52 53 58;
-
-  --kb-text-primary: 238 238 238;
-  --kb-text-secondary: 158 160 164;
-  --kb-text-muted: 100 102 107;
-
-  --kb-teal-light: 210 212 214;
-  --kb-teal: 180 182 185;
-  --kb-teal-dark: 125 128 132;
+.dashboard-card-shine {
+  isolation: isolate;
 }
 
-.light {
-  --kb-page: 244 245 245;
-  --kb-surface: 255 255 255;
-  --kb-surface-2: 238 239 240;
-  --kb-border: 222 223 225;
-  --kb-border-strong: 202 204 207;
-
-  --kb-text-primary: 22 23 25;
-  --kb-text-secondary: 91 93 98;
-  --kb-text-muted: 128 130 135;
-
-  --kb-teal-light: 50 52 55;
-  --kb-teal: 75 77 81;
-  --kb-teal-dark: 100 102 106;
-}
-
-html {
-  color-scheme: dark;
-  background: rgb(var(--kb-page));
-}
-
-html.light {
-  color-scheme: light;
-}
-
-body {
-  font-family: var(--font-body);
+.dashboard-card-shine::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
   background:
     radial-gradient(
-      circle at 50% -10%,
-      rgba(255, 255, 255, 0.035),
-      transparent 32rem
+      circle at 15% 0%,
+      rgba(255, 255, 255, 0.045),
+      transparent 28%
     ),
-    rgb(var(--kb-page));
-  color: rgb(var(--kb-text-primary));
-}
-
-@layer components {
-  .dashboard-page {
-    position: relative;
-  }
-
-  .dashboard-card {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgb(var(--kb-border) / 0.9);
-    border-radius: 16px;
-    background:
-      linear-gradient(
-        135deg,
-        rgb(var(--kb-surface) / 0.98),
-        rgb(var(--kb-surface) / 0.92)
-      );
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.025),
-      0 10px 35px rgb(0 0 0 / 0.08);
-  }
-
-  .dashboard-card::before {
-    content: '';
-    pointer-events: none;
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background:
-      linear-gradient(
-        135deg,
-        rgb(255 255 255 / 0.025),
-        transparent 28%,
-        transparent 70%,
-        rgb(255 255 255 / 0.012)
-      );
-  }
-
-  .dashboard-card-shine::after {
-    content: '';
-    pointer-events: none;
-    position: absolute;
-    left: -35%;
-    top: -55%;
-    width: 65%;
-    height: 150%;
-    transform: rotate(24deg);
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgb(255 255 255 / 0.025),
-      transparent
+    linear-gradient(
+      120deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.025) 45%,
+      transparent 70%
     );
-    opacity: 0.7;
-  }
-
-  .dashboard-card-hover {
-    transition:
-      border-color 180ms ease,
-      transform 180ms ease,
-      box-shadow 180ms ease,
-      background 180ms ease;
-  }
-
-  .dashboard-card-hover:hover {
-    border-color: rgb(var(--kb-border-strong));
-    background:
-      linear-gradient(
-        135deg,
-        rgb(var(--kb-surface-2) / 0.82),
-        rgb(var(--kb-surface) / 0.96)
-      );
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.035),
-      0 14px 40px rgb(0 0 0 / 0.14);
-    transform: translateY(-1px);
-  }
-
-  .dashboard-icon {
-    display: flex;
-    height: 36px;
-    width: 36px;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgb(var(--kb-border-strong) / 0.65);
-    border-radius: 999px;
-    background: rgb(255 255 255 / 0.035);
-    color: rgb(var(--kb-text-primary));
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.035),
-      0 0 18px rgb(255 255 255 / 0.015);
-  }
+  opacity: 0.9;
 }
 
-::selection {
-  background: rgb(255 255 255 / 0.12);
-  color: rgb(var(--kb-text-primary));
-}
-
-::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgb(255 255 255 / 0.1);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(255 255 255 / 0.17);
+.dashboard-card-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.025),
+    inset 0 0 30px rgba(255, 255, 255, 0.012);
 }
