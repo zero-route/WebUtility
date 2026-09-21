@@ -40,7 +40,7 @@ export default function IpCard() {
 
   return (
     <div className="dashboard-card-shine relative min-h-[190px] overflow-hidden rounded-2xl border border-border bg-surface p-6">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_50%,rgba(255,255,255,0.045),transparent_30%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_50%,rgba(255,255,255,0.055),transparent_34%)]" />
 
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex items-start justify-between">
@@ -53,6 +53,7 @@ export default function IpCard() {
               <p className="font-display text-base font-medium text-textPrimary">
                 IP publik
               </p>
+
               <p className="mt-1 text-sm text-textMuted">
                 Identitas koneksi
               </p>
@@ -83,12 +84,18 @@ export default function IpCard() {
 
           <div className="mt-4 flex items-center gap-2 text-sm text-textSecondary">
             <span className="h-2 w-2 rounded-full bg-white" />
-            <span>{failed ? 'Gagal memuat' : copied ? 'IP disalin' : 'Terhubung'}</span>
+            <span>
+              {failed
+                ? 'Gagal memuat'
+                : copied
+                  ? 'IP disalin'
+                  : 'Terhubung'}
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute -right-8 top-1/2 h-48 w-48 -translate-y-1/2 opacity-60">
+      <div className="pointer-events-none absolute -right-8 top-1/2 h-48 w-48 -translate-y-1/2 opacity-80">
         <svg
           viewBox="0 0 220 220"
           className="h-full w-full"
@@ -96,11 +103,57 @@ export default function IpCard() {
           aria-hidden="true"
         >
           <defs>
-            <radialGradient id="ipGlobeFade" cx="50%" cy="42%" r="62%">
-              <stop offset="0%" stopColor="white" stopOpacity="0.15" />
-              <stop offset="55%" stopColor="white" stopOpacity="0.08" />
-              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            <radialGradient
+              id="ipGlobeFade"
+              cx="50%"
+              cy="42%"
+              r="64%"
+            >
+              <stop
+                offset="0%"
+                stopColor="white"
+                stopOpacity="0.24"
+              />
+              <stop
+                offset="48%"
+                stopColor="white"
+                stopOpacity="0.14"
+              />
+              <stop
+                offset="78%"
+                stopColor="white"
+                stopOpacity="0.07"
+              />
+              <stop
+                offset="100%"
+                stopColor="white"
+                stopOpacity="0"
+              />
             </radialGradient>
+
+            <linearGradient
+              id="ipGlobeLineFade"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="0%"
+                stopColor="white"
+                stopOpacity="0.14"
+              />
+              <stop
+                offset="60%"
+                stopColor="white"
+                stopOpacity="0.08"
+              />
+              <stop
+                offset="100%"
+                stopColor="white"
+                stopOpacity="0"
+              />
+            </linearGradient>
           </defs>
 
           <circle
@@ -108,7 +161,7 @@ export default function IpCard() {
             cy="110"
             r="76"
             stroke="url(#ipGlobeFade)"
-            strokeWidth="1.2"
+            strokeWidth="1.4"
           />
 
           <ellipse
@@ -116,8 +169,7 @@ export default function IpCard() {
             cy="110"
             rx="76"
             ry="31"
-            stroke="white"
-            strokeOpacity="0.08"
+            stroke="url(#ipGlobeLineFade)"
             strokeWidth="1"
           />
 
@@ -126,8 +178,7 @@ export default function IpCard() {
             cy="110"
             rx="76"
             ry="54"
-            stroke="white"
-            strokeOpacity="0.06"
+            stroke="url(#ipGlobeLineFade)"
             strokeWidth="1"
           />
 
@@ -136,8 +187,7 @@ export default function IpCard() {
             cy="110"
             rx="31"
             ry="76"
-            stroke="white"
-            strokeOpacity="0.07"
+            stroke="url(#ipGlobeLineFade)"
             strokeWidth="1"
           />
 
@@ -146,37 +196,35 @@ export default function IpCard() {
             cy="110"
             rx="54"
             ry="76"
-            stroke="white"
-            strokeOpacity="0.055"
+            stroke="url(#ipGlobeLineFade)"
             strokeWidth="1"
           />
 
           <path
             d="M34 110H186"
             stroke="white"
-            strokeOpacity="0.055"
+            strokeOpacity="0.075"
           />
 
           <path
             d="M110 34V186"
             stroke="white"
-            strokeOpacity="0.05"
+            strokeOpacity="0.065"
           />
 
           <circle
             cx="110"
             cy="110"
-            r="7"
-            fill="white"
-            fillOpacity="0.035"
+            r="12"
+            fill="url(#ipGlobeFade)"
           />
 
           <circle
             cx="110"
             cy="110"
-            r="2.5"
+            r="3"
             fill="white"
-            fillOpacity="0.18"
+            fillOpacity="0.28"
           />
 
           <Globe2
@@ -185,7 +233,7 @@ export default function IpCard() {
             width="18"
             height="18"
             stroke="white"
-            strokeOpacity="0.14"
+            strokeOpacity="0.22"
             strokeWidth="1.2"
           />
         </svg>

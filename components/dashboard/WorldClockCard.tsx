@@ -67,6 +67,7 @@ export default function WorldClockCard() {
               <h3 className="font-display text-base font-medium text-textPrimary">
                 Jam dunia
               </h3>
+
               <p className="mt-1 text-sm text-textMuted">
                 Waktu di beberapa zona
               </p>
@@ -115,7 +116,7 @@ export default function WorldClockCard() {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute right-0 top-1/2 h-[90%] w-[58%] -translate-y-1/2 opacity-100">
+          <div className="pointer-events-none absolute right-0 top-1/2 h-[92%] w-[60%] -translate-y-1/2 opacity-100">
             <svg
               viewBox="0 0 600 300"
               className="h-full w-full"
@@ -130,9 +131,50 @@ export default function WorldClockCard() {
                   x2="0"
                   y2="1"
                 >
-                  <stop offset="0%" stopColor="white" stopOpacity="0.16" />
-                  <stop offset="48%" stopColor="white" stopOpacity="0.09" />
-                  <stop offset="100%" stopColor="white" stopOpacity="0" />
+                  <stop
+                    offset="0%"
+                    stopColor="white"
+                    stopOpacity="0.27"
+                  />
+                  <stop
+                    offset="35%"
+                    stopColor="white"
+                    stopOpacity="0.19"
+                  />
+                  <stop
+                    offset="65%"
+                    stopColor="white"
+                    stopOpacity="0.10"
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="white"
+                    stopOpacity="0"
+                  />
+                </linearGradient>
+
+                <linearGradient
+                  id="worldMapDotsFade"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="white"
+                    stopOpacity="0.18"
+                  />
+                  <stop
+                    offset="55%"
+                    stopColor="white"
+                    stopOpacity="0.08"
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="white"
+                    stopOpacity="0"
+                  />
                 </linearGradient>
               </defs>
 
@@ -153,13 +195,31 @@ export default function WorldClockCard() {
                 <path d="M458 153L475 150L493 161L503 177L496 190L478 187L469 176Z" />
               </g>
 
-              <g fill="white" fillOpacity="0.08">
-                {Array.from({ length: 80 }).map((_, index) => {
+              <g fill="white" fillOpacity="0.11">
+                {Array.from({ length: 100 }).map((_, index) => {
                   const x = 40 + (index % 10) * 48
-                  const y = 55 + Math.floor(index / 10) * 28
+                  const y = 45 + Math.floor(index / 10) * 25
 
-                  return <circle key={index} cx={x} cy={y} r="1.4" />
+                  return (
+                    <circle
+                      key={index}
+                      cx={x}
+                      cy={y}
+                      r="1.5"
+                    />
+                  )
                 })}
+              </g>
+
+              <g
+                stroke="white"
+                strokeOpacity="0.035"
+                strokeWidth="0.8"
+              >
+                <path d="M20 70H540" />
+                <path d="M20 120H540" />
+                <path d="M20 170H540" />
+                <path d="M20 220H540" />
               </g>
             </svg>
           </div>

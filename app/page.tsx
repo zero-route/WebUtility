@@ -18,17 +18,17 @@ export default function HomePage() {
         Ringkasan tools
       </h1>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
         <TimeCard />
         <IpCard />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         <WorldClockCard />
         <WeatherCard />
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
         {categories.map((category, index) => (
           <CategoryCard
             key={category.slug}
