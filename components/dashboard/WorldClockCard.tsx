@@ -116,14 +116,14 @@ export default function WorldClockCard() {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute inset-y-0 right-[-4%] flex w-[68%] items-center justify-end">
+          <div className="pointer-events-none absolute inset-y-0 right-[-2%] flex w-[75%] items-center justify-end">
             <div
-              className="relative h-[92%] w-full"
+              className="relative h-[96%] w-full"
               style={{
                 maskImage:
-                  'linear-gradient(to bottom, black 0%, black 52%, rgba(0,0,0,0.72) 72%, transparent 100%)',
+                  'linear-gradient(to bottom, black 0%, black 65%, rgba(0,0,0,0.85) 85%, transparent 100%)',
                 WebkitMaskImage:
-                  'linear-gradient(to bottom, black 0%, black 52%, rgba(0,0,0,0.72) 72%, transparent 100%)'
+                  'linear-gradient(to bottom, black 0%, black 65%, rgba(0,0,0,0.85) 85%, transparent 100%)'
               }}
             >
               <img
@@ -133,8 +133,8 @@ export default function WorldClockCard() {
                 className="absolute inset-0 h-full w-full object-contain object-right"
                 style={{
                   filter:
-                    'brightness(0) invert(1) contrast(0.8)',
-                  opacity: 0.19
+                    'brightness(0) invert(1) contrast(0.9)',
+                  opacity: 0.45
                 }}
               />
 
@@ -142,7 +142,7 @@ export default function WorldClockCard() {
                 className="absolute inset-0"
                 style={{
                   background:
-                    'radial-gradient(ellipse at center, transparent 35%, rgba(15,16,18,0.2) 68%, rgba(15,16,18,0.75) 100%)'
+                    'radial-gradient(ellipse at center, transparent 45%, rgba(15,16,18,0.15) 75%, rgba(15,16,18,0.5) 100%)'
                 }}
               />
             </div>
