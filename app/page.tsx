@@ -13,22 +13,22 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="dashboard-page">
-      <h1 className="text-center font-display text-xl font-medium tracking-tight text-textPrimary sm:text-2xl">
+    <div>
+      <h1 className="text-center font-display text-2xl font-medium text-textPrimary sm:text-3xl">
         Ringkasan tools
       </h1>
 
-      <section className="mt-7 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <TimeCard />
         <IpCard />
-      </section>
+      </div>
 
-      <section className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <WorldClockCard />
         <WeatherCard />
-      </section>
+      </div>
 
-      <section className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
         {categories.map((category, index) => (
           <CategoryCard
             key={category.slug}
@@ -36,7 +36,7 @@ export default function HomePage() {
             index={index}
           />
         ))}
-      </section>
+      </div>
     </div>
   )
 }
