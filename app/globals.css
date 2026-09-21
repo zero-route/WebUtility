@@ -3,31 +3,37 @@
 @tailwind utilities;
 
 :root {
-  --kb-page: 15 20 23;
-  --kb-surface: 22 28 32;
-  --kb-surface-2: 28 35 40;
-  --kb-border: 38 46 51;
-  --kb-border-strong: 51 61 67;
-  --kb-text-primary: 230 237 240;
-  --kb-text-secondary: 154 167 173;
-  --kb-text-muted: 107 119 128;
-  --kb-teal-light: 93 202 165;
-  --kb-teal: 29 158 117;
-  --kb-teal-dark: 15 110 86;
+  --kb-page: 9 10 11;
+  --kb-surface: 16 18 20;
+  --kb-surface-2: 23 25 28;
+
+  --kb-border: 34 37 41;
+  --kb-border-strong: 48 52 57;
+
+  --kb-text-primary: 245 245 245;
+  --kb-text-secondary: 184 188 193;
+  --kb-text-muted: 119 124 130;
+
+  --kb-teal-light: 255 255 255;
+  --kb-teal: 245 245 245;
+  --kb-teal-dark: 210 213 216;
 }
 
 .light {
-  --kb-page: 244 247 246;
+  --kb-page: 246 246 246;
   --kb-surface: 255 255 255;
-  --kb-surface-2: 237 241 240;
-  --kb-border: 224 229 228;
-  --kb-border-strong: 200 208 206;
-  --kb-text-primary: 18 24 22;
-  --kb-text-secondary: 90 102 98;
-  --kb-text-muted: 130 140 137;
-  --kb-teal-light: 15 110 86;
-  --kb-teal: 15 110 86;
-  --kb-teal-dark: 8 80 65;
+  --kb-surface-2: 238 239 241;
+
+  --kb-border: 220 222 225;
+  --kb-border-strong: 198 201 205;
+
+  --kb-text-primary: 18 19 21;
+  --kb-text-secondary: 88 92 98;
+  --kb-text-muted: 125 130 136;
+
+  --kb-teal-light: 18 19 21;
+  --kb-teal: 18 19 21;
+  --kb-teal-dark: 70 73 78;
 }
 
 html {
