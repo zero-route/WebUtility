@@ -303,7 +303,7 @@ export default function WeatherCard() {
                 Cuaca
               </p>
               <p className="mt-0.5 truncate text-xs font-medium text-textPrimary">
-                = {describeWeather(data.code)}
+                {describeWeather(data.code)}
               </p>
             </div>
 
@@ -318,7 +318,7 @@ export default function WeatherCard() {
                 Waktu
               </p>
               <p className="mt-0.5 truncate text-xs font-medium text-textPrimary">
-                = {timePeriod.label}
+               {timePeriod.label}
               </p>
             </div>
 
