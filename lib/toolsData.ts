@@ -64,6 +64,11 @@ export const categories: ToolCategory[] = [
         id: 'qr-barcode-generator',
         name: 'QR and barcode generator',
         description: 'Buat QR code dan barcode dari teks atau data sederhana.'
+      }, 
+      {
+        id: 'image-compressor',
+          name: 'Image compressor',
+          description: 'Kecilkan ukuran file gambar langsung di browser.'
       }
     ]
   },
