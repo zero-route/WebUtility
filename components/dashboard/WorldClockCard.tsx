@@ -1,32 +1,94 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { Globe2, Moon, Sun } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowUpRight, Globe2, Moon, Sun } from 'lucide-react'
 
 const zones = [
-  {
-    label: 'WIB',
-    city: 'Jakarta',
-    timeZone: 'Asia/Jakarta'
-  },
-  {
-    label: 'London',
-    city: 'London',
-    timeZone: 'Europe/London'
-  },
-  {
-    label: 'Tokyo',
-    city: 'Tokyo',
-    timeZone: 'Asia/Tokyo'
-  },
-  {
-    label: 'New York',
-    city: 'New York',
-    timeZone: 'America/New_York'
-  }
+  { label: 'London', timeZone: 'Europe/London' },
+  { label: 'Tokyo', timeZone: 'Asia/Tokyo' },
+  { label: 'New York', timeZone: 'America/New_York' }
 ]
 
-function getTimeInfo(date: Date, timeZone: string) {
+function WorldMap() {
+  return (
+    <div className="pointer-events-none absolute inset-y-0 right-0 w-[58%] overflow-hidden opacity-[0.17]">
+      <svg
+        viewBox="0 0 700 320"
+        className="h-full w-full"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <pattern
+            id="mapDots"
+            width="7"
+            height="7"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="2" cy="2" r="1.05" fill="white" fillOpacity="0.55" />
+          </pattern>
+
+          <linearGradient id="mapFade" x1="0" x2="1">
+            <stop offset="0%" stopColor="white" stopOpacity="0" />
+            <stop offset="35%" stopColor="white" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="white" stopOpacity="0.15" />
+          </linearGradient>
+        </defs>
+
+        <g fill="url(#mapDots)">
+          <path d="M80 86 L112 67 L143 70 L166 88 L159 107 L133 109 L117 128 L94 121 L84 103 Z" />
+          <path d="M173 143 L202 150 L211 176 L198 202 L190 230 L173 249 L159 227 L166 202 L157 178 Z" />
+          <path d="M236 81 L260 68 L291 70 L313 83 L340 78 L360 93 L349 109 L318 108 L299 119 L273 111 L251 115 L230 101 Z" />
+          <path d="M314 118 L342 112 L366 122 L381 144 L371 167 L350 173 L337 157 L319 149 Z" />
+          <path d="M386 73 L409 63 L432 69 L442 86 L426 96 L403 93 L387 86 Z" />
+          <path d="M443 105 L477 94 L506 103 L521 122 L509 139 L482 138 L463 128 L442 131 L430 119 Z" />
+          <path d="M478 155 L507 149 L535 164 L549 187 L534 204 L511 199 L497 216 L478 205 L467 183 Z" />
+          <path d="M555 117 L582 107 L608 115 L621 131 L611 146 L584 143 L565 134 Z" />
+          <path d="M571 178 L593 169 L614 180 L620 199 L605 210 L584 201 Z" />
+        </g>
+
+        <path
+          d="M65 157 C210 55 420 58 638 156"
+          fill="none"
+          stroke="url(#mapFade)"
+          strokeOpacity="0.2"
+          strokeWidth="1"
+          strokeDasharray="2 7"
+        />
+
+        <path
+          d="M91 207 C240 275 454 266 612 197"
+          fill="none"
+          stroke="white"
+          strokeOpacity="0.08"
+          strokeWidth="1"
+          strokeDasharray="2 8"
+        />
+      </svg>
+    </div>
+  )
+}
+
+function getZoneTime(date: Date, timeZone: string) {
+  return new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone
+  })
+    .format(date)
+    .replace(/\./g, ':')
+}
+
+function getZoneDate(date: Date) {
+  return new Intl.DateTimeFormat('id-ID', {
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short',
+    timeZone: 'Asia/Jakarta'
+  }).format(date)
+}
+
+function getDayState(date: Date, timeZone: string) {
   const hour = Number(
     new Intl.DateTimeFormat('en-US', {
       hour: 'numeric',
@@ -35,40 +97,7 @@ function getTimeInfo(date: Date, timeZone: string) {
     }).format(date)
   )
 
-  const isDay = hour >= 6 && hour < 18
-
-  return {
-    isDay,
-    period: isDay ? 'Siang' : 'Malam',
-    emoji: isDay ? '☀️' : '🌙'
-  }
-}
-
-function getTime(date: Date, timeZone: string) {
-  return new Intl.DateTimeFormat('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-    timeZone
-  }).format(date)
-}
-
-function getDate(date: Date, timeZone: string) {
-  return new Intl.DateTimeFormat('id-ID', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    timeZone
-  }).format(date)
-}
-
-function getUtcOffset(date: Date, timeZone: string) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone,
-    timeZoneName: 'shortOffset'
-  }).formatToParts(date)
-
-  return parts.find((part) => part.type === 'timeZoneName')?.value ?? 'UTC'
+  return hour >= 6 && hour < 18 ? 'day' : 'night'
 }
 
 export default function WorldClockCard() {
@@ -79,109 +108,110 @@ export default function WorldClockCard() {
 
     const interval = setInterval(() => {
       setNow(new Date())
-    }, 30000)
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [])
 
-  const localZone = zones[0]
-
-  const localInfo = useMemo(() => {
-    if (!now) return null
-    return getTimeInfo(now, localZone.timeZone)
-  }, [now])
-
   return (
-    <div className="min-h-[280px] rounded-2xl border border-border bg-surface p-4 sm:p-5">
-      <div className="flex h-full flex-col">
+    <div className="dashboard-card dashboard-card-shine relative min-h-[390px] overflow-hidden p-5">
+      <div className="relative z-10">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface2 text-textSecondary">
-              <Globe2 size={15} />
-            </div>
+          <div className="flex items-center gap-3">
+            <span className="dashboard-icon">
+              <Globe2 size={18} strokeWidth={1.6} />
+            </span>
 
             <div>
-              <h3 className="font-display text-sm font-medium text-textPrimary">
+              <h3 className="text-sm font-medium text-textPrimary">
                 Jam dunia
               </h3>
-              <p className="text-[10px] text-textMuted">
+              <p className="mt-0.5 text-[10px] text-textMuted">
                 Waktu di beberapa zona
               </p>
             </div>
           </div>
 
-          {localInfo && (
-            <span className="flex items-center gap-1.5 text-[10px] text-textMuted">
-              {localInfo.isDay ? <Sun size={12} /> : <Moon size={12} />}
-              {localInfo.period}
-            </span>
-          )}
+          <button
+            type="button"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-white/[0.025] text-textMuted transition-colors hover:bg-white/[0.06] hover:text-textPrimary"
+          >
+            <ArrowUpRight size={15} />
+          </button>
         </div>
 
-        <div className="mt-3 rounded-xl border border-border bg-surface2 px-4 py-3">
-          <div className="flex items-end justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-textPrimary">
-                  WIB
-                </span>
+        <div className="relative mt-4 min-h-[172px] overflow-hidden rounded-xl border border-border bg-black/10">
+          <WorldMap />
 
-                <span className="text-[10px] text-textMuted">
+          <div className="relative z-10 flex h-full flex-col justify-center px-5 py-5">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.16em] text-textMuted">
+                  WIB
+                </p>
+
+                <p className="mt-1 text-xs text-textSecondary">
                   Jakarta
-                </span>
+                </p>
+
+                <p className="mt-5 font-mono text-3xl font-medium tracking-[0.05em] text-textPrimary">
+                  {now ? getZoneTime(now, 'Asia/Jakarta') : '--:--'}
+                </p>
+
+                <p className="mt-1 text-[10px] text-textMuted">
+                  {now ? getZoneDate(now) : ''} · GMT+7
+                </p>
               </div>
 
-              <p className="mt-1 text-3xl font-semibold tracking-tight text-textPrimary">
-                {now ? getTime(now, localZone.timeZone) : '--:--'}
-              </p>
-
-              <p className="mt-0.5 text-[10px] text-textMuted">
-                {now
-                  ? `${getDate(now, localZone.timeZone)} · ${getUtcOffset(now, localZone.timeZone)}`
-                  : ''}
-              </p>
+              {now && getDayState(now, 'Asia/Jakarta') === 'day' ? (
+                <Sun size={21} className="text-white/65" strokeWidth={1.5} />
+              ) : (
+                <Moon size={21} className="text-white/65" strokeWidth={1.5} />
+              )}
             </div>
-
-            {localInfo && (
-              <span className="text-2xl">
-                {localInfo.emoji}
-              </span>
-            )}
           </div>
         </div>
 
-        <div className="mt-2 grid flex-1 grid-cols-3 gap-2">
-          {zones.slice(1).map((zone) => {
-            const info = now
-              ? getTimeInfo(now, zone.timeZone)
-              : null
+        <div className="mt-3 grid grid-cols-3 gap-2.5">
+          {zones.map((zone) => {
+            const day = now ? getDayState(now, zone.timeZone) === 'day' : true
 
             return (
               <div
                 key={zone.label}
-                className="flex min-w-0 flex-col justify-between rounded-xl border border-border bg-surface2 px-3 py-2.5"
+                className="rounded-xl border border-border bg-surface2/70 px-3 py-3"
               >
                 <div className="flex items-center justify-between gap-1">
-                  <span className="truncate text-[10px] font-medium text-textPrimary">
+                  <p className="truncate text-[10px] font-medium text-textPrimary">
                     {zone.label}
-                  </span>
-
-                  <span className="text-xs">
-                    {info?.emoji ?? '·'}
-                  </span>
-                </div>
-
-                <div className="mt-2">
-                  <p className="text-sm font-semibold text-textPrimary">
-                    {now
-                      ? getTime(now, zone.timeZone)
-                      : '--:--'}
                   </p>
 
-                  <p className="mt-0.5 truncate text-[9px] text-textMuted">
-                    {zone.city}
-                  </p>
+                  {day ? (
+                    <Sun
+                      size={12}
+                      className="shrink-0 text-textSecondary"
+                      strokeWidth={1.5}
+                    />
+                  ) : (
+                    <Moon
+                      size={12}
+                      className="shrink-0 text-textSecondary"
+                      strokeWidth={1.5}
+                    />
+                  )}
                 </div>
+
+                <p className="mt-4 font-mono text-sm font-medium text-textPrimary">
+                  {now ? getZoneTime(now, zone.timeZone) : '--:--'}
+                </p>
+
+                <p className="mt-1 text-[9px] text-textMuted">
+                  {zone.label === 'London'
+                    ? 'GMT+1'
+                    : zone.label === 'Tokyo'
+                      ? 'GMT+9'
+                      : 'GMT-4'}
+                </p>
               </div>
             )
           })}
