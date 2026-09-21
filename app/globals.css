@@ -1,3 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --kb-page: 9 10 11;
+  --kb-surface: 16 18 20;
+  --kb-surface-2: 23 25 28;
+
+  --kb-border: 34 37 41;
+  --kb-border-strong: 48 52 57;
+
+  --kb-text-primary: 245 245 245;
+  --kb-text-secondary: 184 188 193;
+  --kb-text-muted: 119 124 130;
+
+  --kb-teal-light: 255 255 255;
+  --kb-teal: 245 245 245;
+  --kb-teal-dark: 210 213 216;
+}
+
+.light {
+  --kb-page: 246 246 246;
+  --kb-surface: 255 255 255;
+  --kb-surface-2: 238 239 241;
+
+  --kb-border: 220 222 225;
+  --kb-border-strong: 198 201 205;
+
+  --kb-text-primary: 18 19 21;
+  --kb-text-secondary: 88 92 98;
+  --kb-text-muted: 125 130 136;
+
+  --kb-teal-light: 18 19 21;
+  --kb-teal: 18 19 21;
+  --kb-teal-dark: 70 73 78;
+}
+
+html {
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
 .dashboard-card-shine {
   isolation: isolate;
 }
