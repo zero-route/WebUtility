@@ -19,3 +19,15 @@ export async function generateHash(text: string, algorithm: HashAlgorithm): Prom
   const digest = await crypto.subtle.digest(algorithm, data)
   return bufferToHex(digest)
 }
+
+export async function generateFileHash(file: File, algorithm: HashAlgorithm): Promise<string> {
+  const buffer = await file.arrayBuffer()
+
+  if (algorithm === 'MD5') {
+    const wordArray = CryptoJS.lib.WordArray.create(buffer)
+    return CryptoJS.MD5(wordArray).toString(CryptoJS.enc.Hex)
+  }
+
+  const digest = await crypto.subtle.digest(algorithm, buffer)
+  return bufferToHex(digest)
+}
