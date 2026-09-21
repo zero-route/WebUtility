@@ -13,24 +13,30 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div>
-      <h1 className="text-center font-display text-2xl font-medium text-textPrimary">Ringkasan tools</h1>
+    <div className="dashboard-page">
+      <h1 className="text-center font-display text-xl font-medium tracking-tight text-textPrimary sm:text-2xl">
+        Ringkasan tools
+      </h1>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <section className="mt-7 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <TimeCard />
         <IpCard />
-      </div>
+      </section>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <section className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <WorldClockCard />
         <WeatherCard />
-      </div>
+      </section>
 
-      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <section className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
         {categories.map((category, index) => (
-          <CategoryCard key={category.slug} category={category} index={index} />
+          <CategoryCard
+            key={category.slug}
+            category={category}
+            index={index}
+          />
         ))}
-      </div>
+      </section>
     </div>
   )
 }
