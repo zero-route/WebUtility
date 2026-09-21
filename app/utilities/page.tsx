@@ -4,6 +4,9 @@ import JwtDecoder from '@/components/utilities/jwt-decoder/JwtDecoder'
 import MarkdownNotes from '@/components/utilities/markdown-notes/MarkdownNotes'
 import UrlParser from '@/components/utilities/url-inspector/UrlParser'
 import RegexTester from '@/components/utilities/regex-tester/RegexTester'
+import CaseConverter from '@/components/utilities/case-converter/CaseConverter'
+import TextDiffChecker from '@/components/utilities/text-diff/TextDiffChecker'
+import CronParser from '@/components/utilities/cron-parser/CronParser'
 import ToolPage from '@/components/dashboard/ToolPage'
 
 export const metadata: Metadata = {
@@ -45,6 +48,24 @@ export default function UtilitiesPage() {
           name: 'Regex tester',
           description: 'Uji regular expression terhadap teks secara langsung.',
           component: <RegexTester />
+        },
+        {
+          id: 'case-converter',
+          name: 'Case converter',
+          description: 'Ubah teks antar format penamaan: camelCase, snake_case, dll.',
+          component: <CaseConverter />
+        },
+        {
+          id: 'text-diff-checker',
+          name: 'Text diff checker',
+          description: 'Bandingkan dua teks dan lihat bagian yang berbeda.',
+          component: <TextDiffChecker />
+        },
+        {
+          id: 'cron-parser',
+          name: 'Cron expression parser',
+          description: 'Baca ekspresi cron dalam bahasa yang mudah dipahami.',
+          component: <CronParser />
         }
       ]}
     />
