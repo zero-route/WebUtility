@@ -116,7 +116,7 @@ export default function WorldClockCard() {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute right-0 top-1/2 h-[92%] w-[60%] -translate-y-1/2 opacity-100">
+          <div className="pointer-events-none absolute right-[-3%] top-1/2 h-[88%] w-[60%] -translate-y-1/2">
             <svg
               viewBox="0 0 600 300"
               className="h-full w-full"
@@ -125,101 +125,56 @@ export default function WorldClockCard() {
             >
               <defs>
                 <linearGradient
-                  id="worldMapFade"
+                  id="worldMapStroke"
                   x1="0"
                   y1="0"
                   x2="0"
                   y2="1"
                 >
-                  <stop
-                    offset="0%"
-                    stopColor="white"
-                    stopOpacity="0.27"
-                  />
-                  <stop
-                    offset="35%"
-                    stopColor="white"
-                    stopOpacity="0.19"
-                  />
-                  <stop
-                    offset="65%"
-                    stopColor="white"
-                    stopOpacity="0.10"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="white"
-                    stopOpacity="0"
-                  />
+                  <stop offset="0%" stopColor="white" stopOpacity="0" />
+                  <stop offset="18%" stopColor="white" stopOpacity="0.12" />
+                  <stop offset="58%" stopColor="white" stopOpacity="0.09" />
+                  <stop offset="100%" stopColor="white" stopOpacity="0" />
                 </linearGradient>
 
                 <linearGradient
-                  id="worldMapDotsFade"
+                  id="worldMapSideFade"
                   x1="0"
                   y1="0"
-                  x2="0"
-                  y2="1"
+                  x2="1"
+                  y2="0"
                 >
-                  <stop
-                    offset="0%"
-                    stopColor="white"
-                    stopOpacity="0.18"
-                  />
-                  <stop
-                    offset="55%"
-                    stopColor="white"
-                    stopOpacity="0.08"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="white"
-                    stopOpacity="0"
-                  />
+                  <stop offset="0%" stopColor="white" stopOpacity="0" />
+                  <stop offset="25%" stopColor="white" stopOpacity="0.7" />
+                  <stop offset="78%" stopColor="white" stopOpacity="0.65" />
+                  <stop offset="100%" stopColor="white" stopOpacity="0" />
                 </linearGradient>
+
+                <mask id="worldMapMask">
+                  <rect
+                    width="600"
+                    height="300"
+                    fill="url(#worldMapSideFade)"
+                  />
+                </mask>
               </defs>
 
               <g
-                stroke="url(#worldMapFade)"
-                strokeWidth="1.5"
+                mask="url(#worldMapMask)"
+                stroke="url(#worldMapStroke)"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M58 92L77 77L102 79L117 92L111 107L92 110L79 123L65 116L53 100Z" />
-                <path d="M119 128L136 136L142 154L134 174L129 197L118 215L109 202L113 181L106 164L111 147Z" />
-                <path d="M184 82L202 72L228 75L242 87L235 100L216 99L207 110L190 105L179 95Z" />
-                <path d="M231 112L248 108L260 118L273 120L281 136L270 145L255 140L247 151L235 145L224 130Z" />
-                <path d="M270 154L287 158L299 175L297 195L287 211L273 203L267 185L259 174Z" />
-                <path d="M305 85L329 77L355 81L373 91L389 91L402 103L391 115L371 113L360 125L343 121L332 108L316 104Z" />
+                <path d="M52 94L73 78L101 80L119 92L112 107L94 111L80 123L64 117L51 101Z" />
+                <path d="M118 128L136 137L143 154L136 173L130 196L119 216L109 202L113 182L106 164L111 147Z" />
+                <path d="M180 84L201 72L228 76L243 88L236 101L216 100L206 110L190 105L178 95Z" />
+                <path d="M230 112L248 108L260 118L273 121L282 136L270 145L255 140L247 151L235 145L224 130Z" />
+                <path d="M270 154L287 158L300 175L298 195L287 211L273 203L267 185L259 174Z" />
+                <path d="M304 85L329 77L355 81L373 91L389 91L403 103L391 115L371 113L360 125L343 121L332 108L316 104Z" />
                 <path d="M363 132L381 127L399 135L407 148L398 157L382 156L370 167L357 157Z" />
-                <path d="M408 104L428 99L444 108L460 109L474 121L466 132L448 130L437 140L420 134L414 120Z" />
+                <path d="M407 104L428 99L444 108L460 109L475 121L466 132L448 130L437 140L420 134L414 120Z" />
                 <path d="M458 153L475 150L493 161L503 177L496 190L478 187L469 176Z" />
-              </g>
-
-              <g fill="white" fillOpacity="0.11">
-                {Array.from({ length: 100 }).map((_, index) => {
-                  const x = 40 + (index % 10) * 48
-                  const y = 45 + Math.floor(index / 10) * 25
-
-                  return (
-                    <circle
-                      key={index}
-                      cx={x}
-                      cy={y}
-                      r="1.5"
-                    />
-                  )
-                })}
-              </g>
-
-              <g
-                stroke="white"
-                strokeOpacity="0.035"
-                strokeWidth="0.8"
-              >
-                <path d="M20 70H540" />
-                <path d="M20 120H540" />
-                <path d="M20 170H540" />
-                <path d="M20 220H540" />
               </g>
             </svg>
           </div>

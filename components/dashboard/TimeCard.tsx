@@ -48,9 +48,17 @@ export default function TimeCard() {
 
   const time = now ? getTimeParts(now) : null
 
+  const hour = now ? now.getHours() % 12 : 0
+  const minute = now ? now.getMinutes() : 0
+  const second = now ? now.getSeconds() : 0
+
+  const hourAngle = hour * 30 + minute * 0.5
+  const minuteAngle = minute * 6 + second * 0.1
+  const secondAngle = second * 6
+
   return (
     <div className="dashboard-card-shine relative min-h-[190px] overflow-hidden rounded-2xl border border-border bg-surface p-6">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.055),transparent_28%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_50%,rgba(255,255,255,0.045),transparent_30%)]" />
 
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex items-start gap-3">
@@ -62,6 +70,7 @@ export default function TimeCard() {
             <p className="font-display text-base font-medium text-textPrimary">
               Waktu sekarang
             </p>
+
             <p className="mt-1 text-sm text-textMuted">
               Waktu lokal
             </p>
@@ -86,9 +95,12 @@ export default function TimeCard() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute right-6 top-1/2 hidden h-32 w-32 -translate-y-1/2 rounded-full border border-white/[0.06] sm:block">
-        <div className="absolute inset-3 rounded-full border border-white/[0.05]" />
-        <div className="absolute inset-6 rounded-full border border-white/[0.04]" />
+      <div className="pointer-events-none absolute right-5 top-1/2 flex h-32 w-32 -translate-y-1/2 items-center justify-center sm:right-6">
+        <div className="absolute inset-0 rounded-full border border-white/[0.055]" />
+
+        <div className="absolute inset-[13px] rounded-full border border-white/[0.045]" />
+
+        <div className="absolute inset-[25px] rounded-full border border-white/[0.035]" />
 
         {Array.from({ length: 12 }).map((_, index) => {
           const angle = index * 30
@@ -96,15 +108,36 @@ export default function TimeCard() {
           return (
             <span
               key={index}
-              className="absolute left-1/2 top-1/2 h-1.5 w-px origin-[0_64px] bg-white/20"
-              style={{ transform: `rotate(${angle}deg)` }}
+              className="absolute left-1/2 top-1/2 h-[5px] w-px bg-white/20"
+              style={{
+                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-59px)`
+              }}
             />
           )
         })}
 
-        <span className="absolute left-1/2 top-1/2 h-[38px] w-px origin-bottom -translate-x-1/2 -translate-y-full rotate-[35deg] bg-white/60" />
-        <span className="absolute left-1/2 top-1/2 h-[48px] w-px origin-bottom -translate-x-1/2 -translate-y-full -rotate-[55deg] bg-white/35" />
-        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/80" />
+        <span
+          className="absolute left-1/2 top-1/2 h-[34px] w-[2px] origin-bottom rounded-full bg-white/70"
+          style={{
+            transform: `translate(-50%, -100%) rotate(${hourAngle}deg)`
+          }}
+        />
+
+        <span
+          className="absolute left-1/2 top-1/2 h-[45px] w-px origin-bottom rounded-full bg-white/55"
+          style={{
+            transform: `translate(-50%, -100%) rotate(${minuteAngle}deg)`
+          }}
+        />
+
+        <span
+          className="absolute left-1/2 top-1/2 h-[50px] w-px origin-bottom rounded-full bg-white/25"
+          style={{
+            transform: `translate(-50%, -100%) rotate(${secondAngle}deg)`
+          }}
+        />
+
+        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-white/90" />
       </div>
     </div>
   )
