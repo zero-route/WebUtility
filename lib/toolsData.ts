@@ -134,7 +134,7 @@ export const categories: ToolCategory[] = [
     slug: 'networking',
     name: 'Networking and IT support',
     description: 'Info jaringan, kalkulator subnet, dan konversi timestamp',
-    toolCount: 3,
+    toolCount: 7,
     tools: ['IP and network info', 'CIDR/subnet calculator', 'Epoch timestamp converter'],
     items: [
       {
