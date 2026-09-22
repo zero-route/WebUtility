@@ -84,6 +84,20 @@ export default function WorldClockCard() {
         </div>
 
         <div className="relative mt-5 overflow-hidden rounded-xl border border-border bg-surface2/50 p-5">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div
+              className="absolute -right-[20%] top-[48%] h-[1px] w-[90%] rotate-[-35deg] bg-gradient-to-r from-transparent via-white/10 to-transparent blur-[0.5px]"
+            />
+
+            <div
+              className="absolute -right-[8%] top-[44%] h-[120px] w-[55%] rotate-[-35deg] bg-gradient-to-r from-transparent via-white/[0.035] to-transparent blur-2xl"
+            />
+
+            <div
+              className="absolute -right-[10%] top-[42%] h-[1px] w-[65%] rotate-[-35deg] bg-gradient-to-r from-transparent via-white/[0.16] to-transparent"
+            />
+          </div>
+
           <div className="relative z-10">
             <div className="flex items-start justify-between">
               <div>
@@ -113,38 +127,6 @@ export default function WorldClockCard() {
                   <Moon size={21} strokeWidth={1.4} />
                 )}
               </div>
-            </div>
-          </div>
-
-          <div className="pointer-events-none absolute inset-y-0 right-[-2%] flex w-[75%] items-center justify-end">
-            <div
-              className="relative h-[96%] w-full"
-              style={{
-                maskImage:
-                  'linear-gradient(to bottom, black 0%, black 65%, rgba(0,0,0,0.85) 85%, transparent 100%)',
-                WebkitMaskImage:
-                  'linear-gradient(to bottom, black 0%, black 65%, rgba(0,0,0,0.85) 85%, transparent 100%)'
-              }}
-            >
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/4/4d/BlankMap-World.svg"
-                alt=""
-                aria-hidden="true"
-                className="absolute inset-0 h-full w-full object-contain object-right"
-                style={{
-                  filter:
-                    'brightness(0) invert(1) contrast(0.9)',
-                  opacity: 0.45
-                }}
-              />
-
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    'radial-gradient(ellipse at center, transparent 45%, rgba(15,16,18,0.15) 75%, rgba(15,16,18,0.5) 100%)'
-                }}
-              />
             </div>
           </div>
         </div>
