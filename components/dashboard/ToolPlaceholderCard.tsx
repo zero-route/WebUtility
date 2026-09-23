@@ -7,44 +7,30 @@ import {
   Database,
   Download,
   ExternalLink,
-  FileCode2,
   Fingerprint,
-  ImageDown,
-  Instagram,
+  Image,
   LockKeyhole,
   Network,
-  Palette,
   QrCode,
-  Regex,
-  Shield,
   ShieldCheck,
   Terminal,
-  Youtube
+  Instagram,
+  Youtube,
+  Music2,
+  WandSparkles,
+  FileImage,
+  FileDiff,
+  KeyRound,
+  Regex,
+  Globe,
+  Clock3
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
 import type { ToolItem } from '@/lib/toolsData'
 
-function TikTokIcon({ size = 24 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M15.2 4.1C15.65 5.7 16.65 6.75 18.2 7.15V10.1C17.05 10 16.05 9.65 15.2 9.1V15.15C15.2 18.2 12.9 20.2 10.15 20.2C7.4 20.2 5.2 18.35 5.2 15.65C5.2 12.8 7.55 10.75 10.4 10.75C10.75 10.75 11.1 10.8 11.4 10.9V13.85C11.1 13.7 10.8 13.6 10.45 13.6C9.25 13.6 8.3 14.4 8.3 15.55C8.3 16.55 9.1 17.35 10.2 17.35C11.45 17.35 12.35 16.45 12.35 15.05V3.8H15.2V4.1Z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
-
 const icons = {
-  'tiktok-downloader': TikTokIcon,
+  'tiktok-downloader': Music2,
   'youtube-downloader': Youtube,
   'instagram-downloader': Instagram,
   'x-threads-downloader': Download,
@@ -52,16 +38,16 @@ const icons = {
   'svg-vectorizer': Code2,
   'base64-converter': Braces,
   'qr-barcode-generator': QrCode,
-  'color-picker-palette': Palette,
-  'image-compressor': ImageDown,
+  'color-picker': WandSparkles,
+  'image-compressor': FileImage,
 
   'base64-encode-decode': Braces,
   'aes-encryptor': LockKeyhole,
-  'password-generator': Shield,
+  'password-generator': ShieldCheck,
   'hash-generator': Fingerprint,
-  'uuid-guid-generator': Code2,
+  'uuid-generator': Code2,
   'password-strength-checker': ShieldCheck,
-  'file-hash-checker': FileCode2,
+  'file-hash-checker': Fingerprint,
 
   'json-formatter': Braces,
   'jwt-decoder': ShieldCheck,
@@ -69,17 +55,17 @@ const icons = {
   'url-parser': Network,
   'regex-tester': Regex,
   'case-converter': Code2,
-  'text-diff-checker': Code2,
-  'cron-expression-parser': Terminal,
+  'text-diff-checker': FileDiff,
+  'cron-expression-parser': Clock3,
 
   'ip-network-info': Network,
   'subnet-calculator': Network,
   'timestamp-converter': Database,
-  'dns-lookup': Network,
+  'dns-lookup': Globe,
   'ping-latency-tester': Terminal,
   'mac-address-vendor-lookup': Network,
-  'whois-domain-info': Network
-} as const
+  'whois-domain-info': Globe
+}
 
 export default function ToolPlaceholderCard({
   tool,
@@ -104,106 +90,108 @@ export default function ToolPlaceholderCard({
       type="button"
       disabled={!active}
       onClick={onOpen}
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        delay: Math.min(index * 0.035, 0.2),
-        duration: 0.3,
+        delay: Math.min(index * 0.045, 0.18),
+        duration: 0.34,
         ease: [0.22, 1, 0.36, 1]
       }}
       whileHover={active ? { y: -2 } : undefined}
-      whileTap={active ? { scale: 0.985 } : undefined}
-      className={`group relative mx-auto w-full max-w-[295px] overflow-hidden rounded-xl border bg-surface px-3 py-4 text-center transition-[border-color,background-color] duration-300 ${
+      whileTap={active ? { y: 0 } : undefined}
+      className={`group relative h-[155px] w-full overflow-hidden rounded-xl border p-5 text-center backdrop-blur-xl transition-all duration-500 ${
         disabled
-          ? 'cursor-not-allowed border-border'
-          : 'border-border hover:border-textMuted hover:bg-surface2'
+          ? 'cursor-not-allowed border-border bg-surface/20'
+          : 'border-white/[0.07] bg-white/[0.025] hover:border-white/[0.13] hover:bg-white/[0.035]'
       }`}
     >
       <div
-        className={`pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.035] to-transparent transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          active ? 'group-hover:translate-x-[300%]' : ''
+        className={`pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ${
+          active ? 'group-hover:opacity-100' : ''
         }`}
-      />
+      >
+        <div className="absolute -inset-x-20 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-[55%]" />
+      </div>
 
       <div
-        className={`relative flex min-h-[172px] flex-col items-center ${
+        className={`relative flex h-full flex-col items-center transition-all duration-300 ${
           disabled ? 'blur-[3px] opacity-20' : ''
         }`}
       >
         <div
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface2 text-textPrimary transition-all duration-400 ${
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.025] text-textSecondary transition-all duration-500 ${
             active
-              ? 'group-hover:border-textMuted group-hover:bg-surface'
+              ? 'group-hover:border-white/[0.14] group-hover:bg-white/[0.05] group-hover:text-textPrimary'
               : ''
           }`}
         >
           <Icon
-            size={21}
-            strokeWidth={1.8}
-            className={`transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            size={17}
+            strokeWidth={1.7}
+            className={`transition-transform duration-500 ease-out ${
               active
-                ? 'group-hover:rotate-[-4deg] group-hover:scale-[1.04]'
+                ? 'group-hover:translate-y-[-1px] group-hover:rotate-[-4deg]'
                 : ''
             }`}
           />
         </div>
 
-        <h3 className="mt-3 line-clamp-2 min-h-[32px] font-display text-[11px] font-medium leading-4 text-textPrimary">
+        <h3 className="mt-2.5 font-display text-[12px] font-medium leading-tight text-textPrimary">
           {tool.name}
         </h3>
 
-        <p className="mt-1 line-clamp-2 min-h-[34px] text-[9px] leading-4 text-textSecondary">
+        <p className="mt-1 line-clamp-2 max-w-[260px] flex-1 text-[10px] leading-[1.55] text-textSecondary">
           {tool.description}
         </p>
 
         <div
-          className={`relative mt-auto flex h-9 w-[92px] items-center justify-center overflow-hidden rounded-full bg-white px-3 text-[11px] font-medium text-black transition-all duration-500 ${
-            active ? 'group/visit cursor-pointer' : ''
+          className={`group/button relative mt-2.5 flex h-8 w-[78px] shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-3 text-[10px] font-medium text-black transition-all duration-500 ${
+            active
+              ? 'hover:border-white hover:text-white'
+              : ''
           }`}
         >
-          <span className="pointer-events-none absolute inset-0 -translate-x-[105%] bg-neutral-900 transition-transform duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/visit:translate-x-0" />
+          <span
+            className={`absolute inset-0 origin-left scale-x-0 bg-[#151515] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              active ? 'group-hover/button:scale-x-100' : ''
+            }`}
+          />
 
-          <span className="relative z-10 flex items-center gap-1.5 transition-colors duration-500 group-hover/visit:text-white">
-            <span>Kunjungi</span>
+          <span className="relative z-10 transition-transform duration-500 ease-out group-hover/button:translate-x-[-1px]">
+            Kunjungi
+          </span>
 
-            <span className="relative flex h-4 w-4 items-center justify-center overflow-hidden">
-              <ExternalLink
-                size={11}
-                strokeWidth={2}
-                className="absolute transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/visit:-translate-y-3 group-hover/visit:translate-x-3 group-hover/visit:opacity-0"
-              />
-
-              <ExternalLink
-                size={11}
-                strokeWidth={2}
-                className="absolute -translate-x-3 translate-y-3 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/visit:translate-x-0 group-hover/visit:translate-y-0 group-hover/visit:opacity-100"
-              />
-            </span>
+          <span className="relative z-10 flex items-center justify-center">
+            <ExternalLink
+              size={11}
+              strokeWidth={2}
+              className="transition-transform duration-500 ease-out group-hover/button:translate-x-[2px] group-hover/button:translate-y-[-2px]"
+            />
           </span>
         </div>
       </div>
 
       {loading && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-textPrimary" />
+        <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[2px]">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/10 border-t-white/60" />
         </div>
       )}
 
       {disabled && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-3 text-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-borderStrong bg-surface2 text-textSecondary shadow-lg">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] text-textSecondary">
             <LockKeyhole
-              size={18}
-              strokeWidth={1.8}
+              size={19}
+              strokeWidth={1.7}
             />
           </div>
 
-          <p className="mt-2.5 font-display text-[10px] font-medium leading-4 text-textPrimary">
+          <p className="mt-2.5 font-display text-xs font-medium text-textPrimary">
             Tools Dinonaktifkan Oleh Admin
           </p>
 
           {disabledNote && (
-            <p className="mt-1 max-w-[180px] text-[9px] leading-4 text-textMuted">
+            <p className="mt-1 max-w-[240px] text-[10px] leading-4 text-textMuted">
               {disabledNote}
             </p>
           )}
