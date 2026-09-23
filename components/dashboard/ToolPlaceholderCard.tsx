@@ -9,8 +9,8 @@ import {
   ExternalLink,
   FileCode2,
   Fingerprint,
-  Image,
   ImageDown,
+  Instagram,
   LockKeyhole,
   Network,
   Palette,
@@ -19,8 +19,7 @@ import {
   Shield,
   ShieldCheck,
   Terminal,
-  Youtube,
-  Instagram
+  Youtube
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
@@ -114,14 +113,14 @@ export default function ToolPlaceholderCard({
       }}
       whileHover={active ? { y: -2 } : undefined}
       whileTap={active ? { scale: 0.985 } : undefined}
-      className={`group relative min-w-0 overflow-hidden rounded-xl border bg-surface px-3 py-4 text-center transition-all duration-300 ${
+      className={`group relative mx-auto w-full max-w-[295px] overflow-hidden rounded-xl border bg-surface px-3 py-4 text-center transition-[border-color,background-color] duration-300 ${
         disabled
           ? 'cursor-not-allowed border-border'
           : 'border-border hover:border-textMuted hover:bg-surface2'
       }`}
     >
       <div
-        className={`pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent transition-transform duration-700 ease-out ${
+        className={`pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.035] to-transparent transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           active ? 'group-hover:translate-x-[300%]' : ''
         }`}
       />
@@ -132,18 +131,18 @@ export default function ToolPlaceholderCard({
         }`}
       >
         <div
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface2 text-textPrimary transition-all duration-300 ${
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface2 text-textPrimary transition-all duration-400 ${
             active
-              ? 'group-hover:border-textMuted group-hover:bg-surface group-hover:scale-105'
+              ? 'group-hover:border-textMuted group-hover:bg-surface'
               : ''
           }`}
         >
           <Icon
             size={21}
             strokeWidth={1.8}
-            className={`transition-transform duration-300 ${
+            className={`transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
               active
-                ? 'group-hover:scale-105'
+                ? 'group-hover:rotate-[-4deg] group-hover:scale-[1.04]'
                 : ''
             }`}
           />
@@ -158,22 +157,28 @@ export default function ToolPlaceholderCard({
         </p>
 
         <div
-          className={`mt-auto flex items-center gap-1 rounded-full border border-border bg-surface2 py-1 pl-2.5 pr-1 text-[9px] font-medium text-textSecondary transition-all duration-300 ${
-            active
-              ? 'group-hover:border-textMuted group-hover:bg-surface group-hover:text-textPrimary'
-              : ''
+          className={`relative mt-auto flex h-9 w-[92px] items-center justify-center overflow-hidden rounded-full bg-white px-3 text-[11px] font-medium text-black transition-all duration-500 ${
+            active ? 'group/visit cursor-pointer' : ''
           }`}
         >
-          Kunjungi
+          <span className="pointer-events-none absolute inset-0 -translate-x-[105%] bg-neutral-900 transition-transform duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/visit:translate-x-0" />
 
-          <span
-            className={`flex h-4 w-4 items-center justify-center rounded-full border border-border bg-surface text-textMuted transition-all duration-300 ${
-              active
-                ? 'group-hover:text-textPrimary'
-                : ''
-            }`}
-          >
-            <ExternalLink size={9} strokeWidth={2} />
+          <span className="relative z-10 flex items-center gap-1.5 transition-colors duration-500 group-hover/visit:text-white">
+            <span>Kunjungi</span>
+
+            <span className="relative flex h-4 w-4 items-center justify-center overflow-hidden">
+              <ExternalLink
+                size={11}
+                strokeWidth={2}
+                className="absolute transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/visit:-translate-y-3 group-hover/visit:translate-x-3 group-hover/visit:opacity-0"
+              />
+
+              <ExternalLink
+                size={11}
+                strokeWidth={2}
+                className="absolute -translate-x-3 translate-y-3 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/visit:translate-x-0 group-hover/visit:translate-y-0 group-hover/visit:opacity-100"
+              />
+            </span>
           </span>
         </div>
       </div>
@@ -187,7 +192,10 @@ export default function ToolPlaceholderCard({
       {disabled && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-3 text-center">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-borderStrong bg-surface2 text-textSecondary shadow-lg">
-            <LockKeyhole size={18} strokeWidth={1.8} />
+            <LockKeyhole
+              size={18}
+              strokeWidth={1.8}
+            />
           </div>
 
           <p className="mt-2.5 font-display text-[10px] font-medium leading-4 text-textPrimary">
