@@ -2,11 +2,11 @@
 
 import { motion } from 'framer-motion'
 import {
-  ArrowUpRight,
   Braces,
   Code2,
   Database,
   Download,
+  ExternalLink,
   Fingerprint,
   Image,
   LockKeyhole,
@@ -73,7 +73,7 @@ export default function ToolPlaceholderCard({
       }}
       whileHover={active ? { y: -3 } : undefined}
       whileTap={active ? { scale: 0.99 } : undefined}
-      className={`group relative min-h-[156px] w-full overflow-hidden rounded-2xl border bg-surface p-5 text-left transition-[border-color,background-color] duration-300 ${
+      className={`group relative aspect-square w-full overflow-hidden rounded-2xl border bg-surface p-5 text-center transition-[border-color,background-color] duration-300 ${
         disabled
           ? 'cursor-not-allowed border-border'
           : 'border-border hover:border-teal/50 hover:bg-surface2'
@@ -86,55 +86,53 @@ export default function ToolPlaceholderCard({
       />
 
       <div
-        className={`relative flex h-full flex-col transition-all duration-300 ${
+        className={`relative flex h-full flex-col items-center transition-all duration-300 ${
           disabled ? 'blur-[3px] opacity-25' : ''
         }`}
       >
-        <div className="flex items-start justify-between gap-4">
-          <div
-            className={`flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-surface2 text-teal-light transition-all duration-500 ${
+        <div
+          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-border bg-surface2 text-teal-light transition-all duration-500 ${
+            active
+              ? 'group-hover:border-teal/50 group-hover:bg-teal/10 group-hover:scale-105'
+              : ''
+          }`}
+        >
+          <Icon
+            size={22}
+            strokeWidth={1.8}
+            className={`transition-transform duration-500 ${
               active
-                ? 'group-hover:rotate-3 group-hover:rounded-2xl group-hover:border-teal/50 group-hover:bg-teal/10'
+                ? 'group-hover:rotate-[-6deg] group-hover:scale-110'
                 : ''
             }`}
-          >
-            <Icon
-              size={20}
-              strokeWidth={1.8}
-              className={`transition-transform duration-500 ${
-                active
-                  ? 'group-hover:rotate-[-6deg] group-hover:scale-110'
-                  : ''
-              }`}
-            />
-          </div>
-
-          <span
-            className={`flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-surface2 text-textMuted transition-all duration-300 ${
-              active
-                ? 'group-hover:border-teal/40 group-hover:bg-teal/10 group-hover:text-teal-light'
-                : ''
-            }`}
-          >
-            <ArrowUpRight
-              size={17}
-              className={
-                active
-                  ? 'transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5'
-                  : ''
-              }
-            />
-          </span>
+          />
         </div>
 
-        <div className="mt-auto pt-6">
-          <h3 className="font-display text-base font-medium text-textPrimary">
-            {tool.name}
-          </h3>
+        <h3 className="mt-3 font-display text-sm font-medium leading-tight text-textPrimary">
+          {tool.name}
+        </h3>
 
-          <p className="mt-1.5 line-clamp-2 text-sm leading-5 text-textSecondary">
-            {tool.description}
-          </p>
+        <p className="mt-1.5 line-clamp-2 flex-1 text-xs leading-5 text-textSecondary">
+          {tool.description}
+        </p>
+
+        <div
+          className={`mt-3 flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-surface2 py-1.5 pl-3 pr-1.5 text-xs font-medium text-textSecondary transition-all duration-300 ${
+            active
+              ? 'group-hover:border-teal/40 group-hover:bg-teal/10 group-hover:text-teal-light'
+              : ''
+          }`}
+        >
+          Kunjungi
+          <span
+            className={`flex h-5 w-5 items-center justify-center rounded-[6px] border border-border bg-surface text-textMuted transition-all duration-300 ${
+              active
+                ? 'group-hover:border-teal/50 group-hover:text-teal-light'
+                : ''
+            }`}
+          >
+            <ExternalLink size={11} strokeWidth={2} />
+          </span>
         </div>
       </div>
 
