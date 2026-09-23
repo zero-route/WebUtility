@@ -99,9 +99,9 @@ export default function ToolPlaceholderCard({
       }}
       whileHover={active ? { y: -2 } : undefined}
       whileTap={active ? { y: 0 } : undefined}
-      className={`group relative h-[155px] w-full overflow-hidden rounded-xl border p-5 text-center backdrop-blur-xl transition-all duration-500 ${
+      className={`group relative aspect-square w-full overflow-hidden rounded-xl border p-4 text-center backdrop-blur-xl transition-all duration-500 ${
         disabled
-          ? 'cursor-not-allowed border-border bg-surface/20'
+          ? 'cursor-not-allowed border-white/[0.06] bg-white/[0.015]'
           : 'border-white/[0.07] bg-white/[0.025] hover:border-white/[0.13] hover:bg-white/[0.035]'
       }`}
     >
@@ -136,19 +136,17 @@ export default function ToolPlaceholderCard({
           />
         </div>
 
-        <h3 className="mt-2.5 font-display text-[12px] font-medium leading-tight text-textPrimary">
+        <h3 className="mt-2 shrink-0 font-display text-[12px] font-medium leading-tight text-textPrimary">
           {tool.name}
         </h3>
 
-        <p className="mt-1 line-clamp-2 max-w-[260px] flex-1 text-[10px] leading-[1.55] text-textSecondary">
+        <p className="mt-1 line-clamp-2 max-w-[92%] flex-1 text-[10px] leading-[1.35] text-textSecondary">
           {tool.description}
         </p>
 
         <div
-          className={`group/button relative mt-2.5 flex h-8 w-[78px] shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-3 text-[10px] font-medium text-black transition-all duration-500 ${
-            active
-              ? 'hover:border-white hover:text-white'
-              : ''
+          className={`group/button relative mt-2 flex h-8 w-[112px] shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-4 text-[10px] font-medium text-black transition-all duration-500 ${
+            active ? 'hover:border-white hover:text-white' : ''
           }`}
         >
           <span
@@ -157,7 +155,7 @@ export default function ToolPlaceholderCard({
             }`}
           />
 
-          <span className="relative z-10 transition-transform duration-500 ease-out group-hover/button:translate-x-[-1px]">
+          <span className="relative z-10 whitespace-nowrap transition-transform duration-500 ease-out group-hover/button:translate-x-[-1px]">
             Kunjungi
           </span>
 
@@ -178,7 +176,7 @@ export default function ToolPlaceholderCard({
       )}
 
       {disabled && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] text-textSecondary">
             <LockKeyhole
               size={19}
@@ -186,12 +184,12 @@ export default function ToolPlaceholderCard({
             />
           </div>
 
-          <p className="mt-2.5 font-display text-xs font-medium text-textPrimary">
+          <p className="mt-2 font-display text-xs font-medium text-textPrimary">
             Tools Dinonaktifkan Oleh Admin
           </p>
 
           {disabledNote && (
-            <p className="mt-1 max-w-[240px] text-[10px] leading-4 text-textMuted">
+            <p className="mt-1 max-w-[220px] text-[10px] leading-4 text-textMuted">
               {disabledNote}
             </p>
           )}
