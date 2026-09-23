@@ -26,7 +26,7 @@ export default function ToolPlaceholderGrid({
         </p>
       </motion.div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
         {category.items.map((tool, index) => (
           <ToolPlaceholderCard
             key={tool.id}
