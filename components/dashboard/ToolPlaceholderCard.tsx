@@ -99,7 +99,7 @@ export default function ToolPlaceholderCard({
       }}
       whileHover={active ? { y: -2 } : undefined}
       whileTap={active ? { y: 0 } : undefined}
-      className={`group relative aspect-square w-full overflow-hidden rounded-xl border p-4 text-center backdrop-blur-xl transition-all duration-500 ${
+      className={`group relative mx-auto aspect-square w-full max-w-[210px] overflow-hidden rounded-xl border p-4 text-center backdrop-blur-xl transition-all duration-500 ${
         disabled
           ? 'cursor-not-allowed border-white/[0.06] bg-white/[0.015]'
           : 'border-white/[0.07] bg-white/[0.025] hover:border-white/[0.13] hover:bg-white/[0.035]'
@@ -112,6 +112,12 @@ export default function ToolPlaceholderCard({
       >
         <div className="absolute -inset-x-20 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-[55%]" />
       </div>
+
+      <Icon
+        size={130}
+        strokeWidth={1}
+        className="pointer-events-none absolute -bottom-6 -right-6 rotate-[-12deg] text-white/[0.025]"
+      />
 
       <div
         className={`relative flex h-full flex-col items-center transition-all duration-300 ${
@@ -145,7 +151,7 @@ export default function ToolPlaceholderCard({
         </p>
 
         <div
-          className={`group/button relative mt-2 flex h-8 w-[112px] shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-4 text-[10px] font-medium text-black transition-all duration-500 ${
+          className={`group/button relative mt-2 flex h-8 w-full shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-4 text-[10px] font-medium text-black transition-all duration-500 ${
             active ? 'hover:border-white hover:text-white' : ''
           }`}
         >
