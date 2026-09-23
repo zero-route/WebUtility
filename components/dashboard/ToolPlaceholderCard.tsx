@@ -24,21 +24,37 @@ const icons = {
   'youtube-downloader': Download,
   'instagram-downloader': Image,
   'x-threads-downloader': Download,
+
   'svg-vectorizer': Code2,
   'base64-converter': Braces,
   'qr-barcode-generator': QrCode,
+  'color-picker-palette': Code2,
+  'image-compressor': Code2,
+
   'base64-encode-decode': Braces,
   'aes-encryptor': LockKeyhole,
   'password-generator': ShieldCheck,
   'hash-generator': Fingerprint,
+  'uuid-guid-generator': Code2,
+  'password-strength-checker': Code2,
+  'file-hash-checker': Code2,
+
   'json-formatter': Braces,
   'jwt-decoder': ShieldCheck,
   'markdown-notes': Code2,
   'url-parser': Network,
   'regex-tester': Terminal,
+  'case-converter': Code2,
+  'text-diff-checker': Code2,
+  'cron-expression-parser': Code2,
+
   'ip-network-info': Network,
   'subnet-calculator': Network,
-  'timestamp-converter': Database
+  'timestamp-converter': Database,
+  'dns-lookup': Code2,
+  'ping-latency-tester': Code2,
+  'mac-address-vendor-lookup': Code2,
+  'whois-domain-info': Code2
 }
 
 export default function ToolPlaceholderCard({
@@ -73,14 +89,14 @@ export default function ToolPlaceholderCard({
       }}
       whileHover={active ? { y: -3 } : undefined}
       whileTap={active ? { scale: 0.99 } : undefined}
-      className={`group relative aspect-square w-full overflow-hidden rounded-2xl border bg-surface p-5 text-center transition-[border-color,background-color] duration-300 ${
+      className={`group relative aspect-square w-full overflow-hidden rounded-2xl border bg-surface p-5 text-center transition-all duration-300 ${
         disabled
           ? 'cursor-not-allowed border-border'
-          : 'border-border hover:border-teal/50 hover:bg-surface2'
+          : 'border-border hover:border-borderStrong hover:bg-surface2'
       }`}
     >
       <div
-        className={`pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-teal/10 to-transparent transition-transform duration-700 ease-out ${
+        className={`pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-border/20 to-transparent transition-transform duration-700 ease-out ${
           active ? 'group-hover:translate-x-[300%]' : ''
         }`}
       />
@@ -91,9 +107,9 @@ export default function ToolPlaceholderCard({
         }`}
       >
         <div
-          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-border bg-surface2 text-teal-light transition-all duration-500 ${
+          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-border bg-surface2 text-textSecondary transition-all duration-500 ${
             active
-              ? 'group-hover:border-teal/50 group-hover:bg-teal/10 group-hover:scale-105'
+              ? 'group-hover:scale-105 group-hover:border-borderStrong group-hover:bg-surface'
               : ''
           }`}
         >
@@ -119,26 +135,30 @@ export default function ToolPlaceholderCard({
         <div
           className={`mt-3 flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-surface2 py-1.5 pl-3 pr-1.5 text-xs font-medium text-textSecondary transition-all duration-300 ${
             active
-              ? 'group-hover:border-teal/40 group-hover:bg-teal/10 group-hover:text-teal-light'
+              ? 'group-hover:border-borderStrong group-hover:bg-surface group-hover:text-textPrimary'
               : ''
           }`}
         >
           Kunjungi
+
           <span
             className={`flex h-5 w-5 items-center justify-center rounded-[6px] border border-border bg-surface text-textMuted transition-all duration-300 ${
               active
-                ? 'group-hover:border-teal/50 group-hover:text-teal-light'
+                ? 'group-hover:border-borderStrong group-hover:text-textPrimary'
                 : ''
             }`}
           >
-            <ExternalLink size={11} strokeWidth={2} />
+            <ExternalLink
+              size={11}
+              strokeWidth={2}
+            />
           </span>
         </div>
       </div>
 
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-teal" />
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-textSecondary" />
         </div>
       )}
 
