@@ -16,72 +16,72 @@ export type ToolCategory = {
 
 export const categories: ToolCategory[] = [
   {
-    slug: 'downloaders',
-    name: 'Media downloader',
-    description:
-      'Ambil video dan audio dari berbagai platform media sosial menggunakan tautan konten.',
-    toolCount: 4,
-    tools: [
-      'TikTok',
-      'YouTube',
-      'Instagram',
-      'X and Threads'
-    ],
-    items: [
-      {
-        id: 'tiktok-downloader',
-        name: 'TikTok downloader',
-        description:
-          'Tool untuk mengambil media dari TikTok melalui URL video. Cocok digunakan ketika Anda ingin menyimpan konten untuk penggunaan pribadi tanpa perlu memasang aplikasi tambahan.',
-        steps: [
-          'Salin URL video TikTok yang ingin diunduh.',
-          'Tempel URL ke kolom yang tersedia.',
-          'Tekan tombol proses atau download.',
-          'Pilih kualitas atau format yang tersedia.',
-          'Simpan file hasil download ke perangkat.'
-        ]
-      },
-      {
-        id: 'youtube-downloader',
-        name: 'YouTube downloader',
-        description:
-          'Tool untuk memproses tautan video YouTube dan menyediakan hasil media yang dapat diunduh. Gunakan hanya untuk konten yang memang boleh Anda simpan atau gunakan.',
-        steps: [
-          'Salin URL video YouTube.',
-          'Tempel URL ke kolom input.',
-          'Tekan tombol proses.',
-          'Pilih format atau kualitas yang tersedia.',
-          'Unduh file hasilnya ke perangkat.'
-        ]
-      },
-      {
-        id: 'instagram-downloader',
-        name: 'Instagram downloader',
-        description:
-          'Mengambil media dari konten Instagram menggunakan URL publik. Tool dapat digunakan untuk memproses media yang tersedia melalui tautan konten.',
-        steps: [
-          'Salin URL postingan atau media Instagram.',
-          'Tempel URL ke kolom input.',
-          'Tekan tombol proses.',
-          'Tunggu media berhasil ditemukan.',
-          'Unduh hasil media yang tersedia.'
-        ]
-      },
-      {
-        id: 'x-threads-downloader',
-        name: 'X and Threads downloader',
-        description:
-          'Tool untuk mengambil media dari X dan Threads menggunakan tautan konten. Praktis untuk memproses media tanpa perlu menggunakan aplikasi tambahan.',
-        steps: [
-          'Salin URL postingan dari X atau Threads.',
-          'Tempel URL ke kolom input.',
-          'Tekan tombol proses.',
-          'Tunggu media berhasil diproses.',
-          'Unduh file yang tersedia.'
-        ]
-      }
-    ]
-  },
+  slug: 'downloaders',
+  name: 'Media downloader',
+  description:
+    'Ambil video dan audio dari platform media sosial tanpa watermark',
+  toolCount: 4,
+  tools: [
+    'TikTok',
+    'YouTube',
+    'Instagram',
+    'X and Threads'
+  ],
+  items: [
+    {
+      id: 'tiktok-downloader',
+      name: 'TikTok downloader',
+      description:
+        'Mengunduh video TikTok melalui URL konten dengan proses yang sederhana dan praktis, sehingga media dapat disimpan untuk penggunaan pribadi sesuai hak dan ketentuan platform.',
+      steps: [
+        'Salin URL video TikTok yang ingin diproses.',
+        'Tempel URL tersebut ke dalam tool.',
+        'Jalankan proses pengambilan media.',
+        'Periksa hasil video yang tersedia.',
+        'Download video yang diinginkan.'
+      ]
+    },
+    {
+      id: 'youtube-downloader',
+      name: 'YouTube downloader',
+      description:
+        'Mengambil konten media dari tautan YouTube melalui tool yang tersedia, dengan opsi hasil yang mengikuti format atau kualitas yang didukung oleh layanan.',
+      steps: [
+        'Salin URL video YouTube yang ingin diproses.',
+        'Tempel URL ke dalam tool.',
+        'Jalankan proses pengambilan informasi video.',
+        'Pilih format atau kualitas yang tersedia.',
+        'Download hasil yang dipilih.'
+      ]
+    },
+    {
+      id: 'instagram-downloader',
+      name: 'Instagram downloader',
+      description:
+        'Mengambil media Instagram berdasarkan URL konten yang tersedia, sehingga proses penyimpanan media menjadi lebih praktis tanpa perlu menyalin konten secara manual.',
+      steps: [
+        'Salin URL konten Instagram.',
+        'Tempel URL tersebut ke dalam tool.',
+        'Jalankan proses pengambilan media.',
+        'Periksa media yang berhasil ditemukan.',
+        'Download media yang tersedia.'
+      ]
+    },
+    {
+      id: 'x-threads-downloader',
+      name: 'X and Threads downloader',
+      description:
+        'Mengambil media dari konten X atau Threads menggunakan URL posting yang tersedia, dengan hasil bergantung pada jenis konten dan dukungan layanan.',
+      steps: [
+        'Salin URL posting X atau Threads.',
+        'Tempel URL ke dalam tool.',
+        'Jalankan proses pengambilan media.',
+        'Periksa hasil media yang tersedia.',
+        'Download media yang ingin disimpan.'
+      ]
+    }
+  ]
+},
 
   {
     slug: 'design-tools',
