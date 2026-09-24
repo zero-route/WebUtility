@@ -134,9 +134,9 @@ export default function ToolPlaceholderCard({
 
       <div
         className={`
-          relative flex min-h-[142px] flex-col p-3.5
-          sm:min-h-[152px] sm:p-4
-          md:min-h-[158px]
+          relative flex min-h-[310px] flex-col p-3.5
+          sm:min-h-[320px] sm:p-4
+          lg:min-h-[330px]
           ${disabled ? 'blur-[3px] opacity-20' : ''}
         `}
       >
@@ -195,9 +195,38 @@ export default function ToolPlaceholderCard({
             {tool.name}
           </h3>
 
-          <p className="mt-1.5 line-clamp-2 text-[10px] leading-[1.45] text-textSecondary sm:text-[11px]">
+          <p className="mt-1.5 line-clamp-3 text-[10px] leading-[1.45] text-textSecondary sm:text-[11px]">
             {tool.description}
           </p>
+        </div>
+
+        <div className="mt-3 border-t border-white/[0.06] pt-3">
+          <p className="text-[9px] font-medium uppercase tracking-[0.13em] text-textMuted sm:text-[10px]">
+            Langkah penggunaan
+          </p>
+
+          <ol className="mt-2 space-y-1">
+            {tool.steps.slice(0, 3).map((step, stepIndex) => (
+              <li
+                key={stepIndex}
+                className="flex items-start gap-2 text-[9px] leading-[1.45] text-textSecondary sm:text-[10px] sm:leading-[1.5]"
+              >
+                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.02] text-[8px] text-textMuted">
+                  {stepIndex + 1}
+                </span>
+
+                <span className="line-clamp-2 pt-[1px]">
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          {tool.steps.length > 3 && (
+            <p className="mt-1.5 pl-6 text-[9px] text-textMuted sm:text-[10px]">
+              +{tool.steps.length - 3} langkah lainnya
+            </p>
+          )}
         </div>
 
         <div className="mt-auto pt-3">
@@ -208,6 +237,7 @@ export default function ToolPlaceholderCard({
               bg-white/[0.018] px-2.5
               text-[10px] text-textMuted
               transition-all duration-300
+              sm:h-8
               ${
                 active
                   ? 'group-hover:border-white/[0.11] group-hover:bg-white/[0.035] group-hover:text-textPrimary'
