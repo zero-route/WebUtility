@@ -10,14 +10,17 @@ export default function ToolPlaceholderGrid({
   category: ToolCategory
 }) {
   return (
-    <div>
+    <div className="w-full">
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="text-center"
+        transition={{
+          duration: 0.3,
+          ease: [0.22, 1, 0.36, 1]
+        }}
+        className="mx-auto max-w-2xl text-center"
       >
-        <h1 className="font-display text-2xl font-medium text-textPrimary">
+        <h1 className="font-display text-2xl font-medium tracking-tight text-textPrimary sm:text-3xl">
           {category.name}
         </h1>
 
@@ -26,16 +29,51 @@ export default function ToolPlaceholderGrid({
         </p>
       </motion.div>
 
-      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      <motion.div
+        initial="hidden"
+        animate="show"
+        variants={{
+          hidden: {},
+          show: {
+            transition: {
+              staggerChildren: 0.035
+            }
+          }
+        }}
+        className="
+          mt-7 grid grid-cols-1 gap-[10px]
+          sm:grid-cols-2
+          lg:grid-cols-3
+          xl:grid-cols-4
+        "
+      >
         {category.items.map((tool, index) => (
-          <ToolPlaceholderCard
+          <motion.div
             key={tool.id}
-            tool={tool}
-            index={index}
-            onOpen={() => {}}
-          />
+            variants={{
+              hidden: {
+                opacity: 0,
+                y: 6
+              },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 0.25,
+                  ease: [0.22, 1, 0.36, 1]
+                }
+              }
+            }}
+            className="min-w-0"
+          >
+            <ToolPlaceholderCard
+              tool={tool}
+              index={index}
+              onOpen={() => {}}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   )
 }
