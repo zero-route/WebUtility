@@ -99,7 +99,7 @@ export default function ToolPlaceholderCard({
       }}
       whileHover={active ? { y: -2 } : undefined}
       whileTap={active ? { y: 0 } : undefined}
-      className={`group relative mx-auto aspect-square w-full max-w-[280px] overflow-hidden rounded-xl border p-5 text-center backdrop-blur-xl transition-all duration-500 ${
+      className={`group relative mx-auto aspect-square w-full max-w-[190px] overflow-hidden rounded-xl border p-4 text-center backdrop-blur-xl transition-all duration-500 sm:max-w-[230px] sm:p-5 md:max-w-[280px] ${
         disabled
           ? 'cursor-not-allowed border-white/[0.06] bg-white/[0.015]'
           : 'border-white/[0.07] bg-white/[0.025] hover:border-white/[0.13] hover:bg-white/[0.035]'
@@ -125,16 +125,16 @@ export default function ToolPlaceholderCard({
         }`}
       >
         <div
-          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.025] text-textSecondary transition-all duration-500 ${
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.025] text-textSecondary transition-all duration-500 sm:h-14 sm:w-14 ${
             active
               ? 'group-hover:border-white/[0.14] group-hover:bg-white/[0.05] group-hover:text-textPrimary'
               : ''
           }`}
         >
           <Icon
-            size={24}
+            size={19}
             strokeWidth={1.6}
-            className={`transition-transform duration-500 ease-out ${
+            className={`transition-transform duration-500 ease-out sm:h-6 sm:w-6 ${
               active
                 ? 'group-hover:translate-y-[-1px] group-hover:rotate-[-4deg]'
                 : ''
@@ -142,16 +142,16 @@ export default function ToolPlaceholderCard({
           />
         </div>
 
-        <h3 className="mt-3 shrink-0 font-display text-sm font-medium leading-tight text-textPrimary">
+        <h3 className="mt-2 w-full shrink-0 truncate px-1 font-display text-xs font-medium leading-tight text-textPrimary sm:mt-3 sm:text-sm">
           {tool.name}
         </h3>
 
-        <p className="mt-1.5 line-clamp-2 max-w-[92%] flex-1 text-xs leading-[1.5] text-textSecondary">
+        <p className="mt-1 line-clamp-2 max-w-[94%] flex-1 text-[10px] leading-[1.4] text-textSecondary sm:mt-1.5 sm:text-xs sm:leading-[1.5]">
           {tool.description}
         </p>
 
         <div
-          className={`group/button relative mt-3 flex h-10 w-full shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-4 text-xs font-medium text-black transition-all duration-500 ${
+          className={`group/button relative mt-2 flex h-8 w-full shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-4 text-[10px] font-medium text-black transition-all duration-500 sm:mt-3 sm:h-10 sm:text-xs ${
             active ? 'hover:border-white hover:text-white' : ''
           }`}
         >
