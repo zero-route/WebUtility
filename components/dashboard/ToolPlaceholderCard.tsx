@@ -99,7 +99,7 @@ export default function ToolPlaceholderCard({
       }}
       whileHover={active ? { y: -2 } : undefined}
       whileTap={active ? { y: 0 } : undefined}
-      className={`group relative mx-auto aspect-square w-full max-w-[210px] overflow-hidden rounded-xl border p-4 text-center backdrop-blur-xl transition-all duration-500 ${
+      className={`group relative mx-auto aspect-square w-full max-w-[280px] overflow-hidden rounded-xl border p-5 text-center backdrop-blur-xl transition-all duration-500 ${
         disabled
           ? 'cursor-not-allowed border-white/[0.06] bg-white/[0.015]'
           : 'border-white/[0.07] bg-white/[0.025] hover:border-white/[0.13] hover:bg-white/[0.035]'
@@ -114,9 +114,9 @@ export default function ToolPlaceholderCard({
       </div>
 
       <Icon
-        size={130}
+        size={170}
         strokeWidth={1}
-        className="pointer-events-none absolute -bottom-6 -right-6 rotate-[-12deg] text-white/[0.025]"
+        className="pointer-events-none absolute -bottom-8 -right-8 rotate-[-12deg] text-white/[0.025]"
       />
 
       <div
@@ -125,15 +125,15 @@ export default function ToolPlaceholderCard({
         }`}
       >
         <div
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.025] text-textSecondary transition-all duration-500 ${
+          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.025] text-textSecondary transition-all duration-500 ${
             active
               ? 'group-hover:border-white/[0.14] group-hover:bg-white/[0.05] group-hover:text-textPrimary'
               : ''
           }`}
         >
           <Icon
-            size={17}
-            strokeWidth={1.7}
+            size={24}
+            strokeWidth={1.6}
             className={`transition-transform duration-500 ease-out ${
               active
                 ? 'group-hover:translate-y-[-1px] group-hover:rotate-[-4deg]'
@@ -142,16 +142,16 @@ export default function ToolPlaceholderCard({
           />
         </div>
 
-        <h3 className="mt-2 shrink-0 font-display text-[12px] font-medium leading-tight text-textPrimary">
+        <h3 className="mt-3 shrink-0 font-display text-sm font-medium leading-tight text-textPrimary">
           {tool.name}
         </h3>
 
-        <p className="mt-1 line-clamp-2 max-w-[92%] flex-1 text-[10px] leading-[1.35] text-textSecondary">
+        <p className="mt-1.5 line-clamp-2 max-w-[92%] flex-1 text-xs leading-[1.5] text-textSecondary">
           {tool.description}
         </p>
 
         <div
-          className={`group/button relative mt-2 flex h-8 w-full shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-4 text-[10px] font-medium text-black transition-all duration-500 ${
+          className={`group/button relative mt-3 flex h-10 w-full shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-black/10 bg-white px-4 text-xs font-medium text-black transition-all duration-500 ${
             active ? 'hover:border-white hover:text-white' : ''
           }`}
         >
@@ -167,7 +167,7 @@ export default function ToolPlaceholderCard({
 
           <span className="relative z-10 flex items-center justify-center">
             <ExternalLink
-              size={11}
+              size={13}
               strokeWidth={2}
               className="transition-transform duration-500 ease-out group-hover/button:translate-x-[2px] group-hover/button:translate-y-[-2px]"
             />
@@ -182,20 +182,20 @@ export default function ToolPlaceholderCard({
       )}
 
       {disabled && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] text-textSecondary">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] text-textSecondary">
             <LockKeyhole
-              size={19}
+              size={21}
               strokeWidth={1.7}
             />
           </div>
 
-          <p className="mt-2 font-display text-xs font-medium text-textPrimary">
+          <p className="mt-2.5 font-display text-sm font-medium text-textPrimary">
             Tools Dinonaktifkan Oleh Admin
           </p>
 
           {disabledNote && (
-            <p className="mt-1 max-w-[220px] text-[10px] leading-4 text-textMuted">
+            <p className="mt-1 max-w-[240px] text-xs leading-4 text-textMuted">
               {disabledNote}
             </p>
           )}
