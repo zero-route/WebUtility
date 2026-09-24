@@ -19,31 +19,71 @@ export default function DesignToolsPage() {
         {
           id: 'svg-vectorizer',
           name: 'SVG vectorizer',
-          description: 'Upload logo PNG/JPG berlatar transparan, lalu generate kode SVG-nya.',
+          description:
+            'Konversi gambar PNG atau JPG menjadi kode SVG yang dapat digunakan kembali untuk kebutuhan web dan desain.',
+          steps: [
+            'Siapkan gambar PNG atau JPG yang ingin dikonversi.',
+            'Upload gambar ke tool.',
+            'Tunggu proses vectorization selesai.',
+            'Periksa hasil SVG yang dihasilkan.',
+            'Salin atau gunakan kode SVG tersebut.'
+          ],
           component: <VectorizerUI />
         },
         {
           id: 'base64-converter',
           name: 'Base64 converter',
-          description: 'Upload gambar, hasilnya langsung jadi kode data URI Base64.',
+          description:
+            'Mengubah gambar menjadi data URI Base64 yang dapat digunakan pada HTML, CSS, atau kebutuhan aplikasi web.',
+          steps: [
+            'Pilih gambar yang ingin dikonversi.',
+            'Upload gambar ke tool.',
+            'Tunggu proses encoding selesai.',
+            'Periksa data URI Base64 yang dihasilkan.',
+            'Salin hasil untuk digunakan pada project.'
+          ],
           component: <Base64UI />
         },
         {
           id: 'qr-barcode-generator',
           name: 'QR and barcode generator',
-          description: 'Masukkan link atau teks, opsional tambahkan logo di tengah QR.',
+          description:
+            'Membuat QR code atau barcode dari URL, teks, maupun data lainnya dengan opsi kustomisasi yang tersedia.',
+          steps: [
+            'Masukkan URL, teks, atau data yang ingin digunakan.',
+            'Pilih jenis kode yang ingin dibuat.',
+            'Atur opsi tampilan jika diperlukan.',
+            'Periksa hasil QR code atau barcode.',
+            'Download hasil yang sudah dibuat.'
+          ],
           component: <QrUI />
         },
         {
           id: 'color-palette-generator',
           name: 'Color picker and palette generator',
-          description: 'Pilih satu warna, dapatkan variasi kombinasi otomatis.',
+          description:
+            'Memilih warna utama dan menghasilkan variasi palette yang dapat digunakan untuk kebutuhan desain website, aplikasi, maupun aset visual.',
+          steps: [
+            'Pilih warna utama menggunakan color picker.',
+            'Periksa nilai HEX atau format warna lainnya.',
+            'Pilih variasi palette yang tersedia.',
+            'Periksa kombinasi warna yang dihasilkan.',
+            'Salin kode warna yang ingin digunakan.'
+          ],
           component: <ColorPaletteGenerator />
         },
         {
           id: 'image-compressor',
           name: 'Image compressor',
-          description: 'Kecilkan ukuran file gambar langsung di browser.',
+          description:
+            'Mengurangi ukuran file gambar langsung di browser dengan pengaturan kompresi yang tersedia tanpa perlu aplikasi tambahan.',
+          steps: [
+            'Pilih gambar yang ingin dikompres.',
+            'Upload gambar ke tool.',
+            'Atur tingkat kompresi jika tersedia.',
+            'Periksa ukuran dan hasil gambar.',
+            'Download gambar hasil kompresi.'
+          ],
           component: <ImageCompressor />
         }
       ]}
