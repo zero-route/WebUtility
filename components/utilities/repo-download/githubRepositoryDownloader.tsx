@@ -43,6 +43,7 @@ function parseGithubUrl(raw: string): ParsedRepo | null {
 
 function triggerDownload(url: string) {
   const link = document.createElement('a')
+
   link.href = url
   link.rel = 'noopener'
   document.body.appendChild(link)
@@ -103,20 +104,46 @@ export default function GithubRepositoryDownloader() {
           return
         }
 
-        const data = await res.json()
-        branch = data.default_branch ?? 'main'
+        const data: { default_branch?: string } = await res.json()
+
+        branch = data.default_branch ?? null
+
+        if (!branch) {
+          setStatus('error')
+          setMessage(
+            'Branch default repository tidak dapat ditemukan. Tambahkan branch secara langsung pada URL repository.'
+          )
+          return
+        }
       }
 
-      const zipUrl = `https://codeload.github.com/${parsed.owner}/${parsed.repo}/zip/refs/heads/${encodeURIComponent(
-        branch
-      )}`
+      const resolvedBranch = branch
+
+      if (!resolvedBranch) {
+        setStatus('error')
+        setMessage(
+          'Branch repository tidak dapat ditentukan. Coba gunakan URL dengan nama branch, misalnya /tree/main.'
+        )
+        return
+      }
+
+      const zipUrl =
+        `https://codeload.github.com/${parsed.owner}/${parsed.repo}` +
+        `/zip/refs/heads/${encodeURIComponent(resolvedBranch)}`
 
       triggerDownload(zipUrl)
 
-      setResolved({ owner: parsed.owner, repo: parsed.repo, branch })
+      setResolved({
+        owner: parsed.owner,
+        repo: parsed.repo,
+        branch: resolvedBranch
+      })
+
       setManualLink(zipUrl)
       setStatus('success')
-      setMessage('Download dimulai. Kalau tidak otomatis berjalan, pakai tautan manual di bawah.')
+      setMessage(
+        'Download dimulai. Kalau tidak otomatis berjalan, pakai tautan manual di bawah.'
+      )
     } catch {
       setStatus('error')
       setMessage(
@@ -127,7 +154,9 @@ export default function GithubRepositoryDownloader() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
     if (!url.trim() || status === 'checking') return
+
     handleDownload()
   }
 
@@ -177,30 +206,42 @@ export default function GithubRepositoryDownloader() {
             ) : (
               <Download size={16} />
             )}
+
             Download ZIP
           </button>
         </div>
 
         <p className="mt-2 text-xs text-textMuted">
-          Cukup tempel link repo (boleh dengan atau tanpa <code>/tree/branch</code>). Hanya untuk repository publik.
+          Cukup tempel link repo (boleh dengan atau tanpa{' '}
+          <code>/tree/branch</code>). Hanya untuk repository publik.
         </p>
       </form>
 
       {status === 'error' && (
         <div className="mt-4 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4">
-          <AlertCircle size={18} className="mt-0.5 shrink-0 text-red-400" />
+          <AlertCircle
+            size={18}
+            className="mt-0.5 shrink-0 text-red-400"
+          />
+
           <p className="text-sm leading-5 text-red-200">{message}</p>
         </div>
       )}
 
       {status === 'success' && resolved && (
         <div className="mt-4 flex items-start gap-3 rounded-xl border border-teal/20 bg-teal/5 p-4">
-          <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-teal-light" />
+          <CheckCircle2
+            size={18}
+            className="mt-0.5 shrink-0 text-teal-light"
+          />
+
           <div className="text-sm leading-5 text-textSecondary">
             <p>{message}</p>
+
             <p className="mt-1 font-mono text-xs text-textMuted">
               {resolved.owner}/{resolved.repo}@{resolved.branch}
             </p>
+
             {manualLink && (
               <a
                 href={manualLink}
