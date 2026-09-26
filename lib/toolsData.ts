@@ -16,72 +16,72 @@ export type ToolCategory = {
 
 export const categories: ToolCategory[] = [
   {
-  slug: 'downloaders',
-  name: 'Media downloader',
-  description:
-    'Ambil video dan audio dari platform media sosial tanpa watermark',
-  toolCount: 4,
-  tools: [
-    'TikTok',
-    'YouTube',
-    'Instagram',
-    'X and Threads'
-  ],
-  items: [
-    {
-      id: 'tiktok-downloader',
-      name: 'TikTok downloader',
-      description:
-        'Mengunduh video TikTok melalui URL konten dengan proses yang sederhana dan praktis, sehingga media dapat disimpan untuk penggunaan pribadi sesuai hak dan ketentuan platform.',
-      steps: [
-        'Salin URL video TikTok yang ingin diproses.',
-        'Tempel URL tersebut ke dalam tool.',
-        'Jalankan proses pengambilan media.',
-        'Periksa hasil video yang tersedia.',
-        'Download video yang diinginkan.'
-      ]
-    },
-    {
-      id: 'youtube-downloader',
-      name: 'YouTube downloader',
-      description:
-        'Mengambil konten media dari tautan YouTube melalui tool yang tersedia, dengan opsi hasil yang mengikuti format atau kualitas yang didukung oleh layanan.',
-      steps: [
-        'Salin URL video YouTube yang ingin diproses.',
-        'Tempel URL ke dalam tool.',
-        'Jalankan proses pengambilan informasi video.',
-        'Pilih format atau kualitas yang tersedia.',
-        'Download hasil yang dipilih.'
-      ]
-    },
-    {
-      id: 'instagram-downloader',
-      name: 'Instagram downloader',
-      description:
-        'Mengambil media Instagram berdasarkan URL konten yang tersedia, sehingga proses penyimpanan media menjadi lebih praktis tanpa perlu menyalin konten secara manual.',
-      steps: [
-        'Salin URL konten Instagram.',
-        'Tempel URL tersebut ke dalam tool.',
-        'Jalankan proses pengambilan media.',
-        'Periksa media yang berhasil ditemukan.',
-        'Download media yang tersedia.'
-      ]
-    },
-    {
-      id: 'x-threads-downloader',
-      name: 'X and Threads downloader',
-      description:
-        'Mengambil media dari konten X atau Threads menggunakan URL posting yang tersedia, dengan hasil bergantung pada jenis konten dan dukungan layanan.',
-      steps: [
-        'Salin URL posting X atau Threads.',
-        'Tempel URL ke dalam tool.',
-        'Jalankan proses pengambilan media.',
-        'Periksa hasil media yang tersedia.',
-        'Download media yang ingin disimpan.'
-      ]
-    }
-  ]
-},
+    slug: 'downloaders',
+    name: 'Media downloader',
+    description:
+      'Ambil video dan audio dari platform media sosial tanpa watermark',
+    toolCount: 4,
+    tools: [
+      'TikTok',
+      'YouTube',
+      'Instagram',
+      'X and Threads'
+    ],
+    items: [
+      {
+        id: 'tiktok-downloader',
+        name: 'TikTok downloader',
+        description:
+          'Mengunduh video TikTok melalui URL konten dengan proses yang sederhana dan praktis, sehingga media dapat disimpan untuk penggunaan pribadi sesuai hak dan ketentuan platform.',
+        steps: [
+          'Salin URL video TikTok yang ingin diproses.',
+          'Tempel URL tersebut ke dalam tool.',
+          'Jalankan proses pengambilan media.',
+          'Periksa hasil video yang tersedia.',
+          'Download video yang diinginkan.'
+        ]
+      },
+      {
+        id: 'youtube-downloader',
+        name: 'YouTube downloader',
+        description:
+          'Mengambil konten media dari tautan YouTube melalui tool yang tersedia, dengan opsi hasil yang mengikuti format atau kualitas yang didukung oleh layanan.',
+        steps: [
+          'Salin URL video YouTube yang ingin diproses.',
+          'Tempel URL ke dalam tool.',
+          'Jalankan proses pengambilan informasi video.',
+          'Pilih format atau kualitas yang tersedia.',
+          'Download hasil yang dipilih.'
+        ]
+      },
+      {
+        id: 'instagram-downloader',
+        name: 'Instagram downloader',
+        description:
+          'Mengambil media Instagram berdasarkan URL konten yang tersedia, sehingga proses penyimpanan media menjadi lebih praktis tanpa perlu menyalin konten secara manual.',
+        steps: [
+          'Salin URL konten Instagram.',
+          'Tempel URL tersebut ke dalam tool.',
+          'Jalankan proses pengambilan media.',
+          'Periksa media yang berhasil ditemukan.',
+          'Download media yang tersedia.'
+        ]
+      },
+      {
+        id: 'x-threads-downloader',
+        name: 'X and Threads downloader',
+        description:
+          'Mengambil media dari konten X atau Threads menggunakan URL posting yang tersedia, dengan hasil bergantung pada jenis konten dan dukungan layanan.',
+        steps: [
+          'Salin URL posting X atau Threads.',
+          'Tempel URL ke dalam tool.',
+          'Jalankan proses pengambilan media.',
+          'Periksa hasil media yang tersedia.',
+          'Download media yang ingin disimpan.'
+        ]
+      }
+    ]
+  },
 
   {
     slug: 'design-tools',
@@ -279,8 +279,8 @@ export const categories: ToolCategory[] = [
     slug: 'utilities',
     name: 'Utilities and web dev',
     description:
-      'Berbagai utilitas untuk developer seperti JSON, JWT, URL, regex, Markdown, dan pengolahan teks.',
-    toolCount: 8,
+      'Berbagai utilitas untuk developer seperti JSON, JWT, URL, regex, Markdown, pengolahan teks, dan repository GitHub.',
+    toolCount: 9,
     tools: [
       'JSON formatter',
       'JWT decoder',
@@ -289,7 +289,8 @@ export const categories: ToolCategory[] = [
       'Regex tester',
       'Case converter',
       'Text diff checker',
-      'Cron expression parser'
+      'Cron expression parser',
+      'GitHub repository downloader'
     ],
     items: [
       {
@@ -394,6 +395,19 @@ export const categories: ToolCategory[] = [
           'Periksa arti setiap bagian ekspresi.',
           'Lihat jadwal eksekusi yang dihasilkan.',
           'Sesuaikan ekspresi jika diperlukan.'
+        ]
+      },
+      {
+        id: 'github-repository-downloader',
+        name: 'GitHub repository downloader',
+        description:
+          'Mengunduh seluruh isi repository GitHub publik sebagai file ZIP melalui URL repository. Tool dapat menggunakan branch default atau branch yang ditentukan langsung melalui URL.',
+        steps: [
+          'Salin URL repository GitHub publik.',
+          'Tempel URL repository ke dalam tool.',
+          'Jalankan proses pemeriksaan repository.',
+          'Tunggu proses download ZIP dimulai.',
+          'Gunakan tautan manual jika download otomatis tidak berjalan.'
         ]
       }
     ]
