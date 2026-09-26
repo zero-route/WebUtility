@@ -134,9 +134,9 @@ export default function ToolPlaceholderCard({
 
       <div
         className={`
-          relative flex min-h-[310px] flex-col p-3.5
-          sm:min-h-[320px] sm:p-4
-          lg:min-h-[330px]
+          relative flex min-h-[330px] flex-col p-3.5
+          sm:min-h-[340px] sm:p-4
+          lg:min-h-[350px]
           ${disabled ? 'blur-[3px] opacity-20' : ''}
         `}
       >
@@ -205,8 +205,8 @@ export default function ToolPlaceholderCard({
             Langkah penggunaan
           </p>
 
-          <ol className="mt-2 space-y-1">
-            {tool.steps.slice(0, 3).map((step, stepIndex) => (
+          <ol className="mt-2 space-y-1.5">
+            {tool.steps.map((step, stepIndex) => (
               <li
                 key={stepIndex}
                 className="flex items-start gap-2 text-[9px] leading-[1.45] text-textSecondary sm:text-[10px] sm:leading-[1.5]"
@@ -215,18 +215,12 @@ export default function ToolPlaceholderCard({
                   {stepIndex + 1}
                 </span>
 
-                <span className="line-clamp-2 pt-[1px]">
+                <span className="pt-[1px]">
                   {step}
                 </span>
               </li>
             ))}
           </ol>
-
-          {tool.steps.length > 3 && (
-            <p className="mt-1.5 pl-6 text-[9px] text-textMuted sm:text-[10px]">
-              +{tool.steps.length - 3} langkah lainnya
-            </p>
-          )}
         </div>
 
         <div className="mt-auto pt-3">
