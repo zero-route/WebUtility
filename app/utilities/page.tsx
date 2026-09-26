@@ -7,6 +7,7 @@ import RegexTester from '@/components/utilities/regex-tester/RegexTester'
 import CaseConverter from '@/components/utilities/case-converter/CaseConverter'
 import TextDiffChecker from '@/components/utilities/text-diff/TextDiffChecker'
 import CronParser from '@/components/utilities/cron-parser/CronParser'
+import GithubRepositoryDownloader from '@/components/utilities/repo-download/githubRepositoryDownloader'
 import ToolPage from '@/components/dashboard/ToolPage'
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function UtilitiesPage() {
   return (
     <ToolPage
       title="Utilities and web dev"
-      description="Rapikan JSON, baca JWT, dan uji pola regex"
+      description="Rapikan JSON, baca JWT, uji pola regex, dan kelola utilitas web development"
       tools={[
         {
           id: 'json-formatter',
@@ -130,6 +131,20 @@ export default function UtilitiesPage() {
             'Gunakan hasilnya untuk memvalidasi konfigurasi cron.'
           ],
           component: <CronParser />
+        },
+        {
+          id: 'github-repository-downloader',
+          name: 'GitHub repository downloader',
+          description:
+            'Mengunduh seluruh isi repository GitHub publik sebagai file ZIP melalui URL repository. Tool dapat menggunakan branch default atau branch yang ditentukan langsung melalui URL.',
+          steps: [
+            'Salin URL repository GitHub publik.',
+            'Tempel URL repository ke dalam tool.',
+            'Jalankan proses pemeriksaan repository.',
+            'Tunggu proses download ZIP dimulai.',
+            'Gunakan tautan manual jika download otomatis tidak berjalan.'
+          ],
+          component: <GithubRepositoryDownloader />
         }
       ]}
     />
