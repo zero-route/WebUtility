@@ -54,7 +54,7 @@ export default function UrlParser() {
         />
         <button
           onClick={handleParse}
-          className="mt-3 w-full rounded-lg bg-teal px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-dark"
+          className="mt-3 w-full rounded-lg bg-teal px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-teal-dark"
         >
           Parse
         </button>
