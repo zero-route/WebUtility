@@ -85,7 +85,7 @@ export default function TextDiffChecker() {
 
       <button
         onClick={handleCompare}
-        className="w-full rounded-lg bg-teal px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-dark"
+        className="w-full rounded-lg bg-teal px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-teal-dark"
       >
         Bandingkan
       </button>
