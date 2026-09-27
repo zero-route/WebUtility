@@ -21,7 +21,8 @@ import {
   ShieldCheck,
   Terminal,
   WandSparkles,
-  Youtube
+  Youtube, 
+  Github
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
@@ -55,6 +56,7 @@ const icons = {
   'case-converter': Code2,
   'text-diff-checker': FileDiff,
   'cron-expression-parser': Clock3,
+  'github-repository-downloader' : Github,
 
   'ip-network-info': Network,
   'subnet-calculator': Network,
