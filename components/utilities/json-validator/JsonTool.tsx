@@ -52,7 +52,7 @@ export default function JsonTool() {
         <div className="mt-3 flex gap-2">
           <button
             onClick={handleFormat}
-            className="flex-1 rounded-lg bg-teal px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-dark"
+            className="flex-1 rounded-lg bg-teal px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-teal-dark"
           >
             Format
           </button>
