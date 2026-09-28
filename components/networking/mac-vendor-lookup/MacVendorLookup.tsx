@@ -60,7 +60,7 @@ export default function MacVendorLookup() {
         <button
           onClick={handleLookup}
           disabled={isLoading}
-          className="mt-3 w-full rounded-lg bg-teal px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-dark disabled:opacity-50"
+          className="mt-3 w-full rounded-lg bg-teal px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-teal-dark disabled:opacity-50"
         >
           {isLoading ? 'Mencari...' : 'Cari vendor'}
         </button>
