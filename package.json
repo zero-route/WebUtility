@@ -19,7 +19,8 @@
     "imagetracerjs": "1.2.6",
     "qrcode": "1.5.3",
     "crypto-js": "4.2.0",
-    "marked": "9.1.6"
+    "marked": "9.1.6",
+    "dompurify": "3.2.6"
   },
   "devDependencies": {
     "typescript": "5.5.4",
