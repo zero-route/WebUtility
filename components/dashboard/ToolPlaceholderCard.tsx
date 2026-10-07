@@ -39,6 +39,7 @@ const icons = {
   'svg-vectorizer': Code2,
   'base64-converter': Braces,
   'qr-barcode-generator': QrCode,
+  'color-picker': WandSparkles,
   'color-palette-generator': WandSparkles,
   'image-compressor': FileImage,
 
@@ -58,6 +59,9 @@ const icons = {
   'case-converter': CaseSensitive,
   'text-diff-checker': FileDiff,
   'cron-parser': Clock3,
+  'cron-expression-parser': Clock3,
+
+  'github-repo-downloader': Github,
   'github-repository-downloader': Github,
 
   'ip-network-info': Network,
@@ -65,8 +69,11 @@ const icons = {
   'timestamp-converter': Database,
   'dns-lookup': Globe,
   'ping-tester': Terminal,
+  'ping-latency-tester': Terminal,
   'mac-vendor-lookup': Network,
-  'whois-lookup': Globe
+  'mac-address-vendor-lookup': Network,
+  'whois-lookup': Globe,
+  'whois-domain-info': Globe
 }
 
 export default function ToolPlaceholderCard({
