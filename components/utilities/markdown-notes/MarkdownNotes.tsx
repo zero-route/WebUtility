@@ -1,10 +1,74 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import { Copy, Check, Trash2 } from 'lucide-react'
 
 const STORAGE_KEY = 'kitbox-markdown-notes'
+
+const SANITIZE_CONFIG = {
+  ALLOWED_TAGS: [
+    'a',
+    'blockquote',
+    'br',
+    'code',
+    'del',
+    'em',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'hr',
+    'li',
+    'ol',
+    'p',
+    'pre',
+    'strong',
+    'ul'
+  ],
+  ALLOWED_ATTR: [
+    'href',
+    'title',
+    'target',
+    'rel'
+  ],
+  FORBID_TAGS: [
+    'script',
+    'style',
+    'iframe',
+    'object',
+    'embed',
+    'form',
+    'input',
+    'button',
+    'textarea',
+    'select',
+    'option',
+    'video',
+    'audio',
+    'source',
+    'svg',
+    'math'
+  ],
+  FORBID_ATTR: [
+    'style',
+    'id',
+    'class',
+    'src',
+    'srcset',
+    'onerror',
+    'onload',
+    'onclick',
+    'onmouseover',
+    'onfocus',
+    'onmouseenter',
+    'onmouseleave'
+  ],
+  ALLOW_DATA_ATTR: false
+}
 
 export default function MarkdownNotes() {
   const [markdown, setMarkdown] = useState('')
@@ -13,8 +77,19 @@ export default function MarkdownNotes() {
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) setMarkdown(saved)
+
+    if (saved) {
+      setMarkdown(saved)
+    }
   }, [])
+
+  const renderedHtml = useMemo(() => {
+    const rawHtml = marked.parse(
+      markdown || '_Belum ada catatan_'
+    ) as string
+
+    return DOMPurify.sanitize(rawHtml, SANITIZE_CONFIG)
+  }, [markdown])
 
   function handleChange(value: string) {
     setMarkdown(value)
@@ -26,11 +101,16 @@ export default function MarkdownNotes() {
     localStorage.removeItem(STORAGE_KEY)
   }
 
-  function handleCopy() {
+  async function handleCopy() {
     if (!markdown) return
-    navigator.clipboard.writeText(markdown)
+
+    await navigator.clipboard.writeText(markdown)
+
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+
+    setTimeout(() => {
+      setCopied(false)
+    }, 2000)
   }
 
   return (
@@ -46,6 +126,7 @@ export default function MarkdownNotes() {
         >
           Tulis
         </button>
+
         <button
           onClick={() => setTab('preview')}
           className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
@@ -69,7 +150,9 @@ export default function MarkdownNotes() {
       ) : (
         <div
           className="mt-3 min-h-[280px] rounded-lg border border-border bg-surface2 p-4 text-sm text-textPrimary [&_a]:text-teal-light [&_a]:underline [&_blockquote]:border-l-2 [&_blockquote]:border-border [&_blockquote]:pl-3 [&_blockquote]:text-textMuted [&_code]:rounded [&_code]:bg-surface [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs [&_h1]:mb-2 [&_h1]:font-display [&_h1]:text-lg [&_h1]:font-semibold [&_h2]:mb-2 [&_h2]:font-display [&_h2]:text-base [&_h2]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-2 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5"
-          dangerouslySetInnerHTML={{ __html: marked.parse(markdown || '_Belum ada catatan_') as string }}
+          dangerouslySetInnerHTML={{
+            __html: renderedHtml
+          }}
         />
       )}
 
@@ -79,13 +162,16 @@ export default function MarkdownNotes() {
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-border px-3 py-2 text-xs text-textSecondary hover:text-textPrimary"
         >
           {copied ? <Check size={12} /> : <Copy size={12} />}
+
           {copied ? 'Tersalin' : 'Copy'}
         </button>
+
         <button
           onClick={handleClear}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-border px-3 py-2 text-xs text-textSecondary hover:text-textPrimary"
         >
           <Trash2 size={12} />
+
           Hapus
         </button>
       </div>
