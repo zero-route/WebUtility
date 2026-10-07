@@ -35,14 +35,12 @@ const icons = {
   'youtube-downloader': Youtube,
   'instagram-downloader': Instagram,
   'x-threads-downloader': Download,
-
   'svg-vectorizer': Code2,
   'base64-converter': Braces,
   'qr-barcode-generator': QrCode,
   'color-picker': WandSparkles,
   'color-palette-generator': WandSparkles,
   'image-compressor': FileImage,
-
   'base64-encode-decode': Braces,
   'aes-encryptor': LockKeyhole,
   'password-generator': ShieldCheck,
@@ -50,7 +48,6 @@ const icons = {
   'uuid-generator': Code2,
   'password-strength-checker': ShieldCheck,
   'file-hash-checker': Fingerprint,
-
   'json-formatter': Braces,
   'jwt-decoder': ShieldCheck,
   'markdown-notes': FileText,
@@ -60,10 +57,8 @@ const icons = {
   'text-diff-checker': FileDiff,
   'cron-parser': Clock3,
   'cron-expression-parser': Clock3,
-
   'github-repo-downloader': Github,
   'github-repository-downloader': Github,
-
   'ip-network-info': Network,
   'subnet-calculator': Network,
   'timestamp-converter': Database,
@@ -85,14 +80,18 @@ export default function ToolPlaceholderCard({
   index: number
   onOpen: () => void
 }) {
-  const { enabled } = useToolEnabled(tool.id)
+  const { enabled, status, reason } = useToolEnabled(tool.id)
   const disabledNote = useDisabledToolsNote()
 
   const Icon = icons[tool.id as keyof typeof icons] ?? Code2
 
-  const loading = enabled === null
-  const disabled = enabled === false
-  const active = enabled === true
+  const loading = enabled === false && status === 'unavailable'
+  const adminDisabled = status === 'admin_disabled'
+  const unavailable = status === 'unavailable'
+  const disabled = !enabled
+  const active = status === 'enabled'
+
+  const unavailableReason = 'Status : features_flags No info'
 
   return (
     <motion.button
@@ -125,7 +124,6 @@ export default function ToolPlaceholderCard({
         `}
       >
         <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[35%]" />
-
         <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.025] to-transparent" />
       </div>
 
@@ -235,35 +233,50 @@ export default function ToolPlaceholderCard({
         </div>
 
         <div className="mt-auto pt-3">
-          <div
-            className={`
-              flex h-7 items-center justify-between
-              rounded-lg border border-white/[0.06]
-              bg-white/[0.018] px-2.5
-              text-[10px] text-textMuted
-              transition-all duration-300
-              sm:h-8
-              ${
-                active
-                  ? 'group-hover:border-white/[0.11] group-hover:bg-white/[0.035] group-hover:text-textPrimary'
-                  : ''
-              }
-            `}
-          >
-            <span>Gunakan tools</span>
+          {!loading && !adminDisabled && unavailable && (
+            <div className="rounded-lg border border-white/[0.07] bg-white/[0.018] px-2.5 py-2">
+              <p className="text-[10px] font-medium text-textSecondary">
+                Tools Dikunci Sementara
+              </p>
+              <p className="mt-1 text-[9px] text-textMuted">
+                {unavailableReason}
+              </p>
+            </div>
+          )}
 
-            <span
-              className={`
-                h-1 w-1 rounded-full bg-white/25
+          {!loading && adminDisabled && (
+            <div className="rounded-lg border border-white/[0.07] bg-white/[0.018] px-2.5 py-2">
+              <p className="text-[10px] font-medium text-textSecondary">
+                Tools Dinonaktifkan Oleh Admin
+              </p>
+
+              {reason && (
+                <p className="mt-1 line-clamp-2 text-[9px] text-textMuted">
+                  {reason}
+                </p>
+              )}
+            </div>
+          )}
+
+          {active && (
+            <div
+              className="
+                flex h-7 items-center justify-between
+                rounded-lg border border-white/[0.06]
+                bg-white/[0.018] px-2.5
+                text-[10px] text-textMuted
                 transition-all duration-300
-                ${
-                  active
-                    ? 'group-hover:w-2 group-hover:bg-white/60'
-                    : ''
-                }
-              `}
-            />
-          </div>
+                sm:h-8
+                group-hover:border-white/[0.11]
+                group-hover:bg-white/[0.035]
+                group-hover:text-textPrimary
+              "
+            >
+              <span>Gunakan tools</span>
+
+              <span className="h-1 w-1 rounded-full bg-white/25 transition-all duration-300 group-hover:w-2 group-hover:bg-white/60" />
+            </div>
+          )}
         </div>
       </div>
     </motion.button>
