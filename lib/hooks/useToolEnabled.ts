@@ -33,103 +33,93 @@ export function useToolEnabled(toolId: string) {
     reason: null
   })
 
-  const instanceId = useRef(
-    Math.random().toString(36).slice(2)
-  )
+  const requestIdRef = useRef(0)
+  const mountedRef = useRef(false)
 
-  const loadFeatureFlag = useCallback(
-    async (retryCount = 0): Promise<boolean> => {
-      try {
-        const { data, error } = await supabase
-          .from('feature_flags')
-          .select('is_enabled, disabled_reason')
-          .eq('tool_id', toolId)
-          .limit(1)
-          .maybeSingle()
+  const loadFeatureFlag = useCallback(async () => {
+    const requestId = ++requestIdRef.current
 
-        if (error) {
-          if (retryCount < 2) {
-            await new Promise((resolve) =>
-              setTimeout(resolve, 500 * (retryCount + 1))
-            )
+    try {
+      const { data, error } = await supabase
+        .from('feature_flags')
+        .select('is_enabled, disabled_reason')
+        .eq('tool_id', toolId)
+        .limit(1)
+        .maybeSingle()
 
-            return loadFeatureFlag(retryCount + 1)
-          }
+      if (!mountedRef.current) return
 
-          console.error('[FeatureFlags] ERROR', {
-            tool_id: toolId,
-            reason: 'Supabase request failed after retries',
-            error
-          })
+      if (requestId !== requestIdRef.current) return
 
-          setState(unavailableState)
-          return false
-        }
-
-        if (!data) {
-          if (retryCount < 2) {
-            await new Promise((resolve) =>
-              setTimeout(resolve, 500 * (retryCount + 1))
-            )
-
-            return loadFeatureFlag(retryCount + 1)
-          }
-
-          console.error('[FeatureFlags] ERROR', {
-            tool_id: toolId,
-            reason: 'Feature flag record not found'
-          })
-
-          setState(unavailableState)
-          return false
-        }
-
-        if (data.is_enabled === false) {
-          setState({
-            enabled: false,
-            status: 'admin_disabled',
-            reason: data.disabled_reason ?? null
-          })
-
-          return true
-        }
-
-        setState({
-          enabled: true,
-          status: 'enabled',
-          reason: null
-        })
-
-        return true
-      } catch (error) {
-        if (retryCount < 2) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, 500 * (retryCount + 1))
-          )
-
-          return loadFeatureFlag(retryCount + 1)
-        }
-
+      if (error) {
         console.error('[FeatureFlags] ERROR', {
           tool_id: toolId,
-          reason: 'Unexpected feature flag error',
+          reason: 'Supabase request failed',
           error
         })
 
         setState(unavailableState)
-        return false
+        return
       }
-    },
-    [toolId]
-  )
+
+      if (!data) {
+        console.error('[FeatureFlags] ERROR', {
+          tool_id: toolId,
+          reason: 'Feature flag record not found'
+        })
+
+        setState(unavailableState)
+        return
+      }
+
+      if (typeof data.is_enabled !== 'boolean') {
+        console.error('[FeatureFlags] ERROR', {
+          tool_id: toolId,
+          reason: 'Invalid feature flag value'
+        })
+
+        setState(unavailableState)
+        return
+      }
+
+      if (data.is_enabled === false) {
+        setState({
+          enabled: false,
+          status: 'admin_disabled',
+          reason: data.disabled_reason ?? null
+        })
+
+        return
+      }
+
+      setState({
+        enabled: true,
+        status: 'enabled',
+        reason: null
+      })
+    } catch (error) {
+      if (!mountedRef.current) return
+
+      if (requestId !== requestIdRef.current) return
+
+      console.error('[FeatureFlags] ERROR', {
+        tool_id: toolId,
+        reason: 'Unexpected feature flag error',
+        error
+      })
+
+      setState(unavailableState)
+    }
+  }, [toolId])
 
   useEffect(() => {
-    let active = true
+    mountedRef.current = true
+    requestIdRef.current += 1
 
     void loadFeatureFlag()
 
     const channel = supabase
-      .channel(`feature-flag-${toolId}-${instanceId.current}`)
+      .channel(`feature-flag-${toolId}-${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         {
@@ -138,8 +128,8 @@ export function useToolEnabled(toolId: string) {
           table: 'feature_flags',
           filter: `tool_id=eq.${toolId}`
         },
-        (payload) => {
-          if (!active) return
+        async (payload) => {
+          if (!mountedRef.current) return
 
           if (payload.eventType === 'DELETE') {
             console.error('[FeatureFlags] ERROR', {
@@ -147,6 +137,7 @@ export function useToolEnabled(toolId: string) {
               reason: 'Feature flag record deleted'
             })
 
+            requestIdRef.current += 1
             setState(unavailableState)
             return
           }
@@ -156,12 +147,14 @@ export function useToolEnabled(toolId: string) {
           if (typeof next.is_enabled !== 'boolean') {
             console.error('[FeatureFlags] ERROR', {
               tool_id: toolId,
-              reason: 'Invalid feature flag payload'
+              reason: 'Invalid feature flag realtime payload'
             })
 
-            void loadFeatureFlag()
+            await loadFeatureFlag()
             return
           }
+
+          requestIdRef.current += 1
 
           if (next.is_enabled === false) {
             setState({
@@ -181,28 +174,33 @@ export function useToolEnabled(toolId: string) {
         }
       )
       .subscribe((subscriptionStatus) => {
-        if (!active) return
+        if (!mountedRef.current) return
 
         if (
           subscriptionStatus === 'CHANNEL_ERROR' ||
           subscriptionStatus === 'TIMED_OUT'
         ) {
-          console.warn('[FeatureFlags] Realtime unavailable', {
+          console.error('[FeatureFlags] ERROR', {
             tool_id: toolId,
+            reason: 'Realtime feature flag unavailable',
             status: subscriptionStatus
           })
+
+          requestIdRef.current += 1
+          setState(unavailableState)
         }
       })
 
     const pollInterval = window.setInterval(() => {
-      if (!active) return
+      if (!mountedRef.current) return
       void loadFeatureFlag()
     }, 30000)
 
     return () => {
-      active = false
+      mountedRef.current = false
+      requestIdRef.current += 1
       window.clearInterval(pollInterval)
-      supabase.removeChannel(channel)
+      void supabase.removeChannel(channel)
     }
   }, [toolId, loadFeatureFlag])
 
