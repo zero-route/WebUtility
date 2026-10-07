@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import {
   AlertCircle,
   CheckCircle2,
@@ -119,14 +119,6 @@ export default function GithubRepositoryDownloader() {
 
       const resolvedBranch = branch
 
-      if (!resolvedBranch) {
-        setStatus('error')
-        setMessage(
-          'Branch repository tidak dapat ditentukan. Coba gunakan URL dengan nama branch, misalnya /tree/main.'
-        )
-        return
-      }
-
       const zipUrl =
         `https://codeload.github.com/${parsed.owner}/${parsed.repo}` +
         `/zip/refs/heads/${encodeURIComponent(resolvedBranch)}`
@@ -152,12 +144,12 @@ export default function GithubRepositoryDownloader() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
 
     if (!url.trim() || status === 'checking') return
 
-    handleDownload()
+    void handleDownload()
   }
 
   return (
@@ -191,7 +183,7 @@ export default function GithubRepositoryDownloader() {
             id="github-repo-url"
             type="text"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={(event) => setUrl(event.target.value)}
             placeholder="https://github.com/owner/nama-repo"
             className="w-full rounded-xl border border-border bg-surface2 px-4 py-3 text-sm text-textPrimary placeholder:text-textMuted outline-none transition-colors focus:border-teal/50"
           />
@@ -224,7 +216,9 @@ export default function GithubRepositoryDownloader() {
             className="mt-0.5 shrink-0 text-red-400"
           />
 
-          <p className="text-sm leading-5 text-red-200">{message}</p>
+          <p className="text-sm leading-5 text-red-200">
+            {message}
+          </p>
         </div>
       )}
 

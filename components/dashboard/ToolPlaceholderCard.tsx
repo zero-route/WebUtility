@@ -27,7 +27,6 @@ import {
   Youtube
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
-import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
 import type { ToolItem } from '@/lib/toolsData'
 
 const icons = {
@@ -81,17 +80,13 @@ export default function ToolPlaceholderCard({
   onOpen: () => void
 }) {
   const { enabled, status, reason } = useToolEnabled(tool.id)
-  const disabledNote = useDisabledToolsNote()
 
   const Icon = icons[tool.id as keyof typeof icons] ?? Code2
 
-  const loading = enabled === false && status === 'unavailable'
+  const loading = status === 'unavailable'
   const adminDisabled = status === 'admin_disabled'
   const unavailable = status === 'unavailable'
-  const disabled = !enabled
   const active = status === 'enabled'
-
-  const unavailableReason = 'Status : features_flags No info'
 
   return (
     <motion.button
@@ -111,9 +106,9 @@ export default function ToolPlaceholderCard({
         group relative isolate w-full overflow-hidden rounded-[14px]
         border text-left transition-all duration-300
         ${
-          disabled
-            ? 'cursor-not-allowed border-white/[0.055] bg-white/[0.012]'
-            : 'border-white/[0.075] bg-white/[0.018] hover:border-white/[0.14] hover:bg-white/[0.028]'
+          active
+            ? 'border-white/[0.075] bg-white/[0.018] hover:border-white/[0.14] hover:bg-white/[0.028]'
+            : 'cursor-not-allowed border-white/[0.055] bg-white/[0.012]'
         }
       `}
     >
@@ -141,14 +136,7 @@ export default function ToolPlaceholderCard({
         "
       />
 
-      <div
-        className={`
-          relative flex min-h-[330px] flex-col p-3.5
-          sm:min-h-[340px] sm:p-4
-          lg:min-h-[350px]
-          ${disabled ? 'blur-[3px] opacity-20' : ''}
-        `}
-      >
+      <div className="relative flex min-h-[330px] flex-col p-3.5 sm:min-h-[340px] sm:p-4 lg:min-h-[350px]">
         <div className="flex items-start justify-between gap-3">
           <div
             className={`
@@ -167,15 +155,7 @@ export default function ToolPlaceholderCard({
             <Icon
               size={17}
               strokeWidth={1.55}
-              className={`
-                transition-transform duration-400 ease-out
-                sm:h-[18px] sm:w-[18px]
-                ${
-                  active
-                    ? 'group-hover:-translate-y-0.5 group-hover:rotate-[-3deg]'
-                    : ''
-                }
-              `}
+              className="sm:h-[18px] sm:w-[18px]"
             />
           </div>
 
@@ -184,18 +164,20 @@ export default function ToolPlaceholderCard({
               mt-1 flex h-6 w-6 shrink-0 items-center justify-center
               rounded-full border border-white/[0.06]
               text-textMuted transition-all duration-300
-              ${
-                active
-                  ? 'group-hover:border-white/[0.13] group-hover:bg-white/[0.035] group-hover:text-textPrimary'
-                  : ''
-              }
+              ${active ? 'group-hover:border-white/[0.13] group-hover:bg-white/[0.035] group-hover:text-textPrimary' : ''}
             `}
           >
-            <ExternalLink
-              size={11}
-              strokeWidth={1.8}
-              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            />
+            {active ? (
+              <ExternalLink
+                size={11}
+                strokeWidth={1.8}
+              />
+            ) : (
+              <LockKeyhole
+                size={11}
+                strokeWidth={1.8}
+              />
+            )}
           </span>
         </div>
 
@@ -233,45 +215,50 @@ export default function ToolPlaceholderCard({
         </div>
 
         <div className="mt-auto pt-3">
-          {!loading && !adminDisabled && unavailable && (
-            <div className="rounded-lg border border-white/[0.07] bg-white/[0.018] px-2.5 py-2">
-              <p className="text-[10px] font-medium text-textSecondary">
-                Tools Dikunci Sementara
-              </p>
-              <p className="mt-1 text-[9px] text-textMuted">
-                {unavailableReason}
-              </p>
-            </div>
-          )}
+          {adminDisabled && (
+            <div className="flex min-h-[52px] flex-col justify-center rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-2.5">
+              <div className="flex items-center gap-2">
+                <LockKeyhole
+                  size={13}
+                  strokeWidth={1.8}
+                  className="shrink-0 text-textSecondary"
+                />
 
-          {!loading && adminDisabled && (
-            <div className="rounded-lg border border-white/[0.07] bg-white/[0.018] px-2.5 py-2">
-              <p className="text-[10px] font-medium text-textSecondary">
-                Tools Dinonaktifkan Oleh Admin
-              </p>
+                <span className="text-[10px] font-medium text-textPrimary">
+                  Tools Dinonaktifkan Oleh Admin
+                </span>
+              </div>
 
               {reason && (
-                <p className="mt-1 line-clamp-2 text-[9px] text-textMuted">
+                <p className="mt-1 pl-5 text-[9px] leading-4 text-textMuted">
                   {reason}
                 </p>
               )}
             </div>
           )}
 
+          {unavailable && (
+            <div className="flex min-h-[52px] flex-col justify-center rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-2.5">
+              <div className="flex items-center gap-2">
+                <LockKeyhole
+                  size={13}
+                  strokeWidth={1.8}
+                  className="shrink-0 text-textSecondary"
+                />
+
+                <span className="text-[10px] font-medium text-textPrimary">
+                  Tools Dikunci Sementara
+                </span>
+              </div>
+
+              <p className="mt-1 pl-5 text-[9px] leading-4 text-textMuted">
+                Status : features_flags No info
+              </p>
+            </div>
+          )}
+
           {active && (
-            <div
-              className="
-                flex h-7 items-center justify-between
-                rounded-lg border border-white/[0.06]
-                bg-white/[0.018] px-2.5
-                text-[10px] text-textMuted
-                transition-all duration-300
-                sm:h-8
-                group-hover:border-white/[0.11]
-                group-hover:bg-white/[0.035]
-                group-hover:text-textPrimary
-              "
-            >
+            <div className="flex h-7 items-center justify-between rounded-lg border border-white/[0.06] bg-white/[0.018] px-2.5 text-[10px] text-textMuted transition-all duration-300 sm:h-8 group-hover:border-white/[0.11] group-hover:bg-white/[0.035] group-hover:text-textPrimary">
               <span>Gunakan tools</span>
 
               <span className="h-1 w-1 rounded-full bg-white/25 transition-all duration-300 group-hover:w-2 group-hover:bg-white/60" />
