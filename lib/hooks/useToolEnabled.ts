@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
+import type {
+  ToolFeatureState,
+  ToolFeatureStatus
+} from '@/lib/featureFlags'
 
 type FeatureFlagPayload = {
   tool_id?: string
@@ -9,13 +13,29 @@ type FeatureFlagPayload = {
   disabled_reason?: string | null
 }
 
+const unavailableState: ToolFeatureState = {
+  status: 'unavailable',
+  enabled: false,
+  reason: 'Status : features_flags No info'
+}
+
 export function useToolEnabled(toolId: string) {
-  const [enabled, setEnabled] = useState<boolean | null>(null)
-  const [reason, setReason] = useState<string | null>(null)
+  const [state, setState] = useState<ToolFeatureState>({
+    status: 'unavailable',
+    enabled: false,
+    reason: 'Status : features_flags No info'
+  })
+
   const instanceId = useRef(Math.random().toString(36).slice(2))
 
   useEffect(() => {
     let active = true
+
+    const setUnavailable = () => {
+      if (!active) return
+
+      setState(unavailableState)
+    }
 
     const loadInitialState = async () => {
       const { data, error } = await supabase
@@ -26,14 +46,41 @@ export function useToolEnabled(toolId: string) {
 
       if (!active) return
 
-      if (error || !data) {
-        setEnabled(true)
-        setReason(null)
+      if (error) {
+        console.error('[FeatureFlags] ERROR', {
+          tool_id: toolId,
+          reason: 'Supabase request failed',
+          error: error.message
+        })
+
+        setUnavailable()
         return
       }
 
-      setEnabled(data.is_enabled)
-      setReason(data.disabled_reason ?? null)
+      if (!data || typeof data.is_enabled !== 'boolean') {
+        console.error('[FeatureFlags] ERROR', {
+          tool_id: toolId,
+          reason: 'Feature flag data unavailable or invalid'
+        })
+
+        setUnavailable()
+        return
+      }
+
+      if (data.is_enabled === false) {
+        setState({
+          status: 'admin_disabled',
+          enabled: false,
+          reason: data.disabled_reason ?? null
+        })
+        return
+      }
+
+      setState({
+        status: 'enabled',
+        enabled: true,
+        reason: null
+      })
     }
 
     loadInitialState()
@@ -46,26 +93,65 @@ export function useToolEnabled(toolId: string) {
           event: '*',
           schema: 'public',
           table: 'feature_flags',
-          filter: `tool_id=eq.${toolId}`,
+          filter: `tool_id=eq.${toolId}`
         },
         (payload) => {
           if (!active) return
 
-          const next = payload.new as FeatureFlagPayload
-
           if (payload.eventType === 'DELETE') {
-            setEnabled(true)
-            setReason(null)
+            console.error('[FeatureFlags] ERROR', {
+              tool_id: toolId,
+              reason: 'Feature flag record deleted'
+            })
+
+            setUnavailable()
             return
           }
 
-          if (typeof next.is_enabled === 'boolean') {
-            setEnabled(next.is_enabled)
-            setReason(next.disabled_reason ?? null)
+          const next = payload.new as FeatureFlagPayload
+
+          if (typeof next.is_enabled !== 'boolean') {
+            console.error('[FeatureFlags] ERROR', {
+              tool_id: toolId,
+              reason: 'Invalid realtime feature flag payload'
+            })
+
+            setUnavailable()
+            return
           }
+
+          if (next.is_enabled === false) {
+            setState({
+              status: 'admin_disabled',
+              enabled: false,
+              reason: next.disabled_reason ?? null
+            })
+            return
+          }
+
+          setState({
+            status: 'enabled',
+            enabled: true,
+            reason: null
+          })
         }
       )
-      .subscribe()
+      .subscribe((status) => {
+        if (!active) return
+
+        if (
+          status === 'CHANNEL_ERROR' ||
+          status === 'TIMED_OUT' ||
+          status === 'CLOSED'
+        ) {
+          console.error('[FeatureFlags] ERROR', {
+            tool_id: toolId,
+            reason: `Realtime channel ${status}`
+          })
+
+          setUnavailable()
+        }
+      })
 
     return () => {
       active = false
@@ -73,8 +159,11 @@ export function useToolEnabled(toolId: string) {
     }
   }, [toolId])
 
+  const status: ToolFeatureStatus = state.status
+
   return {
-    enabled,
-    reason,
+    enabled: state.enabled,
+    reason: state.reason,
+    status
   }
 }
