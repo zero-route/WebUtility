@@ -5,7 +5,7 @@ export type ToolFeatureStatus =
   | 'admin_disabled'
   | 'unavailable'
 
-export type ToolFeatureState = {
+export type ToolFeatureResult = {
   status: ToolFeatureStatus
   enabled: boolean
   reason: string | null
@@ -13,18 +13,19 @@ export type ToolFeatureState = {
 
 export async function isToolEnabled(
   toolId: string
-): Promise<ToolFeatureState> {
+): Promise<ToolFeatureResult> {
   const { data, error } = await supabase
     .from('feature_flags')
     .select('is_enabled, disabled_reason')
     .eq('tool_id', toolId)
+    .limit(1)
     .maybeSingle()
 
   if (error) {
     console.error('[FeatureFlags] ERROR', {
       tool_id: toolId,
       reason: 'Supabase request failed',
-      error: error.message
+      error
     })
 
     return {
@@ -34,10 +35,10 @@ export async function isToolEnabled(
     }
   }
 
-  if (!data || typeof data.is_enabled !== 'boolean') {
+  if (!data) {
     console.error('[FeatureFlags] ERROR', {
       tool_id: toolId,
-      reason: 'Feature flag data unavailable or invalid'
+      reason: 'Feature flag record not found'
     })
 
     return {

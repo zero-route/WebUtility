@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
-import type {
-  ToolFeatureState,
-  ToolFeatureStatus
-} from '@/lib/featureFlags'
+
+export type ToolFeatureStatus =
+  | 'enabled'
+  | 'admin_disabled'
+  | 'unavailable'
 
 type FeatureFlagPayload = {
   tool_id?: string
@@ -13,77 +14,119 @@ type FeatureFlagPayload = {
   disabled_reason?: string | null
 }
 
-const unavailableState: ToolFeatureState = {
-  status: 'unavailable',
+type FeatureFlagState = {
+  enabled: boolean | null
+  status: ToolFeatureStatus
+  reason: string | null
+}
+
+const unavailableState: FeatureFlagState = {
   enabled: false,
+  status: 'unavailable',
   reason: 'Status : features_flags No info'
 }
 
 export function useToolEnabled(toolId: string) {
-  const [state, setState] = useState<ToolFeatureState>({
+  const [state, setState] = useState<FeatureFlagState>({
+    enabled: null,
     status: 'unavailable',
-    enabled: false,
-    reason: 'Status : features_flags No info'
+    reason: null
   })
 
-  const instanceId = useRef(Math.random().toString(36).slice(2))
+  const instanceId = useRef(
+    Math.random().toString(36).slice(2)
+  )
+
+  const loadFeatureFlag = useCallback(
+    async (retryCount = 0): Promise<boolean> => {
+      try {
+        const { data, error } = await supabase
+          .from('feature_flags')
+          .select('is_enabled, disabled_reason')
+          .eq('tool_id', toolId)
+          .limit(1)
+          .maybeSingle()
+
+        if (error) {
+          if (retryCount < 2) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, 500 * (retryCount + 1))
+            )
+
+            return loadFeatureFlag(retryCount + 1)
+          }
+
+          console.error('[FeatureFlags] ERROR', {
+            tool_id: toolId,
+            reason: 'Supabase request failed after retries',
+            error
+          })
+
+          setState(unavailableState)
+          return false
+        }
+
+        if (!data) {
+          if (retryCount < 2) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, 500 * (retryCount + 1))
+            )
+
+            return loadFeatureFlag(retryCount + 1)
+          }
+
+          console.error('[FeatureFlags] ERROR', {
+            tool_id: toolId,
+            reason: 'Feature flag record not found'
+          })
+
+          setState(unavailableState)
+          return false
+        }
+
+        if (data.is_enabled === false) {
+          setState({
+            enabled: false,
+            status: 'admin_disabled',
+            reason: data.disabled_reason ?? null
+          })
+
+          return true
+        }
+
+        setState({
+          enabled: true,
+          status: 'enabled',
+          reason: null
+        })
+
+        return true
+      } catch (error) {
+        if (retryCount < 2) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, 500 * (retryCount + 1))
+          )
+
+          return loadFeatureFlag(retryCount + 1)
+        }
+
+        console.error('[FeatureFlags] ERROR', {
+          tool_id: toolId,
+          reason: 'Unexpected feature flag error',
+          error
+        })
+
+        setState(unavailableState)
+        return false
+      }
+    },
+    [toolId]
+  )
 
   useEffect(() => {
     let active = true
 
-    const setUnavailable = () => {
-      if (!active) return
-
-      setState(unavailableState)
-    }
-
-    const loadInitialState = async () => {
-      const { data, error } = await supabase
-        .from('feature_flags')
-        .select('is_enabled, disabled_reason')
-        .eq('tool_id', toolId)
-        .maybeSingle()
-
-      if (!active) return
-
-      if (error) {
-        console.error('[FeatureFlags] ERROR', {
-          tool_id: toolId,
-          reason: 'Supabase request failed',
-          error: error.message
-        })
-
-        setUnavailable()
-        return
-      }
-
-      if (!data || typeof data.is_enabled !== 'boolean') {
-        console.error('[FeatureFlags] ERROR', {
-          tool_id: toolId,
-          reason: 'Feature flag data unavailable or invalid'
-        })
-
-        setUnavailable()
-        return
-      }
-
-      if (data.is_enabled === false) {
-        setState({
-          status: 'admin_disabled',
-          enabled: false,
-          reason: data.disabled_reason ?? null
-        })
-        return
-      }
-
-      setState({
-        status: 'enabled',
-        enabled: true,
-        reason: null
-      })
-    }
-
-    loadInitialState()
+    void loadFeatureFlag()
 
     const channel = supabase
       .channel(`feature-flag-${toolId}-${instanceId.current}`)
@@ -104,7 +147,7 @@ export function useToolEnabled(toolId: string) {
               reason: 'Feature flag record deleted'
             })
 
-            setUnavailable()
+            setState(unavailableState)
             return
           }
 
@@ -113,57 +156,55 @@ export function useToolEnabled(toolId: string) {
           if (typeof next.is_enabled !== 'boolean') {
             console.error('[FeatureFlags] ERROR', {
               tool_id: toolId,
-              reason: 'Invalid realtime feature flag payload'
+              reason: 'Invalid feature flag payload'
             })
 
-            setUnavailable()
+            void loadFeatureFlag()
             return
           }
 
           if (next.is_enabled === false) {
             setState({
-              status: 'admin_disabled',
               enabled: false,
+              status: 'admin_disabled',
               reason: next.disabled_reason ?? null
             })
+
             return
           }
 
           setState({
-            status: 'enabled',
             enabled: true,
+            status: 'enabled',
             reason: null
           })
         }
       )
-      .subscribe((status) => {
+      .subscribe((subscriptionStatus) => {
         if (!active) return
 
         if (
-          status === 'CHANNEL_ERROR' ||
-          status === 'TIMED_OUT' ||
-          status === 'CLOSED'
+          subscriptionStatus === 'CHANNEL_ERROR' ||
+          subscriptionStatus === 'TIMED_OUT'
         ) {
-          console.error('[FeatureFlags] ERROR', {
+          console.warn('[FeatureFlags] Realtime unavailable', {
             tool_id: toolId,
-            reason: `Realtime channel ${status}`
+            status: subscriptionStatus
           })
-
-          setUnavailable()
         }
       })
 
+    const pollInterval = window.setInterval(() => {
+      if (!active) return
+      void loadFeatureFlag()
+    }, 30000)
+
     return () => {
       active = false
+      window.clearInterval(pollInterval)
       supabase.removeChannel(channel)
     }
-  }, [toolId])
+  }, [toolId, loadFeatureFlag])
 
-  const status: ToolFeatureStatus = state.status
-
-  return {
-    enabled: state.enabled,
-    reason: state.reason,
-    status
-  }
+  return state
 }
