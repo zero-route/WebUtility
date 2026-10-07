@@ -84,13 +84,15 @@ export default function ToolPlaceholderCard({
   index: number
   onOpen: () => void
 }) {
-  const { enabled, reason } = useToolEnabled(tool.id)
+  const { enabled, status, reason } = useToolEnabled(tool.id)
 
   const Icon = icons[tool.id as keyof typeof icons] ?? Code2
 
   const loading = enabled === null
   const disabled = enabled === false
   const active = enabled === true
+  const adminDisabled = status === 'admin_disabled'
+  const unavailable = status === 'unavailable'
 
   return (
     <motion.button
@@ -238,31 +240,35 @@ export default function ToolPlaceholderCard({
       </div>
 
       {disabled && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center p-6">
-          <div className="flex max-w-[220px] flex-col items-center text-center">
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/10 p-6">
+          <div className="flex max-w-[240px] flex-col items-center text-center">
             <div
               className="
-                flex h-11 w-11 items-center justify-center
+                flex h-12 w-12 items-center justify-center
                 rounded-xl border border-white/[0.10]
-                bg-black/40 text-textSecondary
+                bg-black/45 text-textSecondary
                 shadow-lg backdrop-blur-md
               "
             >
               <LockKeyhole
-                size={19}
+                size={20}
                 strokeWidth={1.7}
               />
             </div>
 
             <h3 className="mt-3 font-display text-[12px] font-medium text-textPrimary sm:text-[13px]">
-              Tools Dinonaktifkan Oleh Admin
+              {adminDisabled
+                ? 'Tools Dinonaktifkan Oleh Admin'
+                : 'Tools Dikunci Sementara'}
             </h3>
 
-            {reason && (
-              <p className="mt-1.5 line-clamp-3 text-[10px] leading-[1.45] text-textMuted sm:text-[11px]">
-                {reason}
-              </p>
-            )}
+            <p className="mt-1.5 text-[10px] leading-[1.45] text-textMuted sm:text-[11px]">
+              {adminDisabled
+                ? reason || 'Tool ini sedang dinonaktifkan oleh admin.'
+                : unavailable
+                  ? 'Status : features_flags No info'
+                  : 'Tool tidak dapat digunakan saat ini.'}
+            </p>
           </div>
         </div>
       )}
