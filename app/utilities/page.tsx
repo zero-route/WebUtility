@@ -133,7 +133,7 @@ export default function UtilitiesPage() {
           component: <CronParser />
         },
         {
-          id: 'github-repo-downloader',
+          id: 'github-repository-downloader',
           name: 'GitHub repository downloader',
           description:
             'Mengunduh seluruh isi repository GitHub publik sebagai file ZIP melalui URL repository. Tool dapat menggunakan branch default atau branch yang ditentukan langsung melalui URL.',
