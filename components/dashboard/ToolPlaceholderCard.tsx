@@ -3,17 +3,20 @@
 import { motion } from 'framer-motion'
 import {
   Braces,
+  CaseSensitive,
+  Clock3,
   Code2,
   Database,
   Download,
   ExternalLink,
-  Fingerprint,
   FileDiff,
   FileImage,
+  FileText,
+  Fingerprint,
   Globe,
+  Github,
   Instagram,
   LockKeyhole,
-  Clock3,
   Music2,
   Network,
   QrCode,
@@ -21,8 +24,7 @@ import {
   ShieldCheck,
   Terminal,
   WandSparkles,
-  Youtube,
-  Github
+  Youtube
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
@@ -50,10 +52,10 @@ const icons = {
 
   'json-formatter': Braces,
   'jwt-decoder': ShieldCheck,
-  'markdown-notes': Code2,
+  'markdown-notes': FileText,
   'url-parser': Network,
   'regex-tester': Regex,
-  'case-converter': Code2,
+  'case-converter': CaseSensitive,
   'text-diff-checker': FileDiff,
   'cron-parser': Clock3,
   'github-repository-downloader': Github,
@@ -241,18 +243,18 @@ export default function ToolPlaceholderCard({
               }
             `}
           >
-            <span>
-              {loading
-                ? 'Memuat status...'
-                : disabled
-                  ? disabledNote
-                  : 'Buka tool'}
-            </span>
+            <span>Gunakan tools</span>
 
-            <ExternalLink
-              size={11}
-              strokeWidth={1.8}
-              className="transition-transform duration-300 group-hover:translate-x-0.5"
+            <span
+              className={`
+                h-1 w-1 rounded-full bg-white/25
+                transition-all duration-300
+                ${
+                  active
+                    ? 'group-hover:w-2 group-hover:bg-white/60'
+                    : ''
+                }
+              `}
             />
           </div>
         </div>
