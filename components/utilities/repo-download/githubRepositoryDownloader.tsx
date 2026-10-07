@@ -1,258 +1,271 @@
 'use client'
 
-import { useState } from 'react'
+import { motion } from 'framer-motion'
 import {
-  AlertCircle,
-  CheckCircle2,
+  Braces,
+  CaseSensitive,
+  Clock3,
+  Code2,
+  Database,
   Download,
+  ExternalLink,
+  FileDiff,
+  FileImage,
+  FileText,
+  Fingerprint,
+  Globe,
   Github,
-  Loader2
+  Instagram,
+  LockKeyhole,
+  Music2,
+  Network,
+  QrCode,
+  Regex,
+  ShieldCheck,
+  Terminal,
+  WandSparkles,
+  Youtube
 } from 'lucide-react'
+import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
+import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
+import type { ToolItem } from '@/lib/toolsData'
 
-type Status = 'idle' | 'checking' | 'success' | 'error'
+const icons = {
+  'tiktok-downloader': Music2,
+  'youtube-downloader': Youtube,
+  'instagram-downloader': Instagram,
+  'x-threads-downloader': Download,
 
-interface ParsedRepo {
-  owner: string
-  repo: string
-  branch: string | null
+  'svg-vectorizer': Code2,
+  'base64-converter': Braces,
+  'qr-barcode-generator': QrCode,
+  'color-picker': WandSparkles,
+  'color-palette-generator': WandSparkles,
+  'image-compressor': FileImage,
+
+  'base64-encode-decode': Braces,
+  'aes-encryptor': LockKeyhole,
+  'password-generator': ShieldCheck,
+  'hash-generator': Fingerprint,
+  'uuid-generator': Code2,
+  'password-strength-checker': ShieldCheck,
+  'file-hash-checker': Fingerprint,
+
+  'json-formatter': Braces,
+  'jwt-decoder': ShieldCheck,
+  'markdown-notes': FileText,
+  'url-parser': Network,
+  'regex-tester': Regex,
+  'case-converter': CaseSensitive,
+  'text-diff-checker': FileDiff,
+  'cron-parser': Clock3,
+  'cron-expression-parser': Clock3,
+
+  'github-repo-downloader': Github,
+  'github-repository-downloader': Github,
+
+  'ip-network-info': Network,
+  'subnet-calculator': Network,
+  'timestamp-converter': Database,
+  'dns-lookup': Globe,
+  'ping-tester': Terminal,
+  'ping-latency-tester': Terminal,
+  'mac-vendor-lookup': Network,
+  'mac-address-vendor-lookup': Network,
+  'whois-lookup': Globe,
+  'whois-domain-info': Globe
 }
 
-function parseGithubUrl(raw: string): ParsedRepo | null {
-  const trimmed = raw.trim()
+export default function ToolPlaceholderCard({
+  tool,
+  index,
+  onOpen
+}: {
+  tool: ToolItem
+  index: number
+  onOpen: () => void
+}) {
+  const { enabled } = useToolEnabled(tool.id)
+  const disabledNote = useDisabledToolsNote()
 
-  if (!trimmed) return null
+  const Icon = icons[tool.id as keyof typeof icons] ?? Code2
 
-  const cleaned = trimmed
-    .replace(/^https?:\/\//i, '')
-    .replace(/^www\./i, '')
-
-  const match = cleaned.match(
-    /^github\.com\/([^/\s#?]+)\/([^/\s#?]+?)(?:\.git)?(?:\/(?:tree|blob)\/([^/\s#?]+))?(?:[/#?].*)?$/i
-  )
-
-  if (!match) return null
-
-  const [, owner, repo, branch] = match
-
-  return {
-    owner,
-    repo,
-    branch: branch ? decodeURIComponent(branch) : null
-  }
-}
-
-function triggerDownload(url: string) {
-  const link = document.createElement('a')
-
-  link.href = url
-  link.rel = 'noopener'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-}
-
-export default function GithubRepositoryDownloader() {
-  const [url, setUrl] = useState('')
-  const [status, setStatus] = useState<Status>('idle')
-  const [message, setMessage] = useState('')
-  const [resolved, setResolved] = useState<ParsedRepo | null>(null)
-  const [manualLink, setManualLink] = useState<string | null>(null)
-
-  const handleDownload = async () => {
-    setStatus('checking')
-    setMessage('')
-    setResolved(null)
-    setManualLink(null)
-
-    const parsed = parseGithubUrl(url)
-
-    if (!parsed) {
-      setStatus('error')
-      setMessage(
-        'URL GitHub tidak valid. Contoh format yang benar: https://github.com/owner/nama-repo'
-      )
-      return
-    }
-
-    let branch = parsed.branch
-
-    try {
-      if (!branch) {
-        const res = await fetch(
-          `https://api.github.com/repos/${parsed.owner}/${parsed.repo}`
-        )
-
-        if (res.status === 404) {
-          setStatus('error')
-          setMessage(
-            'Repository tidak ditemukan. Pastikan URL benar dan repo bersifat publik.'
-          )
-          return
-        }
-
-        if (res.status === 403) {
-          setStatus('error')
-          setMessage(
-            'Terlalu banyak permintaan ke GitHub API saat ini. Coba lagi beberapa menit lagi, atau tambahkan nama branch langsung di URL (contoh: .../tree/main).'
-          )
-          return
-        }
-
-        if (!res.ok) {
-          setStatus('error')
-          setMessage('Gagal mengambil info repository dari GitHub.')
-          return
-        }
-
-        const data: { default_branch?: string } = await res.json()
-
-        branch = data.default_branch ?? null
-
-        if (!branch) {
-          setStatus('error')
-          setMessage(
-            'Branch default repository tidak dapat ditemukan. Tambahkan branch secara langsung pada URL repository.'
-          )
-          return
-        }
-      }
-
-      const resolvedBranch = branch
-
-      if (!resolvedBranch) {
-        setStatus('error')
-        setMessage(
-          'Branch repository tidak dapat ditentukan. Coba gunakan URL dengan nama branch, misalnya /tree/main.'
-        )
-        return
-      }
-
-      const zipUrl =
-        `https://codeload.github.com/${parsed.owner}/${parsed.repo}` +
-        `/zip/refs/heads/${encodeURIComponent(resolvedBranch)}`
-
-      triggerDownload(zipUrl)
-
-      setResolved({
-        owner: parsed.owner,
-        repo: parsed.repo,
-        branch: resolvedBranch
-      })
-
-      setManualLink(zipUrl)
-      setStatus('success')
-      setMessage(
-        'Download dimulai. Kalau tidak otomatis berjalan, pakai tautan manual di bawah.'
-      )
-    } catch {
-      setStatus('error')
-      setMessage(
-        'Gagal terhubung ke GitHub. Cek koneksi internet kamu dan coba lagi.'
-      )
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!url.trim() || status === 'checking') return
-
-    handleDownload()
-  }
+  const loading = enabled === null
+  const disabled = enabled === false
+  const active = enabled === true
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-6">
-      <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-borderStrong bg-surface2 text-textPrimary">
-          <Github size={21} strokeWidth={1.6} />
-        </div>
+    <motion.button
+      type="button"
+      disabled={!active}
+      onClick={onOpen}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        delay: Math.min(index * 0.035, 0.16),
+        duration: 0.3,
+        ease: [0.22, 1, 0.36, 1]
+      }}
+      whileHover={active ? { y: -2 } : undefined}
+      whileTap={active ? { scale: 0.99 } : undefined}
+      className={`
+        group relative isolate w-full overflow-hidden rounded-[14px]
+        border text-left transition-all duration-300
+        ${
+          disabled
+            ? 'cursor-not-allowed border-white/[0.055] bg-white/[0.012]'
+            : 'border-white/[0.075] bg-white/[0.018] hover:border-white/[0.14] hover:bg-white/[0.028]'
+        }
+      `}
+    >
+      <div
+        className={`
+          pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500
+          ${active ? 'group-hover:opacity-100' : ''}
+        `}
+      >
+        <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[35%]" />
 
-        <div>
-          <h3 className="font-display text-base font-medium text-textPrimary">
-            GitHub Repository Downloader
-          </h3>
-
-          <p className="mt-1 text-sm text-textMuted">
-            Unduh seluruh isi repository GitHub sebagai file ZIP
-          </p>
-        </div>
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.025] to-transparent" />
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-6">
-        <label
-          htmlFor="github-repo-url"
-          className="text-xs font-medium uppercase tracking-[0.1em] text-textMuted"
-        >
-          URL Repository
-        </label>
+      <Icon
+        size={150}
+        strokeWidth={1}
+        className="
+          pointer-events-none absolute
+          -bottom-12 -right-8
+          rotate-[-10deg]
+          text-white/[0.018]
+          transition-all duration-500
+          group-hover:rotate-[-7deg]
+          group-hover:text-white/[0.035]
+        "
+      />
 
-        <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-          <input
-            id="github-repo-url"
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://github.com/owner/nama-repo"
-            className="w-full rounded-xl border border-border bg-surface2 px-4 py-3 text-sm text-textPrimary placeholder:text-textMuted outline-none transition-colors focus:border-teal/50"
-          />
-
-          <button
-            type="submit"
-            disabled={!url.trim() || status === 'checking'}
-            className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-textPrimary px-5 py-3 text-sm font-medium text-surface transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
+      <div
+        className={`
+          relative flex min-h-[330px] flex-col p-3.5
+          sm:min-h-[340px] sm:p-4
+          lg:min-h-[350px]
+          ${disabled ? 'blur-[3px] opacity-20' : ''}
+        `}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div
+            className={`
+              flex h-9 w-9 shrink-0 items-center justify-center
+              rounded-[10px] border border-white/[0.07]
+              bg-white/[0.025] text-textSecondary
+              transition-all duration-300
+              sm:h-10 sm:w-10
+              ${
+                active
+                  ? 'group-hover:border-white/[0.14] group-hover:bg-white/[0.045] group-hover:text-textPrimary'
+                  : ''
+              }
+            `}
           >
-            {status === 'checking' ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Download size={16} />
-            )}
+            <Icon
+              size={17}
+              strokeWidth={1.55}
+              className={`
+                transition-transform duration-400 ease-out
+                sm:h-[18px] sm:w-[18px]
+                ${
+                  active
+                    ? 'group-hover:-translate-y-0.5 group-hover:rotate-[-3deg]'
+                    : ''
+                }
+              `}
+            />
+          </div>
 
-            Download ZIP
-          </button>
+          <span
+            className={`
+              mt-1 flex h-6 w-6 shrink-0 items-center justify-center
+              rounded-full border border-white/[0.06]
+              text-textMuted transition-all duration-300
+              ${
+                active
+                  ? 'group-hover:border-white/[0.13] group-hover:bg-white/[0.035] group-hover:text-textPrimary'
+                  : ''
+              }
+            `}
+          >
+            <ExternalLink
+              size={11}
+              strokeWidth={1.8}
+              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </span>
         </div>
 
-        <p className="mt-2 text-xs text-textMuted">
-          Cukup tempel link repo (boleh dengan atau tanpa{' '}
-          <code>/tree/branch</code>). Hanya untuk repository publik.
-        </p>
-      </form>
+        <div className="mt-3 min-w-0">
+          <h3 className="truncate font-display text-[13px] font-medium leading-tight text-textPrimary sm:text-sm">
+            {tool.name}
+          </h3>
 
-      {status === 'error' && (
-        <div className="mt-4 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4">
-          <AlertCircle
-            size={18}
-            className="mt-0.5 shrink-0 text-red-400"
-          />
-
-          <p className="text-sm leading-5 text-red-200">{message}</p>
+          <p className="mt-1.5 line-clamp-3 text-[10px] leading-[1.45] text-textSecondary sm:text-[11px]">
+            {tool.description}
+          </p>
         </div>
-      )}
 
-      {status === 'success' && resolved && (
-        <div className="mt-4 flex items-start gap-3 rounded-xl border border-teal/20 bg-teal/5 p-4">
-          <CheckCircle2
-            size={18}
-            className="mt-0.5 shrink-0 text-teal-light"
-          />
+        <div className="mt-3 border-t border-white/[0.06] pt-3">
+          <p className="text-[9px] font-medium uppercase tracking-[0.13em] text-textMuted sm:text-[10px]">
+            Langkah penggunaan
+          </p>
 
-          <div className="text-sm leading-5 text-textSecondary">
-            <p>{message}</p>
-
-            <p className="mt-1 font-mono text-xs text-textMuted">
-              {resolved.owner}/{resolved.repo}@{resolved.branch}
-            </p>
-
-            {manualLink && (
-              <a
-                href={manualLink}
-                className="mt-2 inline-block text-xs font-medium text-teal-light underline underline-offset-2"
+          <ol className="mt-2 space-y-1.5">
+            {tool.steps.map((step, stepIndex) => (
+              <li
+                key={stepIndex}
+                className="flex items-start gap-2 text-[9px] leading-[1.45] text-textSecondary sm:text-[10px] sm:leading-[1.5]"
               >
-                Buka tautan download manual
-              </a>
-            )}
+                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.02] text-[8px] text-textMuted">
+                  {stepIndex + 1}
+                </span>
+
+                <span className="pt-[1px]">
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="mt-auto pt-3">
+          <div
+            className={`
+              flex h-7 items-center justify-between
+              rounded-lg border border-white/[0.06]
+              bg-white/[0.018] px-2.5
+              text-[10px] text-textMuted
+              transition-all duration-300
+              sm:h-8
+              ${
+                active
+                  ? 'group-hover:border-white/[0.11] group-hover:bg-white/[0.035] group-hover:text-textPrimary'
+                  : ''
+              }
+            `}
+          >
+            <span>Gunakan tools</span>
+
+            <span
+              className={`
+                h-1 w-1 rounded-full bg-white/25
+                transition-all duration-300
+                ${
+                  active
+                    ? 'group-hover:w-2 group-hover:bg-white/60'
+                    : ''
+                }
+              `}
+            />
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    </motion.button>
   )
 }
