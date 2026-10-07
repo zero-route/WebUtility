@@ -21,7 +21,7 @@ import {
   ShieldCheck,
   Terminal,
   WandSparkles,
-  Youtube, 
+  Youtube,
   Github
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
@@ -37,7 +37,7 @@ const icons = {
   'svg-vectorizer': Code2,
   'base64-converter': Braces,
   'qr-barcode-generator': QrCode,
-  'color-picker': WandSparkles,
+  'color-palette-generator': WandSparkles,
   'image-compressor': FileImage,
 
   'base64-encode-decode': Braces,
@@ -55,16 +55,16 @@ const icons = {
   'regex-tester': Regex,
   'case-converter': Code2,
   'text-diff-checker': FileDiff,
-  'cron-expression-parser': Clock3,
-  'github-repository-downloader' : Github,
+  'cron-parser': Clock3,
+  'github-repository-downloader': Github,
 
   'ip-network-info': Network,
   'subnet-calculator': Network,
   'timestamp-converter': Database,
   'dns-lookup': Globe,
-  'ping-latency-tester': Terminal,
-  'mac-address-vendor-lookup': Network,
-  'whois-domain-info': Globe
+  'ping-tester': Terminal,
+  'mac-vendor-lookup': Network,
+  'whois-lookup': Globe
 }
 
 export default function ToolPlaceholderCard({
@@ -241,46 +241,22 @@ export default function ToolPlaceholderCard({
               }
             `}
           >
-            <span>Gunakan tools</span>
+            <span>
+              {loading
+                ? 'Memuat status...'
+                : disabled
+                  ? disabledNote
+                  : 'Buka tool'}
+            </span>
 
-            <span
-              className={`
-                h-1 w-1 rounded-full bg-white/25
-                transition-all duration-300
-                ${
-                  active
-                    ? 'group-hover:w-2 group-hover:bg-white/60'
-                    : ''
-                }
-              `}
+            <ExternalLink
+              size={11}
+              strokeWidth={1.8}
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
             />
           </div>
         </div>
       </div>
-
-      {loading && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 backdrop-blur-[3px]">
-          <div className="h-5 w-5 animate-spin rounded-full border border-white/[0.1] border-t-white/60" />
-        </div>
-      )}
-
-      {disabled && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-5 text-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-white/[0.08] bg-white/[0.025] text-textSecondary">
-            <LockKeyhole size={18} strokeWidth={1.6} />
-          </div>
-
-          <p className="mt-2.5 font-display text-xs font-medium text-textPrimary sm:text-sm">
-            Tools Dinonaktifkan Oleh Admin
-          </p>
-
-          {disabledNote && (
-            <p className="mt-1 max-w-[260px] text-[10px] leading-4 text-textMuted sm:text-xs">
-              {disabledNote}
-            </p>
-          )}
-        </div>
-      )}
     </motion.button>
   )
 }
