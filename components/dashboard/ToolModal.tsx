@@ -41,8 +41,8 @@ function ToolModalContent({
   const loading = enabled === false && status === 'unavailable'
   const adminDisabled = status === 'admin_disabled'
   const unavailable = status === 'unavailable'
-  const active = status === 'enabled'
-
+  const active = status === 'active'
+  
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
