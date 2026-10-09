@@ -1,4 +1,3 @@
-
 'use client'
 
 import { motion } from 'framer-motion'
@@ -13,7 +12,6 @@ import {
   Clock,
   Code2,
   Database,
-  Download,
   FileCheck,
   FileCode,
   FileText,
@@ -34,24 +32,52 @@ import {
   Regex,
   Scan,
   ShieldCheck,
-  Smartphone,
   Terminal,
   Youtube,
   Music2,
   FileImage,
-  WandSparkles,
   CircleDot,
+  Github,
   type LucideIcon
 } from 'lucide-react'
+import type { ComponentType, SVGProps } from 'react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
 import type { ToolItem } from '@/lib/toolsData'
 
-const icons: Record<string, LucideIcon> = {
+type ToolIcon = ComponentType<{
+  size?: number
+  strokeWidth?: number
+  className?: string
+}>
+
+function XLogo({
+  size = 24,
+  className
+}: {
+  size?: number
+  strokeWidth?: number
+  className?: string
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M18.901 1.153h3.308l-7.227 8.26 8.502 13.434h-6.657l-5.214-8.586-7.99 8.586H.313l7.73-8.835L-.01 1.153h6.826l4.713 7.843zM17.743 20.48h1.833L5.522 3.397H3.555z" />
+    </svg>
+  )
+}
+
+const icons: Record<string, ToolIcon> = {
   'tiktok-downloader': Music2,
   'youtube-downloader': Youtube,
   'instagram-downloader': Instagram,
-  'x-threads-downloader': Download,
+  'x-threads-downloader': XLogo,
   'svg-vectorizer': FileCode,
   'base64-converter': Binary,
   'qr-barcode-generator': QrCode,
@@ -110,14 +136,14 @@ export default function ToolPlaceholderCard({
         delay: Math.min(index * 0.025, 0.15),
         duration: 0.28
       }}
-      className={`group relative flex h-full min-h-[246px] flex-col overflow-hidden rounded-xl border bg-surface p-3 text-left transition-colors duration-200 ${
+      className={`group relative flex h-full min-h-[354px] flex-col overflow-hidden rounded-2xl border bg-surface p-4 text-left transition-colors duration-200 sm:min-h-[354px] ${
         active
           ? 'border-border hover:border-borderStrong'
           : 'border-border'
       }`}
     >
       <div
-        className={`pointer-events-none absolute -bottom-7 -right-5 opacity-[0.035] ${
+        className={`pointer-events-none absolute -bottom-5 -right-4 opacity-[0.035] ${
           locked ? 'blur-sm' : ''
         }`}
       >
@@ -130,30 +156,30 @@ export default function ToolPlaceholderCard({
         }`}
       >
         <div className="flex items-center justify-between">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-surface2 text-textSecondary">
-            <Icon size={14} strokeWidth={1.7} />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-surface2 text-textSecondary">
+            <Icon size={19} strokeWidth={1.6} />
           </div>
 
-          <span className="flex h-6 w-6 items-center justify-center rounded-md text-textMuted">
-            <ArrowUpRight size={12} strokeWidth={1.7} />
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg text-textMuted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+            <ArrowUpRight size={15} strokeWidth={1.5} />
           </span>
         </div>
 
-        <h3 className="mt-2.5 line-clamp-1 text-[11px] font-semibold leading-4 text-textPrimary sm:text-xs">
+        <h3 className="mt-3 text-sm font-semibold leading-5 text-textPrimary">
           {tool.name}
         </h3>
 
-        <p className="mt-1 line-clamp-3 min-h-[38px] text-[9px] leading-[1.35] text-textSecondary sm:text-[10px]">
+        <p className="mt-1.5 min-h-[54px] text-xs leading-[1.5] text-textSecondary">
           {tool.description}
         </p>
 
-        <div className="my-2 border-t border-border/70" />
+        <div className="my-3 border-t border-border/70" />
 
-        <p className="mb-1.5 text-[7px] font-semibold uppercase tracking-[0.18em] text-textMuted sm:text-[8px]">
+        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-textMuted">
           Langkah penggunaan
         </p>
 
-        <ol className="space-y-1">
+        <ol className="space-y-1.5">
           {Array.from({ length: 5 }, (_, stepIndex) => {
             const step =
               tool.steps?.[stepIndex] ??
@@ -168,13 +194,13 @@ export default function ToolPlaceholderCard({
             return (
               <li
                 key={`${tool.id}-${stepIndex}`}
-                className="flex min-w-0 items-start gap-1.5 text-[8px] leading-[1.3] text-textSecondary sm:text-[9px]"
+                className="flex min-w-0 items-start gap-2 text-[11px] leading-[1.45] text-textSecondary"
               >
-                <span className="mt-px flex h-[12px] w-[12px] shrink-0 items-center justify-center rounded-full border border-border text-[7px] text-textMuted">
+                <span className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-border text-[9px] text-textMuted">
                   {stepIndex + 1}
                 </span>
 
-                <span className="line-clamp-2">{step}</span>
+                <span className="min-w-0">{step}</span>
               </li>
             )
           })}
@@ -184,10 +210,10 @@ export default function ToolPlaceholderCard({
           type="button"
           onClick={onOpen}
           disabled={!active}
-          className="mt-auto flex min-h-7 w-full items-center justify-between gap-2 rounded-lg border border-border bg-surface2/70 px-2.5 py-1.5 pt-2 text-left text-[9px] text-textMuted transition-colors hover:border-borderStrong hover:text-textPrimary disabled:cursor-not-allowed"
+          className="mt-auto flex min-h-10 w-full items-center justify-between gap-2 rounded-xl border border-border bg-surface2/70 px-3 py-2 text-left text-xs text-textMuted transition-colors hover:border-borderStrong hover:text-textPrimary disabled:cursor-not-allowed"
         >
           <span>Gunakan tools</span>
-          <ArrowUpRight size={11} />
+          <ArrowUpRight size={15} strokeWidth={1.5} />
         </button>
       </div>
 
