@@ -9,8 +9,8 @@ export function useDisabledToolsNote() {
   useEffect(() => {
     let active = true
 
-    async function load() {
-      const { data } = await supabase
+    async function fetchNote() {
+      const { data, error } = await supabase
         .from('app_settings')
         .select('value')
         .eq('key', 'disabled_tools_note')
@@ -18,14 +18,18 @@ export function useDisabledToolsNote() {
 
       if (!active) return
 
-      const value = typeof data?.value === 'string' ? data.value.trim() : ''
-      setNote(value || null)
+      if (error || !data) {
+        setNote(null)
+        return
+      }
+
+      setNote(data.value ?? null)
     }
 
-    load()
+    fetchNote()
 
     const channel = supabase
-      .channel('disabled-tools-note')
+      .channel('app_settings_disabled_tools_note')
       .on(
         'postgres_changes',
         {
@@ -34,13 +38,8 @@ export function useDisabledToolsNote() {
           table: 'app_settings',
           filter: 'key=eq.disabled_tools_note'
         },
-        (payload) => {
-          if (!active) return
-
-          const row = payload.new as { value?: string | null } | null
-          const value = typeof row?.value === 'string' ? row.value.trim() : ''
-
-          setNote(value || null)
+        () => {
+          fetchNote()
         }
       )
       .subscribe()
