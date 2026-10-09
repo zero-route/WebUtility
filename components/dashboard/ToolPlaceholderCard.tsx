@@ -57,12 +57,14 @@ export default function ToolPlaceholderCard({
   const Icon = icons[tool.id as keyof typeof icons] ?? Code2
 
   const loading = status === 'loading'
-  const active = status === 'active'
   const adminDisabled = status === 'admin_disabled'
-  const locked = !loading && !active
+  const unavailable = status === 'unavailable'
+  const hasError = status === 'error'
+  const active = status === 'active'
+  const locked = adminDisabled || unavailable || hasError
   const lockNote = adminDisabled
     ? reason?.trim() || disabledNote?.trim()
-    : disabledNote?.trim()
+    : ''
 
   return (
     <motion.button
