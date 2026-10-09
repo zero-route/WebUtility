@@ -41,14 +41,7 @@ function ToolModalContent({
   const loading = enabled === false && status === 'unavailable'
   const adminDisabled = status === 'admin_disabled'
   const unavailable = status === 'unavailable'
-  const active = status === 'active'
-
-  const note =
-    typeof reason === 'string' && reason.trim()
-      ? reason.trim()
-      : typeof disabledNote === 'string' && disabledNote.trim()
-        ? disabledNote.trim()
-        : ''
+  const active = status === 'enabled'
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -110,16 +103,15 @@ function ToolModalContent({
         <div className="min-h-0 overflow-y-auto p-4 sm:p-6">
           {loading && (
             <div className="flex min-h-[180px] flex-col items-center justify-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-surface2 text-textSecondary">
-                <LockKeyhole
-                  size={23}
-                  strokeWidth={1.8}
-                />
-              </div>
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-teal" />
 
-              <h3 className="mt-4 font-display text-base font-medium text-textPrimary">
+              <p className="mt-4 text-sm font-medium text-textPrimary">
                 Tools Dikunci Sementara
-              </h3>
+              </p>
+
+              <p className="mt-2 text-xs text-textMuted">
+                Status : features_flags No info
+              </p>
             </div>
           )}
 
@@ -135,6 +127,10 @@ function ToolModalContent({
               <h3 className="mt-4 font-display text-base font-medium text-textPrimary">
                 Tools Dikunci Sementara
               </h3>
+
+              <p className="mt-2 max-w-md text-sm leading-6 text-textMuted">
+                Status : features_flags No info
+              </p>
             </div>
           )}
 
@@ -151,9 +147,9 @@ function ToolModalContent({
                 Tools Dinonaktifkan Oleh Admin
               </h3>
 
-              {note && (
-                <p className="mt-2 max-w-md whitespace-pre-wrap break-words text-sm leading-6 text-textMuted">
-                  {note}
+              {(reason || disabledNote) && (
+                <p className="mt-2 max-w-md text-sm leading-6 text-textMuted">
+                  {reason ?? disabledNote}
                 </p>
               )}
             </div>
