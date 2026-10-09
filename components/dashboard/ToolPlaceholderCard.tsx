@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import {
-  AlertTriangle,
   ArrowUpRight,
   Braces,
   Code2,
@@ -51,17 +50,15 @@ export default function ToolPlaceholderCard({
   index: number
   onOpen: () => void
 }) {
-  const { status, reason, debugDetail } = useToolEnabled(tool.id)
+  const { status, reason } = useToolEnabled(tool.id)
   const disabledNote = useDisabledToolsNote()
 
   const Icon = icons[tool.id as keyof typeof icons] ?? Code2
 
   const loading = status === 'loading'
-  const adminDisabled = status === 'admin_disabled'
-  const unavailable = status === 'unavailable'
-  const hasError = status === 'error'
   const active = status === 'active'
-  const locked = adminDisabled || unavailable || hasError
+  const locked = !loading && !active
+  const lockNote = reason?.trim() || disabledNote?.trim() || ''
 
   return (
     <motion.button
@@ -148,7 +145,7 @@ export default function ToolPlaceholderCard({
         </div>
       )}
 
-      {adminDisabled && (
+      {locked && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-borderStrong bg-surface2 text-textSecondary shadow-lg">
             <LockKeyhole size={21} strokeWidth={1.8} />
@@ -158,43 +155,9 @@ export default function ToolPlaceholderCard({
             Tools Dinonaktifkan Oleh Admin
           </p>
 
-          {(reason || disabledNote) && (
-            <p className="mt-1.5 max-w-[260px] text-xs leading-5 text-textMuted">
-              {reason ?? disabledNote}
-            </p>
-          )}
-        </div>
-      )}
-
-      {unavailable && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-borderStrong bg-surface2 text-textSecondary shadow-lg">
-            <LockKeyhole size={21} strokeWidth={1.8} />
-          </div>
-
-          <p className="mt-3 font-display text-sm font-medium text-textPrimary">
-            Tools Belum Tersedia
-          </p>
-
-          <p className="mt-1.5 max-w-[260px] text-xs leading-5 text-textMuted">
-            Tools ini belum terdaftar di sistem.
-          </p>
-        </div>
-      )}
-
-      {hasError && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-red-500/30 bg-red-500/5 text-red-400 shadow-lg">
-            <AlertTriangle size={21} strokeWidth={1.8} />
-          </div>
-
-          <p className="mt-3 font-display text-sm font-medium text-textPrimary">
-            Status : Error Supabase
-          </p>
-
-          {debugDetail && (
-            <p className="mt-1.5 max-w-[260px] break-words font-mono text-[10px] leading-4 text-red-300/70">
-              {debugDetail}
+          {lockNote && (
+            <p className="mt-1.5 max-w-[260px] whitespace-pre-wrap break-words text-xs leading-5 text-textMuted">
+              {lockNote}
             </p>
           )}
         </div>
