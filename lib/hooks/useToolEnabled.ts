@@ -45,7 +45,7 @@ export function useToolEnabled(toolId: string) {
         setState({
           enabled: false,
           status: 'error',
-          reason: null,
+          reason: 'Terjadi gangguan saat mengambil status tools dari server.',
           debugDetail: `${error.code ?? 'ERR'}: ${error.message}`
         })
         return
@@ -55,7 +55,7 @@ export function useToolEnabled(toolId: string) {
         setState({
           enabled: false,
           status: 'unavailable',
-          reason: null,
+          reason: 'Tools belum terdaftar di sistem.',
           debugDetail: `Baris '${toolId}' tidak ditemukan di tabel feature_flags`
         })
         return
@@ -65,7 +65,7 @@ export function useToolEnabled(toolId: string) {
         setState({
           enabled: false,
           status: 'error',
-          reason: null,
+          reason: 'Data status tools tidak valid.',
           debugDetail: `Kolom is_enabled bukan boolean (dapat: ${typeof data.is_enabled})`
         })
         return
@@ -75,7 +75,7 @@ export function useToolEnabled(toolId: string) {
         setState({
           enabled: false,
           status: 'admin_disabled',
-          reason: data.disabled_reason?.trim() || null,
+          reason: data.disabled_reason ?? null,
           debugDetail: null
         })
         return

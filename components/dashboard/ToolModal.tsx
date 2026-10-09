@@ -35,13 +35,13 @@ function ToolModalContent({
   tool: ToolPageItem
   onClose: () => void
 }) {
-  const { status, reason } = useToolEnabled(tool.id)
+  const { enabled, status, reason } = useToolEnabled(tool.id)
   const disabledNote = useDisabledToolsNote()
 
-  const loading = status === 'loading'
-  const active = status === 'active'
-  const locked = !loading && !active
-  const lockNote = reason?.trim() || disabledNote?.trim() || ''
+  const loading = enabled === false && status === 'unavailable'
+  const adminDisabled = status === 'admin_disabled'
+  const unavailable = status === 'unavailable'
+  const active = status === 'enabled'
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -102,24 +102,54 @@ function ToolModalContent({
 
         <div className="min-h-0 overflow-y-auto p-4 sm:p-6">
           {loading && (
-            <div className="flex min-h-[180px] items-center justify-center">
+            <div className="flex min-h-[180px] flex-col items-center justify-center text-center">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-teal" />
+
+              <p className="mt-4 text-sm font-medium text-textPrimary">
+                Tools Dikunci Sementara
+              </p>
+
+              <p className="mt-2 text-xs text-textMuted">
+                Status : features_flags No info
+              </p>
             </div>
           )}
 
-          {locked && (
-            <div className="flex min-h-[180px] flex-col items-center justify-center px-4 text-center">
+          {unavailable && !loading && (
+            <div className="flex min-h-[180px] flex-col items-center justify-center text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-surface2 text-textSecondary">
-                <LockKeyhole size={23} strokeWidth={1.8} />
+                <LockKeyhole
+                  size={23}
+                  strokeWidth={1.8}
+                />
+              </div>
+
+              <h3 className="mt-4 font-display text-base font-medium text-textPrimary">
+                Tools Dikunci Sementara
+              </h3>
+
+              <p className="mt-2 max-w-md text-sm leading-6 text-textMuted">
+                Status : features_flags No info
+              </p>
+            </div>
+          )}
+
+          {adminDisabled && (
+            <div className="flex min-h-[180px] flex-col items-center justify-center text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-surface2 text-textSecondary">
+                <LockKeyhole
+                  size={23}
+                  strokeWidth={1.8}
+                />
               </div>
 
               <h3 className="mt-4 font-display text-base font-medium text-textPrimary">
                 Tools Dinonaktifkan Oleh Admin
               </h3>
 
-              {lockNote && (
-                <p className="mt-2 max-w-md whitespace-pre-wrap break-words text-sm leading-6 text-textMuted">
-                  {lockNote}
+              {(reason || disabledNote) && (
+                <p className="mt-2 max-w-md text-sm leading-6 text-textMuted">
+                  {reason ?? disabledNote}
                 </p>
               )}
             </div>
