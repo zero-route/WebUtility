@@ -10,8 +10,6 @@ import {
   Type,
   BadgeCheck,
   Clock,
-  Code2,
-  Database,
   FileCheck,
   FileCode,
   FileText,
@@ -19,7 +17,6 @@ import {
   Fingerprint,
   Globe,
   Hash,
-  Image,
   Instagram,
   KeyRound,
   Link2,
@@ -38,27 +35,20 @@ import {
   FileImage,
   CircleDot,
   Github,
-  type LucideIcon
+  type LucideProps
 } from 'lucide-react'
-import type { ComponentType, SVGProps } from 'react'
+import type { ComponentType } from 'react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
 import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
 import type { ToolItem } from '@/lib/toolsData'
 
-type ToolIcon = ComponentType<{
-  size?: number
-  strokeWidth?: number
-  className?: string
-}>
+type ToolIcon = ComponentType<LucideProps>
 
 function XLogo({
   size = 24,
-  className
-}: {
-  size?: number
-  strokeWidth?: number
-  className?: string
-}) {
+  className,
+  ...props
+}: LucideProps) {
   return (
     <svg
       width={size}
@@ -67,6 +57,7 @@ function XLogo({
       fill="currentColor"
       className={className}
       aria-hidden="true"
+      {...props}
     >
       <path d="M18.901 1.153h3.308l-7.227 8.26 8.502 13.434h-6.657l-5.214-8.586-7.99 8.586H.313l7.73-8.835L-.01 1.153h6.826l4.713 7.843zM17.743 20.48h1.833L5.522 3.397H3.555z" />
     </svg>
@@ -108,6 +99,14 @@ const icons: Record<string, ToolIcon> = {
   'whois-lookup': CircleDot
 }
 
+const defaultSteps = [
+  'Buka tool yang ingin digunakan.',
+  'Masukkan data atau pilih file yang diperlukan.',
+  'Atur opsi sesuai kebutuhan.',
+  'Jalankan proses dan periksa hasilnya.',
+  'Salin atau unduh hasil yang tersedia.'
+]
+
 export default function ToolPlaceholderCard({
   tool,
   index,
@@ -136,7 +135,7 @@ export default function ToolPlaceholderCard({
         delay: Math.min(index * 0.025, 0.15),
         duration: 0.28
       }}
-      className={`group relative flex h-full min-h-[354px] flex-col overflow-hidden rounded-2xl border bg-surface p-4 text-left transition-colors duration-200 sm:min-h-[354px] ${
+      className={`group relative flex h-full min-h-[354px] flex-col overflow-hidden rounded-2xl border bg-surface p-4 text-left transition-colors duration-200 ${
         active
           ? 'border-border hover:border-borderStrong'
           : 'border-border'
@@ -182,14 +181,7 @@ export default function ToolPlaceholderCard({
         <ol className="space-y-1.5">
           {Array.from({ length: 5 }, (_, stepIndex) => {
             const step =
-              tool.steps?.[stepIndex] ??
-              [
-                'Buka tool yang ingin digunakan.',
-                'Masukkan data atau pilih file yang diperlukan.',
-                'Atur opsi sesuai kebutuhan.',
-                'Jalankan proses dan periksa hasilnya.',
-                'Salin atau unduh hasil yang tersedia.'
-              ][stepIndex]
+              tool.steps?.[stepIndex] ?? defaultSteps[stepIndex]
 
             return (
               <li
