@@ -2,77 +2,44 @@
 
 import { motion } from 'framer-motion'
 import {
+  AlertTriangle,
+  ArrowUpRight,
   Braces,
-  CaseSensitive,
-  Clock3,
   Code2,
   Database,
   Download,
-  ExternalLink,
-  FileDiff,
-  FileImage,
-  FileText,
   Fingerprint,
-  Globe,
-  Github,
-  Instagram,
+  Image,
   LockKeyhole,
-  Music2,
   Network,
   QrCode,
-  Regex,
   ShieldCheck,
-  Terminal,
-  WandSparkles,
-  Youtube
+  Terminal
 } from 'lucide-react'
 import { useToolEnabled } from '@/lib/hooks/useToolEnabled'
+import { useDisabledToolsNote } from '@/lib/hooks/useDisabledToolsNote'
 import type { ToolItem } from '@/lib/toolsData'
 
 const icons = {
-  'tiktok-downloader': Music2,
-  'youtube-downloader': Youtube,
-  'instagram-downloader': Instagram,
+  'tiktok-downloader': Download,
+  'youtube-downloader': Download,
+  'instagram-downloader': Image,
   'x-threads-downloader': Download,
-
   'svg-vectorizer': Code2,
   'base64-converter': Braces,
   'qr-barcode-generator': QrCode,
-  'color-picker': WandSparkles,
-  'color-palette-generator': WandSparkles,
-  'image-compressor': FileImage,
-
   'base64-encode-decode': Braces,
   'aes-encryptor': LockKeyhole,
   'password-generator': ShieldCheck,
   'hash-generator': Fingerprint,
-  'uuid-generator': Code2,
-  'password-strength-checker': ShieldCheck,
-  'file-hash-checker': Fingerprint,
-
   'json-formatter': Braces,
   'jwt-decoder': ShieldCheck,
-  'markdown-notes': FileText,
+  'markdown-notes': Code2,
   'url-parser': Network,
-  'regex-tester': Regex,
-  'case-converter': CaseSensitive,
-  'text-diff-checker': FileDiff,
-  'cron-parser': Clock3,
-  'cron-expression-parser': Clock3,
-
-  'github-repo-downloader': Github,
-  'github-repository-downloader': Github,
-
+  'regex-tester': Terminal,
   'ip-network-info': Network,
   'subnet-calculator': Network,
-  'timestamp-converter': Database,
-  'dns-lookup': Globe,
-  'ping-tester': Terminal,
-  'ping-latency-tester': Terminal,
-  'mac-vendor-lookup': Network,
-  'mac-address-vendor-lookup': Network,
-  'whois-lookup': Globe,
-  'whois-domain-info': Globe
+  'timestamp-converter': Database
 }
 
 export default function ToolPlaceholderCard({
@@ -84,198 +51,152 @@ export default function ToolPlaceholderCard({
   index: number
   onOpen: () => void
 }) {
-  const { enabled, status, reason } = useToolEnabled(tool.id)
+  const { status, reason, debugDetail } = useToolEnabled(tool.id)
+  const disabledNote = useDisabledToolsNote()
 
   const Icon = icons[tool.id as keyof typeof icons] ?? Code2
 
-  const loading = enabled === null
-  const disabled = enabled === false
-  const active = enabled === true
+  const loading = status === 'loading'
   const adminDisabled = status === 'admin_disabled'
   const unavailable = status === 'unavailable'
+  const hasError = status === 'error'
+  const active = status === 'active'
+  const locked = adminDisabled || unavailable || hasError
 
   return (
     <motion.button
       type="button"
       disabled={!active}
       onClick={onOpen}
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        delay: Math.min(index * 0.035, 0.16),
-        duration: 0.3,
+        delay: Math.min(index * 0.045, 0.18),
+        duration: 0.32,
         ease: [0.22, 1, 0.36, 1]
       }}
-      whileHover={active ? { y: -2 } : undefined}
+      whileHover={active ? { y: -3 } : undefined}
       whileTap={active ? { scale: 0.99 } : undefined}
-      className={`
-        group relative isolate w-full overflow-hidden rounded-[14px]
-        border text-left transition-all duration-300
-        ${
-          disabled
-            ? 'cursor-not-allowed border-white/[0.055] bg-white/[0.012]'
-            : 'border-white/[0.075] bg-white/[0.018] hover:border-white/[0.14] hover:bg-white/[0.028]'
-        }
-      `}
+      className={`group relative min-h-[156px] w-full overflow-hidden rounded-2xl border bg-surface p-5 text-left transition-[border-color,background-color] duration-300 ${
+        locked
+          ? 'cursor-not-allowed border-border'
+          : 'border-border hover:border-teal/50 hover:bg-surface2'
+      }`}
     >
       <div
-        className={`
-          relative
-          ${disabled ? 'blur-[4px] opacity-30' : ''}
-        `}
-      >
-        <div
-          className="
-            pointer-events-none absolute inset-0 opacity-0
-            transition-opacity duration-500
-            group-hover:opacity-100
-          "
-        >
-          <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[35%]" />
+        className={`pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-teal/10 to-transparent transition-transform duration-700 ease-out ${
+          active ? 'group-hover:translate-x-[300%]' : ''
+        }`}
+      />
 
-          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.025] to-transparent" />
+      <div
+        className={`relative flex h-full flex-col transition-all duration-300 ${
+          locked ? 'blur-[3px] opacity-25' : ''
+        }`}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-surface2 text-teal-light transition-all duration-500 ${
+              active
+                ? 'group-hover:rotate-3 group-hover:rounded-2xl group-hover:border-teal/50 group-hover:bg-teal/10'
+                : ''
+            }`}
+          >
+            <Icon
+              size={20}
+              strokeWidth={1.8}
+              className={`transition-transform duration-500 ${
+                active
+                  ? 'group-hover:rotate-[-6deg] group-hover:scale-110'
+                  : ''
+              }`}
+            />
+          </div>
+
+          <span
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-surface2 text-textMuted transition-all duration-300 ${
+              active
+                ? 'group-hover:border-teal/40 group-hover:bg-teal/10 group-hover:text-teal-light'
+                : ''
+            }`}
+          >
+            <ArrowUpRight
+              size={17}
+              className={
+                active
+                  ? 'transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5'
+                  : ''
+              }
+            />
+          </span>
         </div>
 
-        <Icon
-          size={150}
-          strokeWidth={1}
-          className="
-            pointer-events-none absolute
-            -bottom-12 -right-8
-            rotate-[-10deg]
-            text-white/[0.018]
-            transition-all duration-500
-            group-hover:rotate-[-7deg]
-            group-hover:text-white/[0.035]
-          "
-        />
+        <div className="mt-auto pt-6">
+          <h3 className="font-display text-base font-medium text-textPrimary">
+            {tool.name}
+          </h3>
 
-        <div
-          className="
-            relative flex min-h-[330px] flex-col p-3.5
-            sm:min-h-[340px] sm:p-4
-            lg:min-h-[350px]
-          "
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div
-              className="
-                flex h-9 w-9 shrink-0 items-center justify-center
-                rounded-[10px] border border-white/[0.07]
-                bg-white/[0.025] text-textSecondary
-                transition-all duration-300
-                sm:h-10 sm:w-10
-              "
-            >
-              <Icon
-                size={17}
-                strokeWidth={1.55}
-                className="sm:h-[18px] sm:w-[18px]"
-              />
-            </div>
-
-            <span
-              className="
-                mt-1 flex h-6 w-6 shrink-0 items-center justify-center
-                rounded-full border border-white/[0.06]
-                text-textMuted
-              "
-            >
-              <ExternalLink
-                size={11}
-                strokeWidth={1.8}
-              />
-            </span>
-          </div>
-
-          <div className="mt-3 min-w-0">
-            <h3 className="truncate font-display text-[13px] font-medium leading-tight text-textPrimary sm:text-sm">
-              {tool.name}
-            </h3>
-
-            <p className="mt-1.5 line-clamp-3 text-[10px] leading-[1.45] text-textSecondary sm:text-[11px]">
-              {tool.description}
-            </p>
-          </div>
-
-          <div className="mt-3 border-t border-white/[0.06] pt-3">
-            <p className="text-[9px] font-medium uppercase tracking-[0.13em] text-textMuted sm:text-[10px]">
-              Langkah penggunaan
-            </p>
-
-            <ol className="mt-2 space-y-1.5">
-              {tool.steps.map((step, stepIndex) => (
-                <li
-                  key={stepIndex}
-                  className="flex items-start gap-2 text-[9px] leading-[1.45] text-textSecondary sm:text-[10px] sm:leading-[1.5]"
-                >
-                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.02] text-[8px] text-textMuted">
-                    {stepIndex + 1}
-                  </span>
-
-                  <span className="pt-[1px]">
-                    {step}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="mt-auto pt-3">
-            <div
-              className="
-                flex h-7 items-center justify-between
-                rounded-lg border border-white/[0.06]
-                bg-white/[0.018] px-2.5
-                text-[10px] text-textMuted
-                sm:h-8
-              "
-            >
-              <span>Gunakan tools</span>
-
-              <span className="h-1 w-1 rounded-full bg-white/25" />
-            </div>
-          </div>
+          <p className="mt-1.5 line-clamp-2 text-sm leading-5 text-textSecondary">
+            {tool.description}
+          </p>
         </div>
       </div>
 
-      {disabled && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/10 p-6">
-          <div className="flex max-w-[240px] flex-col items-center text-center">
-            <div
-              className="
-                flex h-12 w-12 items-center justify-center
-                rounded-xl border border-white/[0.10]
-                bg-black/45 text-textSecondary
-                shadow-lg backdrop-blur-md
-              "
-            >
-              <LockKeyhole
-                size={20}
-                strokeWidth={1.7}
-              />
-            </div>
-
-            <h3 className="mt-3 font-display text-[12px] font-medium text-textPrimary sm:text-[13px]">
-              {adminDisabled
-                ? 'Tools Dinonaktifkan Oleh Admin'
-                : 'Tools Dikunci Sementara'}
-            </h3>
-
-            <p className="mt-1.5 text-[10px] leading-[1.45] text-textMuted sm:text-[11px]">
-              {adminDisabled
-                ? reason || 'Tool ini sedang dinonaktifkan oleh admin.'
-                : unavailable
-                  ? 'Status : features_flags No info'
-                  : 'Tool tidak dapat digunakan saat ini.'}
-            </p>
-          </div>
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-teal" />
         </div>
       )}
 
-      {loading && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/[0.08] border-t-white/50" />
+      {adminDisabled && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-borderStrong bg-surface2 text-textSecondary shadow-lg">
+            <LockKeyhole size={21} strokeWidth={1.8} />
+          </div>
+
+          <p className="mt-3 font-display text-sm font-medium text-textPrimary">
+            Tools Dinonaktifkan Oleh Admin
+          </p>
+
+          {(reason || disabledNote) && (
+            <p className="mt-1.5 max-w-[260px] text-xs leading-5 text-textMuted">
+              {reason ?? disabledNote}
+            </p>
+          )}
+        </div>
+      )}
+
+      {unavailable && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-borderStrong bg-surface2 text-textSecondary shadow-lg">
+            <LockKeyhole size={21} strokeWidth={1.8} />
+          </div>
+
+          <p className="mt-3 font-display text-sm font-medium text-textPrimary">
+            Tools Belum Tersedia
+          </p>
+
+          <p className="mt-1.5 max-w-[260px] text-xs leading-5 text-textMuted">
+            Tools ini belum terdaftar di sistem.
+          </p>
+        </div>
+      )}
+
+      {hasError && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-red-500/30 bg-red-500/5 text-red-400 shadow-lg">
+            <AlertTriangle size={21} strokeWidth={1.8} />
+          </div>
+
+          <p className="mt-3 font-display text-sm font-medium text-textPrimary">
+            Status : Error Supabase
+          </p>
+
+          {debugDetail && (
+            <p className="mt-1.5 max-w-[260px] break-words font-mono text-[10px] leading-4 text-red-300/70">
+              {debugDetail}
+            </p>
+          )}
         </div>
       )}
     </motion.button>
