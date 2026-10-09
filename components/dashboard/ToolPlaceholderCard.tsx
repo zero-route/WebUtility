@@ -72,7 +72,7 @@ const icons: Record<string, LucideIcon> = {
   'case-converter': Type,
   'text-diff-checker': GitCompare,
   'cron-parser': CalendarDays,
-  'github-repository-downloader': Database,
+  'github-repository-downloader': Github,
   'ip-network-info': Network,
   'subnet-calculator': Router,
   'timestamp-converter': Clock,
