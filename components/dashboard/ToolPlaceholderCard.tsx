@@ -199,9 +199,9 @@ export default function ToolPlaceholderCard({
         </ol>
 
         <button
-          type="button"
-          onClick={onOpen}
-          disabled={!active}
+  type="button"
+  onClick={onOpen}
+  disabled={loading || locked}
           className="mt-auto flex min-h-10 w-full items-center justify-between gap-2 rounded-xl border border-border bg-surface2/70 px-3 py-2 text-left text-xs text-textMuted transition-colors hover:border-borderStrong hover:text-textPrimary disabled:cursor-not-allowed"
         >
           <span>Gunakan tools</span>
