@@ -1,125 +1,98 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
 export type ToolFeatureStatus =
-  | 'enabled'
+  | 'loading'
+  | 'active'
   | 'admin_disabled'
   | 'unavailable'
-
-type FeatureFlagPayload = {
-  tool_id?: string
-  is_enabled?: boolean
-  disabled_reason?: string | null
-}
+  | 'error'
 
 type FeatureFlagState = {
   enabled: boolean | null
   status: ToolFeatureStatus
   reason: string | null
+  debugDetail: string | null
 }
 
-const unavailableState: FeatureFlagState = {
-  enabled: false,
-  status: 'unavailable',
-  reason: 'Status : features_flags No info'
+const loadingState: FeatureFlagState = {
+  enabled: null,
+  status: 'loading',
+  reason: null,
+  debugDetail: null
 }
 
 export function useToolEnabled(toolId: string) {
-  const [state, setState] = useState<FeatureFlagState>({
-    enabled: null,
-    status: 'unavailable',
-    reason: null
-  })
+  const [state, setState] = useState<FeatureFlagState>(loadingState)
 
-  const requestIdRef = useRef(0)
-  const mountedRef = useRef(false)
+  useEffect(() => {
+    let active = true
 
-  const loadFeatureFlag = useCallback(async () => {
-    const requestId = ++requestIdRef.current
+    async function fetchFlag() {
+      setState(loadingState)
 
-    try {
       const { data, error } = await supabase
         .from('feature_flags')
         .select('is_enabled, disabled_reason')
         .eq('tool_id', toolId)
-        .limit(1)
         .maybeSingle()
 
-      if (!mountedRef.current) return
-
-      if (requestId !== requestIdRef.current) return
+      if (!active) return
 
       if (error) {
-        console.error('[FeatureFlags] ERROR', {
-          tool_id: toolId,
-          reason: 'Supabase request failed',
-          error
+        setState({
+          enabled: false,
+          status: 'error',
+          reason: 'Terjadi gangguan saat mengambil status tools dari server.',
+          debugDetail: `${error.code ?? 'ERR'}: ${error.message}`
         })
-
-        setState(unavailableState)
         return
       }
 
       if (!data) {
-        console.error('[FeatureFlags] ERROR', {
-          tool_id: toolId,
-          reason: 'Feature flag record not found'
+        setState({
+          enabled: false,
+          status: 'unavailable',
+          reason: 'Tools belum terdaftar di sistem.',
+          debugDetail: `Baris '${toolId}' tidak ditemukan di tabel feature_flags`
         })
-
-        setState(unavailableState)
         return
       }
 
       if (typeof data.is_enabled !== 'boolean') {
-        console.error('[FeatureFlags] ERROR', {
-          tool_id: toolId,
-          reason: 'Invalid feature flag value'
+        setState({
+          enabled: false,
+          status: 'error',
+          reason: 'Data status tools tidak valid.',
+          debugDetail: `Kolom is_enabled bukan boolean (dapat: ${typeof data.is_enabled})`
         })
-
-        setState(unavailableState)
         return
       }
 
-      if (data.is_enabled === false) {
+      if (!data.is_enabled) {
         setState({
           enabled: false,
           status: 'admin_disabled',
-          reason: data.disabled_reason ?? null
+          reason: data.disabled_reason ?? null,
+          debugDetail: null
         })
-
         return
       }
 
       setState({
         enabled: true,
-        status: 'enabled',
-        reason: null
+        status: 'active',
+        reason: null,
+        debugDetail: null
       })
-    } catch (error) {
-      if (!mountedRef.current) return
-
-      if (requestId !== requestIdRef.current) return
-
-      console.error('[FeatureFlags] ERROR', {
-        tool_id: toolId,
-        reason: 'Unexpected feature flag error',
-        error
-      })
-
-      setState(unavailableState)
     }
-  }, [toolId])
 
-  useEffect(() => {
-    mountedRef.current = true
-    requestIdRef.current += 1
-
-    void loadFeatureFlag()
+    fetchFlag()
 
     const channel = supabase
-      .channel(`feature-flag-${toolId}-${Math.random().toString(36).slice(2)}`)
+      .channel(`feature_flags_${toolId}`)
       .on(
         'postgres_changes',
         {
@@ -128,81 +101,17 @@ export function useToolEnabled(toolId: string) {
           table: 'feature_flags',
           filter: `tool_id=eq.${toolId}`
         },
-        async (payload) => {
-          if (!mountedRef.current) return
-
-          if (payload.eventType === 'DELETE') {
-            console.error('[FeatureFlags] ERROR', {
-              tool_id: toolId,
-              reason: 'Feature flag record deleted'
-            })
-
-            requestIdRef.current += 1
-            setState(unavailableState)
-            return
-          }
-
-          const next = payload.new as FeatureFlagPayload
-
-          if (typeof next.is_enabled !== 'boolean') {
-            console.error('[FeatureFlags] ERROR', {
-              tool_id: toolId,
-              reason: 'Invalid feature flag realtime payload'
-            })
-
-            await loadFeatureFlag()
-            return
-          }
-
-          requestIdRef.current += 1
-
-          if (next.is_enabled === false) {
-            setState({
-              enabled: false,
-              status: 'admin_disabled',
-              reason: next.disabled_reason ?? null
-            })
-
-            return
-          }
-
-          setState({
-            enabled: true,
-            status: 'enabled',
-            reason: null
-          })
+        () => {
+          fetchFlag()
         }
       )
-      .subscribe((subscriptionStatus) => {
-        if (!mountedRef.current) return
-
-        if (
-          subscriptionStatus === 'CHANNEL_ERROR' ||
-          subscriptionStatus === 'TIMED_OUT'
-        ) {
-          console.error('[FeatureFlags] ERROR', {
-            tool_id: toolId,
-            reason: 'Realtime feature flag unavailable',
-            status: subscriptionStatus
-          })
-
-          requestIdRef.current += 1
-          setState(unavailableState)
-        }
-      })
-
-    const pollInterval = window.setInterval(() => {
-      if (!mountedRef.current) return
-      void loadFeatureFlag()
-    }, 30000)
+      .subscribe()
 
     return () => {
-      mountedRef.current = false
-      requestIdRef.current += 1
-      window.clearInterval(pollInterval)
-      void supabase.removeChannel(channel)
+      active = false
+      supabase.removeChannel(channel)
     }
-  }, [toolId, loadFeatureFlag])
+  }, [toolId])
 
   return state
 }
