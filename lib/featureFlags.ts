@@ -1,4 +1,3 @@
-
 import { supabase } from './supabaseClient'
 
 export type ToolFeatureStatus =
@@ -32,7 +31,7 @@ export async function isToolEnabled(
     return {
       status: 'unavailable',
       enabled: false,
-      reason: null
+      reason: 'Status : features_flags No info'
     }
   }
 
@@ -45,7 +44,7 @@ export async function isToolEnabled(
     return {
       status: 'unavailable',
       enabled: false,
-      reason: null
+      reason: 'Status : features_flags No info'
     }
   }
 
@@ -53,15 +52,7 @@ export async function isToolEnabled(
     return {
       status: 'admin_disabled',
       enabled: false,
-      reason: data.disabled_reason?.trim() || null
-    }
-  }
-
-  if (data.is_enabled !== true) {
-    return {
-      status: 'unavailable',
-      enabled: false,
-      reason: null
+      reason: data.disabled_reason ?? null
     }
   }
 
