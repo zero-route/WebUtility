@@ -1,3 +1,4 @@
+
 'use client'
 
 import { motion } from 'framer-motion'
@@ -40,12 +41,7 @@ export default function ToolPlaceholderGrid({
             }
           }
         }}
-        className="
-          mt-7 grid grid-cols-1 gap-[10px]
-          sm:grid-cols-2
-          lg:grid-cols-3
-          xl:grid-cols-4
-        "
+        className="mt-7 grid grid-cols-2 items-stretch gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4"
       >
         {category.items.map((tool, index) => (
           <motion.div
@@ -64,13 +60,17 @@ export default function ToolPlaceholderGrid({
                 }
               }
             }}
-            className="min-w-0"
+            className="flex min-w-0"
           >
-            <ToolPlaceholderCard
-              tool={tool}
-              index={index}
-              onOpen={() => {}}
-            />
+            <div className="w-full">
+              <ToolPlaceholderCard
+                tool={tool}
+                index={index}
+                onOpen={() => {
+                  window.location.href = `/tools/${tool.id}`
+                }}
+              />
+            </div>
           </motion.div>
         ))}
       </motion.div>
